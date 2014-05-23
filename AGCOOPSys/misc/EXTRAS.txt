@@ -1,0 +1,15 @@
+
+create role ALCROLE;
+
+create public synonym COMPANY for COMPANY;
+create public synonym MEMBER for MEMBER;
+create public synonym SUPPLIER for SUPPLIER;
+
+grant select,insert,update,delete on COMPANY to ALCROLE;
+grant select,insert,update,delete on MEMBER to ALCROLE;
+grant select,insert,update,delete on SUPPLIER to ALCROLE;
+
+create user test identified by "p@ssword";
+grant resource, connect to test;
+
+grant ALCROLE to test;

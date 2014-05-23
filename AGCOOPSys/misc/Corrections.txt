@@ -1,0 +1,70 @@
+
+May 21, 2014
+
+
+1) Main
+   
+   Change tile to AG-Coop Loan Management System
+
+   Place a picture/system title on the banner screen
+
+   Add a "Search" button
+      Company Name,  Member First/Middle/Last Names, Supplier Name
+      should be able to use % wildcard
+
+   Upon selection from menu option, appropriate tab should be on top/active.
+
+   Dialog boxes such as add/edit windows should be always on top unless closed by user.
+
+   When button "Refresh" is clicked, place cursor(highlight) at the first record. 
+
+2) Company
+
+   Columns displayed on main screen:
+      Company Name, Contact Person, Contact No. (1), Contact No. (2), E-mail
+      Resize columns appropriately
+      All columns is NOT editable
+
+   Validation
+      Company Name is the only field required
+      Company Name should be unique, case-insensitive, space-insensitive
+
+   Add/Edit Window
+      Company Name, Address, E-mail,  Contact Person, Contact No. (1), Contact No. (2)
+
+3) Member
+
+   Columns displayed on main screen:
+      Lastname, First Name, Contact No. (1), Contact No. (2), E-mail, Company Name
+      Resize columns appropriately
+      All columns is NOT editable
+
+   Validation
+      First and Last Names are the only fields required
+      First and Last Names should be unique, case-insensitive, space-insensitive
+      Contibution and Max Share default is 0 (zero).
+      Status default is "Employed"
+      Date Hired is current date
+      * When "Clear" is pressed set appropriate default values 
+
+   Add/Edit Window
+      Company, First Name, Middle Initial, Last Name, Address,             
+      Contact No. (1), Contact No. (2), E-mail, Contibution/Month, Total Contribution,
+      Maximum Share, Status, Date Hired, Date Resigned, Remarks
+
+4) Supplier
+
+   Columns displayed on main screen:
+      Supplier Name, Contact Person, Contact No. (1), Contact No. (2), E-mail
+      Resize columns appropriately
+      All columns is NOT editable
+
+   Validation
+      Supplier Name is the only field required
+      Supplier Name should be unique, case-insensitive, space-insensitive
+      Balance default is 0 (zero).
+      * When "Clear" is pressed set appropriate default values 
+
+   Add/Edit Window
+      Supplier Name, Address, E-mail,  Contact Person, Contact No. (1), Contact No. (2), 
+      Balance

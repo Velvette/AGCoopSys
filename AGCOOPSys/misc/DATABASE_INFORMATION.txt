@@ -1,0 +1,3 @@
+connectionname: test_oracl
+username: test
+password: p@ssword

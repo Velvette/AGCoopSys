@@ -1,0 +1,35 @@
+create or replace TRIGGER nlsTrigger
+AFTER LOGON ON DATABASE
+begin
+execute immediate 'alter session set nls_date_format = ''YYYY MM DD'' ';
+end ;
+
+
+create or replace TRIGGER company_bir 
+BEFORE INSERT ON company 
+FOR EACH ROW
+BEGIN
+  SELECT company_seq.NEXTVAL
+  INTO   :new.compid
+  FROM   dual;
+END;
+
+
+create or replace TRIGGER member_bir 
+BEFORE INSERT ON member 
+FOR EACH ROW
+BEGIN
+  SELECT member_seq.NEXTVAL
+  INTO   :new.memberid
+  FROM   dual;
+END;
+
+
+create or replace TRIGGER supplier_bir 
+BEFORE INSERT ON supplier 
+FOR EACH ROW
+BEGIN
+  SELECT supplier_seq.NEXTVAL
+  INTO   :new.suppid
+  FROM   dual;
+END;
