@@ -161,7 +161,7 @@ public class viewSupplier extends javax.swing.JPanel {
                 {null, null, null, null}
             },
             new String [] {
-                "SupplierID", "Title 2", "Title 3", "Title 4"
+                "SupplierID", "Title 22", "Title 3", "Title 4"
             }
         ));
         jScrollPane1.setViewportView(listSupplier);
