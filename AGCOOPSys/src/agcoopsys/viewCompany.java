@@ -9,8 +9,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import net.proteanit.sql.DbUtils;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -25,7 +28,8 @@ public class viewCompany extends javax.swing.JPanel {
     public String password;
     public Connection conn;
     int rep = 0;
-    String query = "Select compid,compname,address1,address2,address3,contactperson,contactno1,contactno2,email from company order by compname";
+    DbUtils tableUtils = new DbUtils();
+    String query = "Select compid,compname,contactperson,contactno1,contactno2,email from company order by compname";
     
     public viewCompany() {
         
@@ -59,7 +63,16 @@ public class viewCompany extends javax.swing.JPanel {
 	try
         {
             rs = stmt.executeQuery(tempQuery);
-            listCompany.setModel(DbUtils.resultSetToTableModel(rs));
+            
+            try
+            {
+                tableUtils.updateTableModelData((DefaultTableModel) listCompany.getModel(), rs, 6);
+            }
+            
+            catch (Exception ex)
+            {
+                Logger.getLogger(viewMember.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         catch (SQLException e)
@@ -152,21 +165,36 @@ public class viewCompany extends javax.swing.JPanel {
 
         listCompany.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "COMPANY NAME", "CONTACT 1", "CONTACT 2", "E-MAIL"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         listCompany.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 listCompanyMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(listCompany);
+        listCompany.getColumnModel().getColumn(0).setResizable(false);
+        listCompany.getColumnModel().getColumn(0).setPreferredWidth(30);
+        listCompany.getColumnModel().getColumn(1).setResizable(false);
+        listCompany.getColumnModel().getColumn(1).setPreferredWidth(250);
+        listCompany.getColumnModel().getColumn(2).setResizable(false);
+        listCompany.getColumnModel().getColumn(2).setPreferredWidth(150);
+        listCompany.getColumnModel().getColumn(3).setResizable(false);
+        listCompany.getColumnModel().getColumn(3).setPreferredWidth(150);
+        listCompany.getColumnModel().getColumn(4).setResizable(false);
+        listCompany.getColumnModel().getColumn(4).setPreferredWidth(150);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

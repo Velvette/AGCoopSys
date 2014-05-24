@@ -10,8 +10,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
-import net.proteanit.sql.DbUtils;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -35,6 +37,7 @@ public class viewLoan extends javax.swing.JPanel {
     ArrayList<String> arrayLastName = new ArrayList<>();
     ArrayList<String> arrayFirstName = new ArrayList<>();
     ArrayList<String> arrayMidName = new ArrayList<>();
+    DbUtils tableUtils = new DbUtils();
     
     public viewLoan() {
         initComponents();
@@ -156,7 +159,15 @@ public class viewLoan extends javax.swing.JPanel {
             new String [] {
                 "AMORDATE", "MON_AMOR", "MON_INTEREST"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane3.setViewportView(listDetails);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -179,7 +190,15 @@ public class viewLoan extends javax.swing.JPanel {
             new String [] {
                 "LOANTYPE", "STATUS", "GRANTDT", "STARTDT", "ENDDT", "LOANAMT", "MONTOPAY", "INTERESTRT", "INTERESTAMT", "PAYABLEAMT", "BALANCE"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, true, true, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         listLoan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 listLoanMouseClicked(evt);
@@ -277,7 +296,12 @@ public class viewLoan extends javax.swing.JPanel {
 	try
         {
             rs = stmt.executeQuery(tempQuery);
-            listLoan.setModel(DbUtils.resultSetToTableModel(rs));
+            try {
+                tableUtils.updateTableModelData((DefaultTableModel) listLoan.getModel(), rs, 12);
+            } catch (Exception ex) {
+                Logger.getLogger(viewMember.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
         
         catch (SQLException e)
@@ -329,7 +353,14 @@ public class viewLoan extends javax.swing.JPanel {
             try
             {
                 rs = stmt.executeQuery(tempQuery);
-                listDetails.setModel(DbUtils.resultSetToTableModel(rs));
+                try
+                {
+                    tableUtils.updateTableModelData((DefaultTableModel) listDetails.getModel(), rs, 3);
+                }
+                catch (Exception ex)
+                {
+                    Logger.getLogger(viewMember.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         
         catch (SQLException e)

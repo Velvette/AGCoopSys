@@ -10,8 +10,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import net.proteanit.sql.DbUtils;
+import javax.swing.table.DefaultTableModel;
 
 public class viewMember extends javax.swing.JPanel {
 
@@ -27,8 +29,9 @@ public class viewMember extends javax.swing.JPanel {
     public String username;
     public String password;
     public Connection conn;
+    DbUtils tableUtils = new DbUtils();
     int rep = 0;
-    String query = "Select memberid,firstname,midinit,lastname,address1,address2,address3,contactno1,contactno2,email,compid,contribution,contribtotal,maxshare,status,hiredt,resigndt,remarks from member order by lastname";
+    String query = "Select memberid,lastname,firstname,midinit,member.contactno1,member.contactno2,member.email,compname,remarks from member inner join company on member.compid = company.compid order by lastname";
 
     public void getList()
     {
@@ -59,14 +62,21 @@ public class viewMember extends javax.swing.JPanel {
 	try
         {
             rs = stmt.executeQuery(tempQuery);
-            listMember.setModel(DbUtils.resultSetToTableModel(rs));
-            this.disconnect();
+            try {
+                tableUtils.updateTableModelData((DefaultTableModel) listMember.getModel(), rs, 9);
+            } catch (Exception ex) {
+                Logger.getLogger(viewMember.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
         
         catch (SQLException e)
         {
             e.printStackTrace();
 	}
+        finally{
+            this.disconnect();
+        }
         listMember.setRowSelectionInterval(0, 0);
     }
         
@@ -160,16 +170,33 @@ public class viewMember extends javax.swing.JPanel {
 
         listMember.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "LASTNAME", "MID INIT", "FIRSTNAME", "CONTACT 1", "CONTACT 2", "E-MAIL", "COMPANY NAME", "REMARKS"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(listMember);
+        listMember.getColumnModel().getColumn(0).setResizable(false);
+        listMember.getColumnModel().getColumn(0).setPreferredWidth(30);
+        listMember.getColumnModel().getColumn(1).setResizable(false);
+        listMember.getColumnModel().getColumn(1).setPreferredWidth(100);
+        listMember.getColumnModel().getColumn(2).setResizable(false);
+        listMember.getColumnModel().getColumn(2).setPreferredWidth(100);
+        listMember.getColumnModel().getColumn(3).setResizable(false);
+        listMember.getColumnModel().getColumn(3).setPreferredWidth(100);
+        listMember.getColumnModel().getColumn(4).setResizable(false);
+        listMember.getColumnModel().getColumn(6).setResizable(false);
+        listMember.getColumnModel().getColumn(7).setResizable(false);
+        listMember.getColumnModel().getColumn(8).setResizable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

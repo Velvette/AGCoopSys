@@ -49,16 +49,12 @@ public class ConnectToDatabaseSys {
     {
         try
         {
-            System.out.println("1");
             Class.forName(dbClass);
             con = DriverManager.getConnection (dbUrl, name, password);
             PreparedStatement stmt = con.prepareStatement(query);
-            System.out.println("2");
             stmt.executeUpdate(query);
-            System.out.println("3");
             JOptionPane.showMessageDialog(null, "Database Update: Success", "Updating database", JOptionPane.INFORMATION_MESSAGE);
-            con.close();
-            System.out.println("4");
+            
         }
         
         catch(ClassNotFoundException e)
@@ -71,6 +67,14 @@ public class ConnectToDatabaseSys {
         {
             JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE); 
             e.printStackTrace();
+        }
+        
+        finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ConnectToDatabaseSys.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -108,6 +112,44 @@ public class ConnectToDatabaseSys {
        }
     }
     
+    public void connect()
+    {
+                
+        try
+        {
+            Class.forName(dbClass).newInstance();
+            con = DriverManager.getConnection(dbUrl,name,password);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    public void executeQuery(String query)
+    {
+        try
+        {
+            Class.forName(dbClass);
+            con = DriverManager.getConnection (dbUrl, name, password);
+            PreparedStatement stmt = con.prepareStatement(query);
+            stmt.executeUpdate(query);
+            JOptionPane.showMessageDialog(null, "Database Update: Success", "Updating database", JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+        catch(ClassNotFoundException e)
+        {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE); 
+        }
+
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE); 
+        }
+    }
+
     public boolean checkDuplicate(String checkThis, int choice) throws ClassNotFoundException, SQLException
     {       
         String query = "";

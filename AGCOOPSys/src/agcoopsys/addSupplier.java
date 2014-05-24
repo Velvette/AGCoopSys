@@ -144,25 +144,8 @@ public class addSupplier extends javax.swing.JFrame {
             errorMessages += "Supplier Name: Field cannot be empty\n";
             errorCount++;
         }
-        
-        if(!(validateInputs.checkIfEmpty(supplierAddress1)))
-        {
-            errorMessages += "Supplier Address 1: Field cannot be empty\n";
-            errorCount++;
-        }
-        
-        if(!(validateInputs.checkIfEmpty(supplierContactPerson)))
-        {
-            errorMessages += "Contact Person: Field cannot be empty\n";
-            errorCount++;
-        }
-        
-        if(!(validateInputs.checkIfEmpty(supplierBalanceText)))
-        {
-            errorMessages += "Balance: Field cannot be empty\n";
-            errorCount++;
-        }
-        
+                       
+        if(supplierContactPerson.length() != 0)
         if(!(validateInputs.checkForSpecial(supplierContactPerson)))
         {
             errorMessages += "Contact Person: Must not contain special characters\n";
@@ -194,7 +177,8 @@ public class addSupplier extends javax.swing.JFrame {
                         "contactperson='"+supplierContactPerson+"',contactno1='"+supplierContact1+"',contactno2='"+supplierContact2+"',email='"+supplierEmail+"',balance='"+supplierBalance+"' where suppid="+supplierID;
                 choice = 0;
             }
-            connectDB.accessInputDatabase(query);
+            connectDB.executeQuery(query);
+            connectDB.disconnect();
         }
         
         else if(errorCount > 0)
@@ -203,10 +187,6 @@ public class addSupplier extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, errorMessages, "Error: Company Information", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-    
-    
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -87,9 +87,9 @@
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="3" rowCount="0">
-                    <Column editable="true" title="AMORDATE" type="java.lang.Object"/>
-                    <Column editable="true" title="MON_AMOR" type="java.lang.Object"/>
-                    <Column editable="true" title="MON_INTEREST" type="java.lang.Object"/>
+                    <Column editable="false" title="AMORDATE" type="java.lang.Object"/>
+                    <Column editable="false" title="MON_AMOR" type="java.lang.Object"/>
+                    <Column editable="false" title="MON_INTEREST" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -153,16 +153,16 @@
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="11" rowCount="0">
-                    <Column editable="true" title="LOANTYPE" type="java.lang.Object"/>
-                    <Column editable="true" title="STATUS" type="java.lang.Object"/>
-                    <Column editable="true" title="GRANTDT" type="java.lang.Object"/>
-                    <Column editable="true" title="STARTDT" type="java.lang.Object"/>
-                    <Column editable="true" title="ENDDT" type="java.lang.Object"/>
-                    <Column editable="true" title="LOANAMT" type="java.lang.Object"/>
+                    <Column editable="false" title="LOANTYPE" type="java.lang.Object"/>
+                    <Column editable="false" title="STATUS" type="java.lang.Object"/>
+                    <Column editable="false" title="GRANTDT" type="java.lang.Object"/>
+                    <Column editable="false" title="STARTDT" type="java.lang.Object"/>
+                    <Column editable="false" title="ENDDT" type="java.lang.Object"/>
+                    <Column editable="false" title="LOANAMT" type="java.lang.Object"/>
                     <Column editable="true" title="MONTOPAY" type="java.lang.Object"/>
                     <Column editable="true" title="INTERESTRT" type="java.lang.Object"/>
-                    <Column editable="true" title="INTERESTAMT" type="java.lang.Object"/>
-                    <Column editable="true" title="PAYABLEAMT" type="java.lang.Object"/>
+                    <Column editable="false" title="INTERESTAMT" type="java.lang.Object"/>
+                    <Column editable="false" title="PAYABLEAMT" type="java.lang.Object"/>
                     <Column editable="true" title="BALANCE" type="java.lang.Object"/>
                   </Table>
                 </Property>

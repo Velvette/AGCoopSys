@@ -1,4 +1,4 @@
-/*
+     /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -9,8 +9,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import net.proteanit.sql.DbUtils;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,9 +20,6 @@ import net.proteanit.sql.DbUtils;
  */
 public class viewSupplier extends javax.swing.JPanel {
 
-    /**
-     * Creates new form viewSupplier
-     */
     public viewSupplier() {
         
         initComponents();
@@ -33,8 +32,9 @@ public class viewSupplier extends javax.swing.JPanel {
     public String username;
     public String password;
     public Connection conn;
+    DbUtils tableUtils = new DbUtils();
     int rep = 0;
-    String query = "Select suppid,suppname,address1,address2,address3,contactperson,contactno1,contactno2,email,balance from supplier order by suppname";
+    String query = "Select suppid,suppname,contactno1,contactno2,email from supplier order by suppname";
 
     public void getList()
     {
@@ -65,15 +65,22 @@ public class viewSupplier extends javax.swing.JPanel {
 	try
         {
             rs = stmt.executeQuery(tempQuery);
-            listSupplier.setModel(DbUtils.resultSetToTableModel(rs));
-            this.disconnect();
+            try {
+                tableUtils.updateTableModelData((DefaultTableModel) listSupplier.getModel(), rs,5);
+            } catch (Exception ex) {
+                Logger.getLogger(viewMember.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
         
         catch (SQLException e)
         {
             e.printStackTrace();
 	}
-        
+        finally
+        {
+            this.disconnect();
+        }
         listSupplier.setRowSelectionInterval(0, 0);
     }
         
@@ -155,16 +162,28 @@ public class viewSupplier extends javax.swing.JPanel {
 
         listSupplier.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "SupplierID", "Title 22", "Title 3", "Title 4"
+                "ID", "SUPPLIER NAME", "CONTACT 1", "CONTACT 2", "E-MAIL"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(listSupplier);
+        listSupplier.getColumnModel().getColumn(0).setResizable(false);
+        listSupplier.getColumnModel().getColumn(0).setPreferredWidth(30);
+        listSupplier.getColumnModel().getColumn(1).setResizable(false);
+        listSupplier.getColumnModel().getColumn(1).setPreferredWidth(400);
+        listSupplier.getColumnModel().getColumn(2).setResizable(false);
+        listSupplier.getColumnModel().getColumn(3).setResizable(false);
+        listSupplier.getColumnModel().getColumn(4).setResizable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

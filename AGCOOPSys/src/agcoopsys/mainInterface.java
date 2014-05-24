@@ -15,6 +15,7 @@ public class mainInterface extends javax.swing.JFrame {
     viewMember vM = new viewMember();
     viewSupplier vS = new viewSupplier();
     viewLoan vL = new viewLoan();
+    processBillStatement pB = new processBillStatement();
     
     public mainInterface() {
         initComponents();
@@ -40,7 +41,6 @@ public class mainInterface extends javax.swing.JFrame {
         textSearch = new javax.swing.JTextField();
         buttonSearch = new javax.swing.JButton();
         jSeparator4 = new javax.swing.JSeparator();
-        buttonLoan = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuCompany = new javax.swing.JMenuItem();
@@ -48,8 +48,11 @@ public class mainInterface extends javax.swing.JFrame {
         menuSupplier = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         menuLoans = new javax.swing.JMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+        buttonMemberLoan = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
+        menuStatement = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         menuCloseTab = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
@@ -112,14 +115,6 @@ public class mainInterface extends javax.swing.JFrame {
 
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        buttonLoan.setText("New Loan");
-        buttonLoan.setEnabled(false);
-        buttonLoan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonLoanActionPerformed(evt);
-            }
-        });
-
         jMenu1.setText("File");
 
         menuCompany.setText("Company");
@@ -157,10 +152,31 @@ public class mainInterface extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
+        jMenu5.setText("Transaction");
+
+        buttonMemberLoan.setText("Member loan");
+        buttonMemberLoan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonMemberLoanActionPerformed(evt);
+            }
+        });
+        jMenu5.add(buttonMemberLoan);
+
+        jMenuBar1.add(jMenu5);
+
         jMenu2.setText("Reports");
         jMenuBar1.add(jMenu2);
 
         jMenu4.setText("Process");
+
+        menuStatement.setText("Bill Statement");
+        menuStatement.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuStatementActionPerformed(evt);
+            }
+        });
+        jMenu4.add(menuStatement);
+
         jMenuBar1.add(jMenu4);
 
         jMenu3.setText("Close");
@@ -211,9 +227,7 @@ public class mainInterface extends javax.swing.JFrame {
                         .addComponent(buttonSearch)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonLoan)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 663, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 336, Short.MAX_VALUE)
                         .addComponent(buttonRefresh)))
                 .addContainerGap())
         );
@@ -235,8 +249,7 @@ public class mainInterface extends javax.swing.JFrame {
                         .addComponent(buttonDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(labelSearch)
                         .addComponent(textSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(buttonSearch)
-                        .addComponent(buttonLoan))))
+                        .addComponent(buttonSearch))))
         );
 
         pack();
@@ -259,7 +272,7 @@ public class mainInterface extends javax.swing.JFrame {
                 buttonEdit.setEnabled(false);
                 buttonDelete.setEnabled(false);
                 buttonSave.setEnabled(false);
-                buttonLoan.setEnabled(false);
+                buttonMemberLoan.setEnabled(false);
                 buttonSearch.setEnabled(false);
                 textSearch.setEnabled(false);
                 labelSearch.setEnabled(false);
@@ -336,7 +349,7 @@ public class mainInterface extends javax.swing.JFrame {
         buttonEdit.setEnabled(true);
         buttonDelete.setEnabled(true);
         buttonSave.setEnabled(true);
-        buttonLoan.setEnabled(true);
+        buttonMemberLoan.setEnabled(true);
         buttonSearch.setEnabled(true);
         textSearch.setEnabled(true);
         labelSearch.setEnabled(true);
@@ -443,24 +456,6 @@ public class mainInterface extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonEditActionPerformed
 
-    private void buttonLoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoanActionPerformed
-        String agcoopMember = "agcoopsys.viewMember";
-        try{
-            if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopMember))
-            {
-                    vM.addLoan();
-            }
-        }
-        
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(null, "Error: Select member to apply for loan", "Error - Loan information", JOptionPane.ERROR_MESSAGE); 
-        }
-        
-        
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonLoanActionPerformed
-
     private void menuLoansActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuLoansActionPerformed
 
         viewTab.add("Loans", vL);
@@ -473,6 +468,30 @@ public class mainInterface extends javax.swing.JFrame {
         
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonSearchActionPerformed
+
+    private void menuStatementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuStatementActionPerformed
+
+        viewTab.add("Billing Statement", pB);
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuStatementActionPerformed
+
+    private void buttonMemberLoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMemberLoanActionPerformed
+
+                String agcoopMember = "agcoopsys.viewMember";
+        try{
+            if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopMember))
+            {
+                    vM.addLoan();
+            }
+        }
+        
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null, "Error: Select member to apply for loan", "Error - Loan information", JOptionPane.ERROR_MESSAGE); 
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonMemberLoanActionPerformed
 
     /**
      * @param args the command line arguments
@@ -511,7 +530,7 @@ public class mainInterface extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonDelete;
     private javax.swing.JButton buttonEdit;
-    private javax.swing.JButton buttonLoan;
+    private javax.swing.JMenuItem buttonMemberLoan;
     private javax.swing.JButton buttonRefresh;
     private javax.swing.JButton buttonSave;
     private javax.swing.JButton buttonSearch;
@@ -519,6 +538,7 @@ public class mainInterface extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
@@ -531,6 +551,7 @@ public class mainInterface extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuExit;
     private javax.swing.JMenuItem menuLoans;
     private javax.swing.JMenuItem menuMember;
+    private javax.swing.JMenuItem menuStatement;
     private javax.swing.JMenuItem menuSupplier;
     private javax.swing.JTextField textSearch;
     private javax.swing.JTabbedPane viewTab;

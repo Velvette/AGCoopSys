@@ -36,8 +36,10 @@ public class addMember extends javax.swing.JFrame {
     private float memberTotal = 0;
     private float memberShares;
     private String memberEmploymentStatus = "";
+    
     private Date memberHired;
     private Date memberResigned;
+    
     private String memberHiredText;
     private String memberResignedText;
     private String memberRemarks;
@@ -647,7 +649,8 @@ public class addMember extends javax.swing.JFrame {
             errorCount++;
         }
         
-        try{  
+        try
+        {  
             memberHired = df.parse(memberHiredText);
             finalHired = df.format(memberHired);
             System.out.println(finalHired);
@@ -656,6 +659,7 @@ public class addMember extends javax.swing.JFrame {
         { 
             errorMessages += "Date Hired: Format YYYY-MM-DD\n";
             errorCount++;
+            System.out.println(finalHired);
         } 
         
         try
@@ -701,7 +705,7 @@ public class addMember extends javax.swing.JFrame {
                         memberContact1+"',contactno2='"+memberContact2+"',email='"+memberEmail+"',compid='"+companyID+"',contribution='"+memberContribution+"',contribtotal='"+memberTotal+"',maxshare='"+memberShares+"',status='"+memberEmploymentStatus+"',hiredt='"+
                         memberHired+"',resigndt='"+memberResigned+"',remarks='"+memberRemarks+"' where memberid="+memberID;
             }
-            System.out.println(query);
+            //System.out.println(query);
             ConnectToDatabaseSys connectDB = new ConnectToDatabaseSys();
             connectDB.accessInputDatabase(query);
             viewMember vM = new viewMember();
@@ -712,7 +716,7 @@ public class addMember extends javax.swing.JFrame {
             //System.out.println(errorMessages);
             JOptionPane.showMessageDialog(null, errorMessages, "Error: Member Information", JOptionPane.ERROR_MESSAGE);
         }   
-}
+    }
 
     public int getCompanyIdCombo(int comboID)
     {

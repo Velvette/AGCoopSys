@@ -45,6 +45,21 @@
             </MenuItem>
           </SubComponents>
         </Menu>
+        <Menu class="javax.swing.JMenu" name="jMenu5">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Transaction"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="buttonMemberLoan">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Member loan"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonMemberLoanActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Reports"/>
@@ -54,6 +69,16 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Process"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="menuStatement">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Bill Statement"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuStatementActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu3">
           <Properties>
@@ -127,9 +152,7 @@
                       <Component id="buttonSearch" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSeparator4" min="-2" pref="9" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="buttonLoan" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="663" max="32767" attributes="0"/>
+                      <EmptySpace pref="336" max="32767" attributes="0"/>
                       <Component id="buttonRefresh" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -156,7 +179,6 @@
                       <Component id="labelSearch" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="textSearch" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="buttonSearch" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="buttonLoan" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -240,15 +262,6 @@
       <Properties>
         <Property name="orientation" type="int" value="1"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="buttonLoan">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="New Loan"/>
-        <Property name="enabled" type="boolean" value="false"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonLoanActionPerformed"/>
-      </Events>
     </Component>
   </SubComponents>
 </Form>
