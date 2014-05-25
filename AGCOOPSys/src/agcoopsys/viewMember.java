@@ -77,7 +77,14 @@ public class viewMember extends javax.swing.JPanel {
         finally{
             this.disconnect();
         }
-        listMember.setRowSelectionInterval(0, 0);
+        try{
+            listMember.setRowSelectionInterval(0, 0);
+        }
+        catch(Exception e)
+        {
+            
+        }
+        
     }
         
     public void connect()
