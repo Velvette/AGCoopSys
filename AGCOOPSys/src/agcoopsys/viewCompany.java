@@ -82,8 +82,13 @@ public class viewCompany extends javax.swing.JPanel {
         finally{
             this.disconnect();
         }
-        
-        listCompany.setRowSelectionInterval(0, 0);
+        try{
+            listCompany.setRowSelectionInterval(0, 0);
+        }
+        catch(Exception e)
+        {
+            
+        }
     }
         
     public void connect()
