@@ -81,7 +81,14 @@ public class viewSupplier extends javax.swing.JPanel {
         {
             this.disconnect();
         }
-        listSupplier.setRowSelectionInterval(0, 0);
+        try
+        {
+            listSupplier.setRowSelectionInterval(0, 0);
+        }
+        catch(Exception e)
+        {
+            
+        }
     }
         
     public void connect()
