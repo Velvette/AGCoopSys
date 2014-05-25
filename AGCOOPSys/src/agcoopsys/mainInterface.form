@@ -50,13 +50,25 @@
             <Property name="text" type="java.lang.String" value="Transaction"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="buttonMemberLoan">
+            <MenuItem class="javax.swing.JMenuItem" name="menuMemberLoan">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Member loan"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonMemberLoanActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuMemberLoanActionPerformed"/>
               </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuNonMember">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Non-Member loan"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator6">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuPurchaseGoods">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Purchase goods"/>
+              </Properties>
             </MenuItem>
           </SubComponents>
         </Menu>

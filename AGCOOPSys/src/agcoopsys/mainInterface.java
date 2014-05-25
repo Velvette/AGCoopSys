@@ -49,7 +49,10 @@ public class mainInterface extends javax.swing.JFrame {
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         menuLoans = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
-        buttonMemberLoan = new javax.swing.JMenuItem();
+        menuMemberLoan = new javax.swing.JMenuItem();
+        menuNonMember = new javax.swing.JMenuItem();
+        jSeparator6 = new javax.swing.JPopupMenu.Separator();
+        menuPurchaseGoods = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         menuStatement = new javax.swing.JMenuItem();
@@ -154,13 +157,20 @@ public class mainInterface extends javax.swing.JFrame {
 
         jMenu5.setText("Transaction");
 
-        buttonMemberLoan.setText("Member loan");
-        buttonMemberLoan.addActionListener(new java.awt.event.ActionListener() {
+        menuMemberLoan.setText("Member loan");
+        menuMemberLoan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonMemberLoanActionPerformed(evt);
+                menuMemberLoanActionPerformed(evt);
             }
         });
-        jMenu5.add(buttonMemberLoan);
+        jMenu5.add(menuMemberLoan);
+
+        menuNonMember.setText("Non-Member loan");
+        jMenu5.add(menuNonMember);
+        jMenu5.add(jSeparator6);
+
+        menuPurchaseGoods.setText("Purchase goods");
+        jMenu5.add(menuPurchaseGoods);
 
         jMenuBar1.add(jMenu5);
 
@@ -272,7 +282,7 @@ public class mainInterface extends javax.swing.JFrame {
                 buttonEdit.setEnabled(false);
                 buttonDelete.setEnabled(false);
                 buttonSave.setEnabled(false);
-                buttonMemberLoan.setEnabled(false);
+                menuMemberLoan.setEnabled(false);
                 buttonSearch.setEnabled(false);
                 textSearch.setEnabled(false);
                 labelSearch.setEnabled(false);
@@ -349,7 +359,7 @@ public class mainInterface extends javax.swing.JFrame {
         buttonEdit.setEnabled(true);
         buttonDelete.setEnabled(true);
         buttonSave.setEnabled(true);
-        buttonMemberLoan.setEnabled(true);
+        menuMemberLoan.setEnabled(true);
         buttonSearch.setEnabled(true);
         textSearch.setEnabled(true);
         labelSearch.setEnabled(true);
@@ -476,7 +486,7 @@ public class mainInterface extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_menuStatementActionPerformed
 
-    private void buttonMemberLoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMemberLoanActionPerformed
+    private void menuMemberLoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMemberLoanActionPerformed
 
                 String agcoopMember = "agcoopsys.viewMember";
         try{
@@ -491,7 +501,7 @@ public class mainInterface extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error: Select member to apply for loan", "Error - Loan information", JOptionPane.ERROR_MESSAGE); 
         }
         // TODO add your handling code here:
-    }//GEN-LAST:event_buttonMemberLoanActionPerformed
+    }//GEN-LAST:event_menuMemberLoanActionPerformed
 
     /**
      * @param args the command line arguments
@@ -530,7 +540,6 @@ public class mainInterface extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonDelete;
     private javax.swing.JButton buttonEdit;
-    private javax.swing.JMenuItem buttonMemberLoan;
     private javax.swing.JButton buttonRefresh;
     private javax.swing.JButton buttonSave;
     private javax.swing.JButton buttonSearch;
@@ -545,12 +554,16 @@ public class mainInterface extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
+    private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JLabel labelSearch;
     private javax.swing.JMenuItem menuCloseTab;
     private javax.swing.JMenuItem menuCompany;
     private javax.swing.JMenuItem menuExit;
     private javax.swing.JMenuItem menuLoans;
     private javax.swing.JMenuItem menuMember;
+    private javax.swing.JMenuItem menuMemberLoan;
+    private javax.swing.JMenuItem menuNonMember;
+    private javax.swing.JMenuItem menuPurchaseGoods;
     private javax.swing.JMenuItem menuStatement;
     private javax.swing.JMenuItem menuSupplier;
     private javax.swing.JTextField textSearch;
