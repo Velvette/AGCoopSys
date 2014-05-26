@@ -41,6 +41,8 @@ public class mainInterface extends javax.swing.JFrame {
         textSearch = new javax.swing.JTextField();
         buttonSearch = new javax.swing.JButton();
         jSeparator4 = new javax.swing.JSeparator();
+        progressBar = new javax.swing.JProgressBar();
+        jSeparator7 = new javax.swing.JSeparator();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuCompany = new javax.swing.JMenuItem();
@@ -62,6 +64,22 @@ public class mainInterface extends javax.swing.JFrame {
         menuExit = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+                formWindowLostFocus(evt);
+            }
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         viewTab.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         viewTab.addContainerListener(new java.awt.event.ContainerAdapter() {
@@ -117,6 +135,8 @@ public class mainInterface extends javax.swing.JFrame {
         });
 
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        jSeparator7.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         jMenu1.setText("File");
 
@@ -237,29 +257,38 @@ public class mainInterface extends javax.swing.JFrame {
                         .addComponent(buttonSearch)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 336, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 285, Short.MAX_VALUE)
                         .addComponent(buttonRefresh)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(18, Short.MAX_VALUE)
                 .addComponent(viewTab, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jSeparator3)
-                    .addComponent(jSeparator4, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(buttonSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buttonEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buttonRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buttonDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(labelSearch)
-                        .addComponent(textSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(buttonSearch))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jSeparator3)
+                        .addComponent(jSeparator4, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(buttonSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(buttonEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(buttonRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(buttonDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelSearch)
+                            .addComponent(textSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(buttonSearch))
+                        .addComponent(jSeparator7, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         pack();
@@ -295,9 +324,7 @@ public class mainInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_menuCloseTabActionPerformed
 
     private void menuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuExitActionPerformed
-        int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Close application", JOptionPane.YES_NO_OPTION);
-        if (reply == JOptionPane.YES_OPTION)
-            System.exit(0);
+        this.formWindowClosing(null);
         // TODO add your handling code here:
     }//GEN-LAST:event_menuExitActionPerformed
 
@@ -370,34 +397,7 @@ public class mainInterface extends javax.swing.JFrame {
         vM.getList();
         vC.getList();
         vS.getList();
-        
-        String agcoopCompany = "agcoopsys.viewCompany";
-        String agcoopMember = "agcoopsys.viewMember";
-        String agcoopSupplier = "agcoopsys.viewSupplier";
-        
-        
-       try
-       {
-        if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCompany))
-        {
-            
-        }
-        
-        else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopMember))
-        {
-             
-        }
-        
-        else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopSupplier))
-        {
-         
-        }
-       }
-            
-       catch (Exception ex)
-       {
-           
-       }
+        vL.getList();
         
     }//GEN-LAST:event_buttonRefreshActionPerformed
 
@@ -406,6 +406,8 @@ public class mainInterface extends javax.swing.JFrame {
         String agcoopCompany = "agcoopsys.viewCompany";
         String agcoopMember = "agcoopsys.viewMember";
         String agcoopSupplier = "agcoopsys.viewSupplier";
+        String agcoopLoan = "agcoopsys.viewLoan";
+        
             int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete?", "Delete - Information", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION)
             {  
@@ -428,6 +430,13 @@ public class mainInterface extends javax.swing.JFrame {
                         vS.deleteSupplier();
                         vS.getList();
                     }
+                    
+                    else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopLoan))
+                    {
+                        vL.deleteLoan();
+                        vL.getList();
+                    }
+                    
                 }
             
                 catch (Exception ex)
@@ -475,6 +484,8 @@ public class mainInterface extends javax.swing.JFrame {
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
 
+        String searchQuery = textSearch.getText();
+        
         
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonSearchActionPerformed
@@ -488,12 +499,15 @@ public class mainInterface extends javax.swing.JFrame {
 
     private void menuMemberLoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMemberLoanActionPerformed
 
-                String agcoopMember = "agcoopsys.viewMember";
+        String agcoopMember = "agcoopsys.viewMember";
         try{
             if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopMember))
             {
                     vM.addLoan();
             }
+            
+            else
+                JOptionPane.showMessageDialog(null, "Error: Select member to apply for loan", "Error - Loan information", JOptionPane.ERROR_MESSAGE);
         }
         
         catch(Exception e)
@@ -502,6 +516,29 @@ public class mainInterface extends javax.swing.JFrame {
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_menuMemberLoanActionPerformed
+
+    private void formWindowLostFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowLostFocus
+
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowLostFocus
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowGainedFocus
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Close application", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION)
+            System.exit(0);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -555,6 +592,7 @@ public class mainInterface extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
+    private javax.swing.JSeparator jSeparator7;
     private javax.swing.JLabel labelSearch;
     private javax.swing.JMenuItem menuCloseTab;
     private javax.swing.JMenuItem menuCompany;
@@ -566,6 +604,7 @@ public class mainInterface extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuPurchaseGoods;
     private javax.swing.JMenuItem menuStatement;
     private javax.swing.JMenuItem menuSupplier;
+    private javax.swing.JProgressBar progressBar;
     private javax.swing.JTextField textSearch;
     private javax.swing.JTabbedPane viewTab;
     // End of variables declaration//GEN-END:variables
