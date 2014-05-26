@@ -51,6 +51,7 @@ public class addLoan extends javax.swing.JFrame {
     int terms  = 0;
     int loanID;
     Date tempCal;
+    String checkNo = "";
     loanDetailCalculate loanCalculate = new loanDetailCalculate();
     
     public addLoan() {
@@ -94,10 +95,18 @@ public class addLoan extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         labelTotalPrincipal = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
-        jButton2 = new javax.swing.JButton();
+        buttonCancel = new javax.swing.JButton();
         buttonCompute = new javax.swing.JButton();
+        textCheckNo = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setText("Member");
 
@@ -105,7 +114,12 @@ public class addLoan extends javax.swing.JFrame {
 
         jLabel3.setText("Type");
 
-        comboTypeOfLoan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Regular", "Calamity", "Educational", "Emergency" }));
+        comboTypeOfLoan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Regular", "Calamity", "Educational", "Emergency", "Cashloan" }));
+        comboTypeOfLoan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboTypeOfLoanActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Principal");
 
@@ -155,7 +169,12 @@ public class addLoan extends javax.swing.JFrame {
 
         labelTotalPrincipal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jButton2.setText("Cancel");
+        buttonCancel.setText("Cancel");
+        buttonCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCancelActionPerformed(evt);
+            }
+        });
 
         buttonCompute.setText("Compute");
         buttonCompute.addActionListener(new java.awt.event.ActionListener() {
@@ -163,6 +182,8 @@ public class addLoan extends javax.swing.JFrame {
                 buttonComputeActionPerformed(evt);
             }
         });
+
+        jLabel12.setText("Check No");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -180,18 +201,22 @@ public class addLoan extends javax.swing.JFrame {
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
+                            .addComponent(labelMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(comboTypeOfLoan, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(41, 41, 41)
-                                .addComponent(jLabel8)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel12))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(textInterest, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
-                            .addComponent(labelMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(textCheckNo)
+                                    .addComponent(textInterest, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE))
+                                .addContainerGap())))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton2)
+                                .addComponent(buttonCancel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(buttonCompute)
                                 .addGap(18, 18, 18)
@@ -239,9 +264,13 @@ public class addLoan extends javax.swing.JFrame {
                     .addComponent(comboTypeOfLoan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
                     .addComponent(textInterest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textCheckNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(textPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -257,9 +286,9 @@ public class addLoan extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(textEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelAmortization, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
@@ -280,7 +309,7 @@ public class addLoan extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonConfirm)
-                    .addComponent(jButton2)
+                    .addComponent(buttonCancel)
                     .addComponent(buttonCompute))
                 .addContainerGap())
         );
@@ -407,7 +436,7 @@ public class addLoan extends javax.swing.JFrame {
            interestrt = Float.parseFloat(textInterest.getText());
            totalPayment = loanCalculate.getTotAmortization();
            terms = Integer.parseInt(textTerms.getText());
-           
+           checkNo = textCheckNo.getText();
            labelAmortization.setText(Float.toString(monthlyAmortization));
            labelTotalPayment.setText(Float.toString(totalPayment));
            labelTotalInterest.setText(Float.toString(loanCalculate.getTotInterest()));
@@ -481,11 +510,34 @@ public class addLoan extends javax.swing.JFrame {
         loanCalculate.reset();
     }//GEN-LAST:event_buttonConfirmActionPerformed
 
+    private void comboTypeOfLoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboTypeOfLoanActionPerformed
+
+        if(comboTypeOfLoan.getSelectedItem().equals("Cashloan"))
+        {
+            textTerms.setEditable(false);
+        }
+        else
+            textTerms.setEditable(true);
+        
+    }//GEN-LAST:event_comboTypeOfLoanActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowOpened
+
+    private void buttonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelActionPerformed
+
+        this.dispose();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonCancelActionPerformed
+
     public void firstBreakCommit()
     {
-       String query = "insert into loan_hdr (memberid, loantype, grantdt,startdt,enddt,loanamt,montopay,interestrt, interestamt,payableamt,balance,amortization)"
+       String query = "insert into loan_hdr (memberid, loantype, grantdt,startdt,enddt,loanamt,montopay,interestrt, interestamt,payableamt,balance,amortization,checkno)"
                 + "values('"+memberID+"','"+loanType+"','"+currentdtString+"','"+startdtString+"','"+enddtString+"','"+principal+"','"+terms+
-                "','"+interestrt+"','"+interest+"','"+totalPayment+"','"+totalPayment+"','"+monthlyAmortization+"')";
+                "','"+interestrt+"','"+interest+"','"+totalPayment+"','"+totalPayment+"','"+monthlyAmortization+"','"+checkNo+"')";
        
         System.out.println(query);
         paramDB.accessInputDatabase(query);
@@ -571,13 +623,14 @@ public class addLoan extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonCancel;
     private javax.swing.JButton buttonCompute;
     private javax.swing.JButton buttonConfirm;
     private javax.swing.JComboBox comboTypeOfLoan;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -594,6 +647,7 @@ public class addLoan extends javax.swing.JFrame {
     private javax.swing.JLabel labelTotalInterest;
     private javax.swing.JLabel labelTotalPayment;
     private javax.swing.JLabel labelTotalPrincipal;
+    private javax.swing.JTextField textCheckNo;
     private javax.swing.JTextField textEndDate;
     private javax.swing.JTextField textInterest;
     private javax.swing.JTextField textPrincipal;
