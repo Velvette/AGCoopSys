@@ -188,29 +188,7 @@ public class ConnectToDatabaseSys {
         con.close();
         return false;
     }
-    
-    public String getInsertAmortDates(Date repEnd, int terms, float[] arrayInterest, int loanID, float monthlyAmortization)
-    {
-        DateFormat df;
-        df = new SimpleDateFormat("yyyy-MM-dd");
-        df.setLenient(false);
-        String repEndString = "";
-        String insertString = "insert all ";
-        Calendar calendar = Calendar.getInstance();
         
-        for(int i=0; i<terms;i++)
-        {
-            repEndString = df.format(repEnd);
-            System.out.println(repEndString);
-            calendar.setTime(repEnd);
-            insertString += "into loan_dtl (loanid,amordate,mon_amort,mon_interest) values ('"+loanID+"','"+repEndString+"','"+monthlyAmortization+"','"+arrayInterest[i]+"')\n";
-            calendar.add(Calendar.MONTH, 1);
-            repEnd = calendar.getTime();
-        }
-        insertString +="\nselect * from dual";
-        return insertString;
-    }
-    
     public boolean checkDuplicateLoan(String memberID, String loantype)
     {
         String query = "select * from loan_hdr where memberid="+memberID+" and status='A' and loantype='"+loantype+"'";
