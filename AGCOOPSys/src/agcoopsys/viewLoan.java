@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -128,6 +129,51 @@ public class viewLoan extends javax.swing.JPanel {
        {
        }
     }
+    
+    public void deleteLoan()
+    {
+        Statement stmt = null;
+        try
+        {
+            int index = listLoan.getSelectedRow();
+            String i = listLoan.getValueAt(index, 0).toString();
+            String tempQuery = "delete from loan_dtl where loanid="+i;
+            this.connect();
+            try
+            {
+                stmt = conn.createStatement();
+            }
+            
+            catch(Exception p)
+            {
+                
+            }
+            
+            try
+            {
+                stmt.addBatch(tempQuery);
+                tempQuery = "delete from loan_hdr where loanid="+i;
+                stmt.addBatch(tempQuery);
+                int[] executeBatch = stmt.executeBatch();
+            }
+            
+            catch(Exception o)
+            {
+                
+            }
+            finally{
+                this.disconnect();
+            }
+        }
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null, "Error: Select row to delete", "Error", JOptionPane.ERROR_MESSAGE); 
+        }
+        
+        this.listMemberMouseClicked(null);
+        this.listLoanMouseClicked(null);
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -157,7 +203,7 @@ public class viewLoan extends javax.swing.JPanel {
 
             },
             new String [] {
-                "AMORDATE", "MON_AMOR", "MON_INTEREST"
+                "AMORTIZATION DATE", "MON AMORTIZATION", "MON INTEREST"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -188,11 +234,11 @@ public class viewLoan extends javax.swing.JPanel {
 
             },
             new String [] {
-                "LOANTYPE", "STATUS", "GRANTDT", "STARTDT", "ENDDT", "LOANAMT", "MONTOPAY", "INTERESTRT", "INTERESTAMT", "PAYABLEAMT", "BALANCE"
+                "ID", "STATUS", "TYPE", "GRANT", "START", "END", "LOANAMT", "TERMS", "RATE", "INTERESTAMT", "PAYABLE", "BALANCE"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true, true, false, false, true
+                false, false, true, false, false, false, false, true, true, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -322,9 +368,17 @@ public class viewLoan extends javax.swing.JPanel {
 
     private void listLoanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listLoanMouseClicked
 
-        int index = listLoan.getSelectedRow();
-        String i = listLoan.getValueAt(index, 0).toString();
-        this.getListDetails(i);
+        try{
+            int index = listLoan.getSelectedRow();
+            String i = listLoan.getValueAt(index, 0).toString();
+            this.getListDetails(i);
+        }
+        catch(Exception o)
+        {
+            DefaultTableModel model = (DefaultTableModel) listDetails.getModel();
+            model.removeRow(model.getRowCount()-1);
+        }
+        
         
         // TODO add your handling code here:
     }//GEN-LAST:event_listLoanMouseClicked
