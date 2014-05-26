@@ -539,9 +539,32 @@ public class addLoan extends javax.swing.JFrame {
                 + "values('"+memberID+"','"+loanType+"','"+currentdtString+"','"+startdtString+"','"+enddtString+"','"+principal+"','"+terms+
                 "','"+interestrt+"','"+interest+"','"+totalPayment+"','"+totalPayment+"','"+monthlyAmortization+"','"+checkNo+"')";
        
-        System.out.println(query);
-        paramDB.accessInputDatabase(query);
-
+        //System.out.println(query);
+        this.connect();
+        Statement stmt = null;
+        
+        try
+        {
+            stmt = conn.createStatement();
+        }
+        catch(Exception e)
+        {
+            
+        }
+        
+        try
+        {
+            stmt.addBatch(query);
+            stmt.executeBatch();
+        }
+        catch (SQLException ex)
+        {
+            
+        }
+        
+        finally{
+            this.disconnect();
+        }
     }
     
     public void secondBreakCommit()
@@ -551,8 +574,55 @@ public class addLoan extends javax.swing.JFrame {
         repEnd = startdt;
         float arrayInterest[] = new float[terms];
         arrayInterest = loanCalculate.getInterestRecur(terms, principal);
-        String query = paramDB.getInsertAmortDates(repEnd, terms, arrayInterest, loanID, monthlyAmortization);
-        paramDB.accessLoopDatabase(query);
+        this.getInsertAmortDates(repEnd, terms, arrayInterest, loanID, monthlyAmortization);
+    }
+    
+    
+    public void getInsertAmortDates(Date repEnd, int terms, float[] arrayInterest, int loanID, float monthlyAmortization)
+    {
+        DateFormat df;
+        df = new SimpleDateFormat("yyyy-MM-dd");
+        df.setLenient(false);
+        String repEndString = "";
+        String insertString = "";
+        Calendar calendar = Calendar.getInstance();
+        Statement stmt = null;
+        
+        try
+        {
+             stmt = conn.createStatement();
+        }
+        catch(Exception e)
+        {
+            
+        }
+        
+        this.connect();
+        try
+        {           
+            for(int i=0; i<terms;i++)
+            {
+                repEndString = df.format(repEnd);
+                //System.out.println(repEndString);
+                calendar.setTime(repEnd);
+                insertString = "insert into loan_dtl (loanid,amordate,mon_amort,mon_interest) values ('"+loanID+"','"+repEndString+"','"+monthlyAmortization+"','"+arrayInterest[i]+"')";
+                
+                stmt.addBatch(insertString);
+                calendar.add(Calendar.MONTH, 1);
+                repEnd = calendar.getTime();
+            }
+            stmt.executeBatch();
+            JOptionPane.showMessageDialog(null, "Database Update: Success", "Updating database", JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch(Exception o)
+        {
+            JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE); 
+        }
+        
+        finally{
+            this.disconnect();
+        }
+        
     }
     
     public void getID()
