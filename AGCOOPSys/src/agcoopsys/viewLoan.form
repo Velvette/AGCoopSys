@@ -155,16 +155,16 @@
                   <Table columnCount="12" rowCount="0">
                     <Column editable="false" title="ID" type="java.lang.Object"/>
                     <Column editable="false" title="STATUS" type="java.lang.Object"/>
-                    <Column editable="true" title="TYPE" type="java.lang.Object"/>
+                    <Column editable="false" title="TYPE" type="java.lang.Object"/>
                     <Column editable="false" title="GRANT" type="java.lang.Object"/>
                     <Column editable="false" title="START" type="java.lang.Object"/>
                     <Column editable="false" title="END" type="java.lang.Object"/>
                     <Column editable="false" title="LOANAMT" type="java.lang.Object"/>
-                    <Column editable="true" title="TERMS" type="java.lang.Object"/>
-                    <Column editable="true" title="RATE" type="java.lang.Object"/>
+                    <Column editable="false" title="TERMS" type="java.lang.Object"/>
+                    <Column editable="false" title="RATE" type="java.lang.Object"/>
                     <Column editable="false" title="INTERESTAMT" type="java.lang.Object"/>
                     <Column editable="false" title="PAYABLE" type="java.lang.Object"/>
-                    <Column editable="true" title="BALANCE" type="java.lang.Object"/>
+                    <Column editable="false" title="BALANCE" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
