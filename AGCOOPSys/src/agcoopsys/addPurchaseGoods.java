@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -37,7 +38,10 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private String status;
     private int memberid;
     private String dateText;
-    
+    private String descText;
+    private String billRemark;
+    private float amount;
+    private String current;
     
     public String dbUrl;
     public String dbDriver;
@@ -66,6 +70,8 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         buttonGroup.add(radioNew);
         buttonGroup.add(radioOld);
         buttonGroup.add(radioMember);
+        Date date = new Date();
+        current = df.format(date);
     }
        
     /**
@@ -112,15 +118,16 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         listNames = new javax.swing.JList();
         labelName = new javax.swing.JLabel();
         labelAmount = new javax.swing.JLabel();
-        labelBalance = new javax.swing.JLabel();
         labelDesc = new javax.swing.JLabel();
         textAmount = new javax.swing.JTextField();
-        textBalance = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         textDesc = new javax.swing.JTextArea();
         radioOld = new javax.swing.JRadioButton();
         labelBill = new javax.swing.JLabel();
         textBill = new javax.swing.JTextField();
+        labelRem = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        textRem = new javax.swing.JTextArea();
         jSeparator2 = new javax.swing.JSeparator();
         buttonNext = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
@@ -143,7 +150,6 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         });
 
         buttonConfirm.setText("Confirm");
-        buttonConfirm.setEnabled(false);
         buttonConfirm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonConfirmActionPerformed(evt);
@@ -263,7 +269,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                     .addGroup(panelNonLayout.createSequentialGroup()
                         .addComponent(labelRemarks)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelNonLayout.setVerticalGroup(
@@ -297,8 +303,8 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                     .addComponent(labelEmail))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(labelRemarks)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -346,15 +352,10 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         labelAmount.setText("Amount");
         labelAmount.setEnabled(false);
 
-        labelBalance.setText("Balance");
-        labelBalance.setEnabled(false);
-
         labelDesc.setText("Description");
         labelDesc.setEnabled(false);
 
         textAmount.setEnabled(false);
-
-        textBalance.setEnabled(false);
 
         textDesc.setColumns(20);
         textDesc.setRows(5);
@@ -376,7 +377,13 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         labelBill.setText("Bill Date");
         labelBill.setEnabled(false);
 
-        textBill.setEditable(false);
+        labelRem.setText("Remarks");
+        labelRem.setEnabled(false);
+
+        textRem.setColumns(20);
+        textRem.setRows(5);
+        textRem.setEnabled(false);
+        jScrollPane4.setViewportView(textRem);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -398,21 +405,24 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                                 .addComponent(radioMember)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(radioOld)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                                 .addComponent(radioNew))))
                     .addComponent(jScrollPane3)
                     .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(labelAmount)
+                        .addGap(38, 38, 38)
+                        .addComponent(textAmount))
+                    .addComponent(jScrollPane4)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(labelBill)
+                        .addGap(37, 37, 37)
+                        .addComponent(textBill))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelAmount)
-                            .addComponent(labelBalance)
                             .addComponent(labelName)
-                            .addComponent(labelDesc)
-                            .addComponent(labelBill))
-                        .addGap(22, 22, 22)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textBalance, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(textAmount)
-                            .addComponent(textBill))))
+                            .addComponent(labelRem)
+                            .addComponent(labelDesc))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -428,28 +438,28 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                     .addComponent(radioMember)
                     .addComponent(radioNew)
                     .addComponent(radioOld))
-                .addGap(13, 13, 13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelRem)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelAmount))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textBalance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelBalance))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelBill)
-                    .addComponent(textBill, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                    .addComponent(textBill, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelBill))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(labelDesc)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
                 .addGap(6, 6, 6))
         );
 
@@ -538,6 +548,16 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         
     }//GEN-LAST:event_buttonClearActionPerformed
 
+    public void setBillRemark()
+    {
+        this.billRemark = textRem.getText().toUpperCase();
+    }
+    
+    public void setMemberDesc()
+    {
+        this.descText = textDesc.getText().toUpperCase();
+    }
+    
     public void setMemberLastName() {
         this.memberLastName = textLastName.getText().toUpperCase();
     }
@@ -629,7 +649,6 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                 arrayMidName.add(midinit);
                 listModel.addElement(nameTemp);
                 nameTemp = "";
-                //System.out.println(nameTemp);
             }
         this.disconnect();      
         }
@@ -715,6 +734,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
 
+        this.goodsHeader();
        
         
     }//GEN-LAST:event_buttonConfirmActionPerformed
@@ -731,9 +751,14 @@ public class addPurchaseGoods extends javax.swing.JFrame {
 
     private void listNamesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listNamesMouseClicked
 
-
         memberid = arrayMemberid.get(listNames.getSelectedIndex());
-        System.out.println(memberid);
+        labelAmount.setEnabled(true);
+        textAmount.setEnabled(true);
+        labelBill.setEnabled(true);
+        textBill.setEnabled(true);
+        labelDesc.setEnabled(true);
+        textDesc.setEnabled(true);
+        
         
         // TODO add your handling code here:
     }//GEN-LAST:event_listNamesMouseClicked
@@ -817,6 +842,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         listModel.clear();
         if(radioOld.isSelected())
         {
+            arrayMemberid.clear();
             labelName.setEnabled(true);
             listNames.setEnabled(true);
             final String query = "Select memberid,firstname,lastname,midinit from nonmember order by lastname";
@@ -827,8 +853,6 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         {
             
         }
-        
-        // TODO add your handling code here:
     }//GEN-LAST:event_radioOldItemStateChanged
 
     private void radioMemberItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioMemberItemStateChanged
@@ -836,6 +860,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         listModel.clear();
         if(radioMember.isSelected())
         {
+            arrayMemberid.clear();
             labelName.setEnabled(true);
             listNames.setEnabled(true);
             final String query = "Select memberid,firstname,lastname,midinit from member order by lastname";
@@ -846,8 +871,6 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         {
             
         }
-        
-        // TODO add your handling code here:
     }//GEN-LAST:event_radioMemberItemStateChanged
 
     public int commitAndGetId(int i)
@@ -885,6 +908,97 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     }
     public void newAddNonMember()
     {
+        
+        int i = this.getCompanyIdCombo(comboCompany.getSelectedIndex());
+        memberid = this.commitAndGetId(i);
+        this.enabledFalse();
+        
+        labelAmount.setEnabled(true);
+        textAmount.setEnabled(true);
+        labelDesc.setEnabled(true);
+        textDesc.setEnabled(true);
+        labelBill.setEnabled(true);
+        textBill.setEnabled(true);
+        labelRem.setEnabled(true);
+        textRem.setEnabled(true);
+    }
+    
+    public void goodsHeader()
+    {
+        String errorMessage = "";
+        int error = 0;
+        this.setBillRemark();
+        this.setMemberDesc();
+        
+        try
+        {
+            amount = Integer.parseInt(textAmount.getText());
+        }
+        catch(Exception o)
+        {
+            errorMessage += "Amount: Must only contain numbers.";
+            error++;
+        }
+        
+        try
+        {
+            Date date = df.parse(textBill.getText());
+            dateText = df.format(date);
+            System.out.println(dateText);
+        }
+        catch(Exception e)
+        {
+            errorMessage += "Date: Format YYYY-MM-DD";
+            error++;
+        }
+        
+        int invid = 0;
+        if(error == 0)
+        {
+            invid = this.commitHeader();
+            String query = "insert into goods_sold_dtl (invid,memberid,amount,balance,description,status) values ('"+invid+"','"+memberid+"','"+amount+"','"+amount+"','"+descText+"','"+status+"')";        
+            paramDB.accessInputDatabase(query);
+        }
+        
+
+    }
+    
+    public int commitHeader()
+    {
+        String queryHeader = "insert into goods_sold_hdr (invdt,billingdt,invamt,remarks) values ('"+current+"','"+dateText+"','"+amount+"','"+billRemark+"')";
+        String queryInvID = "select max(invid) as invid from goods_sold_hdr";
+        this.connect();
+        Statement stmt = null;
+        ResultSet rs;
+        int id = 0;
+        try
+        {
+            stmt = conn.createStatement();
+        }
+        catch(Exception e)
+        {
+            
+        }
+        
+        try
+        {
+            stmt.executeQuery(queryHeader);
+            rs = stmt.executeQuery(queryInvID);
+            if(rs.next());
+                id = rs.getInt("invid");
+        }
+        catch(Exception o)
+        {
+            o.printStackTrace();
+        }
+        finally{
+            this.disconnect();
+        }
+        return id;
+    }
+    
+    private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
+
         this.setMemberFirstName();
         this.setMemberLastName();
         this.setMemberMiddleName();
@@ -896,36 +1010,10 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         this.setMemberEmail();
         this.setMemberRemarks();
         
-        int i = this.getCompanyIdCombo(comboCompany.getSelectedIndex());
-        int id = this.commitAndGetId(i);
-        this.enabledFalse();
-        
-        labelAmount.setEnabled(true);
-        labelBalance.setEnabled(true);
-        labelDesc.setEnabled(true);
-        
-    }
-    
-    public void goodsHeader()
-    {
-        String current = "";
-        try
-        {
-            Date date = df.parse(textBill.getText());
-            Date currentDate = new Date();
-            dateText = df.format(date);
-            current = df.format(currentDate);
-        }
-        catch(Exception e)
-        {
-            
-        }
-    }
-    
-    
-    private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
-
-        this.newAddNonMember();
+        if(memberFirstName.isEmpty() && memberLastName.isEmpty() && memberMiddleName.isEmpty())
+            JOptionPane.showMessageDialog(null, "Error: Names cannot be empty", "Error", JOptionPane.ERROR_MESSAGE); 
+        else
+            this.newAddNonMember();
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonNextActionPerformed
 
@@ -977,10 +1065,10 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel labelAmount;
-    private javax.swing.JLabel labelBalance;
     private javax.swing.JLabel labelBill;
     private javax.swing.JLabel labelContact1;
     private javax.swing.JLabel labelContact2;
@@ -990,6 +1078,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private javax.swing.JLabel labelLastname;
     private javax.swing.JLabel labelMidinit;
     private javax.swing.JLabel labelName;
+    private javax.swing.JLabel labelRem;
     private javax.swing.JLabel labelRemarks;
     private javax.swing.JList listNames;
     private javax.swing.JPanel panelAddress;
@@ -998,7 +1087,6 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private javax.swing.JRadioButton radioNew;
     private javax.swing.JRadioButton radioOld;
     private javax.swing.JTextField textAmount;
-    private javax.swing.JTextField textBalance;
     private javax.swing.JTextField textBill;
     private javax.swing.JTextArea textDesc;
     private javax.swing.JTextField textFirstName;
@@ -1010,6 +1098,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private javax.swing.JTextField textMemCon2;
     private javax.swing.JTextField textMemEmail;
     private javax.swing.JTextField textMidInit;
+    private javax.swing.JTextArea textRem;
     private javax.swing.JTextArea textRemark;
     // End of variables declaration//GEN-END:variables
 }
