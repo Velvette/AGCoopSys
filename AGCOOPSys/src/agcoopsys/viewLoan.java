@@ -49,7 +49,7 @@ public class viewLoan extends javax.swing.JPanel {
 
     public void getList()
     {
-        String tempQuery = "SELECT distinct member.memberid,member.firstname,member.lastname,member.midinit from MEMBER INNER JOIN loan_hdr on member.memberid = loan_hdr.memberid";
+        final String tempQuery = "SELECT distinct member.memberid,member.firstname,member.lastname,member.midinit from MEMBER INNER JOIN loan_hdr on member.memberid = loan_hdr.memberid";
         
         listModel.clear();
         Statement stmt = null;       

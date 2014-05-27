@@ -43,17 +43,13 @@
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="buttonConfirm" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="textCompanyContact2" max="32767" attributes="0"/>
-                                  <Component id="textCompanyContact1" max="32767" attributes="0"/>
-                                  <Component id="textCompanyEmail" pref="320" max="32767" attributes="0"/>
-                                  <Component id="textCompanyContactPerson" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="textCompanyName" alignment="1" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="textCompanyContact2" max="32767" attributes="0"/>
+                          <Component id="textCompanyContact1" max="32767" attributes="0"/>
+                          <Component id="textCompanyEmail" pref="320" max="32767" attributes="0"/>
+                          <Component id="textCompanyContactPerson" alignment="1" max="32767" attributes="0"/>
+                          <Component id="textCompanyName" alignment="1" max="32767" attributes="0"/>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>

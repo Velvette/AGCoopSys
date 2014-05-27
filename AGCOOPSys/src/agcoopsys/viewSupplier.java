@@ -20,6 +20,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class viewSupplier extends javax.swing.JPanel {
 
+    addSupplier aS = new addSupplier();
+    
     public viewSupplier() {
         
         initComponents();
@@ -147,7 +149,6 @@ public class viewSupplier extends javax.swing.JPanel {
     {
             int index = listSupplier.getSelectedRow();
             String i = listSupplier.getValueAt(index, 0).toString();
-            addSupplier aS = new addSupplier();
             aS.setVisible(true);
             aS.setLocationRelativeTo(null);
             aS.setResizable(false);

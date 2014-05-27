@@ -4,19 +4,59 @@
  */
 package agcoopsys;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+
 /**
  *
- * @author Lenovo
+ * @author admin
  */
-public class addPurchaseGoods extends javax.swing.JPanel {
+public class addPurchaseGoods extends javax.swing.JFrame {
 
-    /**
-     * Creates new form addPurchaseGoods
-     */
+    private String memberFirstName;
+    private String memberLastName;
+    private String memberMiddleName;
+    private String memberAddress1;
+    private String memberAddress2 = "";
+    private String memberAddress3 = "";
+    private String memberContact1;
+    private String memberContact2;
+    private String memberEmail;
+    private String memberRemarks; 
+    private String companyIDText;
+    private String status;
+    
+    
+    public String dbUrl;
+    public String dbDriver;
+    public String username;
+    public String password;
+    public Connection conn;
+    ConnectToDatabaseSys paramDB = new ConnectToDatabaseSys();
+    
+    ArrayList<Integer> arrayList = new ArrayList<>();
+    ArrayList<String> arrayListCompany = new ArrayList<>();
+    ArrayList<String> arrayLastName = new ArrayList<>();
+    ArrayList<String> arrayFirstName = new ArrayList<>();
+    ArrayList<String> arrayMidName = new ArrayList<>();
+    ArrayList<Integer> arrayMemberid = new ArrayList<>();
+    
+    public DefaultListModel listModel = new DefaultListModel();
+        
     public addPurchaseGoods() {
         initComponents();
+        this.returnParams();
+        listNames.setModel(listModel);
+        buttonGroup.add(radioNew);
+        buttonGroup.add(radioOld);
+        buttonGroup.add(radioMember);
     }
-
+       
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,17 +66,804 @@ public class addPurchaseGoods extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        buttonGroup = new javax.swing.ButtonGroup();
+        buttonCancel = new javax.swing.JButton();
+        buttonClear = new javax.swing.JButton();
+        buttonConfirm = new javax.swing.JButton();
+        panelNon = new javax.swing.JPanel();
+        labelFirstname = new javax.swing.JLabel();
+        labelMidinit = new javax.swing.JLabel();
+        labelLastname = new javax.swing.JLabel();
+        textFirstName = new javax.swing.JTextField();
+        textMidInit = new javax.swing.JTextField();
+        textLastName = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        textMemAd3 = new javax.swing.JTextField();
+        textMemAd2 = new javax.swing.JTextField();
+        textMemAd1 = new javax.swing.JTextField();
+        labelContact1 = new javax.swing.JLabel();
+        textMemCon1 = new javax.swing.JTextField();
+        textMemCon2 = new javax.swing.JTextField();
+        labelContact2 = new javax.swing.JLabel();
+        textMemEmail = new javax.swing.JTextField();
+        labelEmail = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        textRemark = new javax.swing.JTextArea();
+        labelRemarks = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        comboCompany = new javax.swing.JComboBox();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        radioMember = new javax.swing.JRadioButton();
+        radioNew = new javax.swing.JRadioButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listNames = new javax.swing.JList();
+        labelName = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        textAmount = new javax.swing.JTextField();
+        textBalance = new javax.swing.JTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        radioOld = new javax.swing.JRadioButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        buttonCancel.setText("Cancel");
+        buttonCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCancelActionPerformed(evt);
+            }
+        });
+
+        buttonClear.setText("Clear");
+        buttonClear.setEnabled(false);
+        buttonClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonClearActionPerformed(evt);
+            }
+        });
+
+        buttonConfirm.setText("Confirm");
+        buttonConfirm.setEnabled(false);
+        buttonConfirm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonConfirmActionPerformed(evt);
+            }
+        });
+
+        panelNon.setBorder(javax.swing.BorderFactory.createTitledBorder("Non-Member"));
+        panelNon.setEnabled(false);
+
+        labelFirstname.setText("First name");
+        labelFirstname.setEnabled(false);
+
+        labelMidinit.setText("Middle Initial");
+        labelMidinit.setEnabled(false);
+
+        labelLastname.setText("Last name");
+        labelLastname.setEnabled(false);
+
+        textFirstName.setEnabled(false);
+
+        textMidInit.setEnabled(false);
+
+        textLastName.setEnabled(false);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Address"));
+        jPanel1.setEnabled(false);
+
+        textMemAd3.setEnabled(false);
+        textMemAd3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textMemAd3ActionPerformed(evt);
+            }
+        });
+
+        textMemAd2.setEnabled(false);
+
+        textMemAd1.setEnabled(false);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(textMemAd1)
+                    .addComponent(textMemAd2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textMemAd3))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addComponent(textMemAd1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(textMemAd2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addComponent(textMemAd3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        labelContact1.setText("Contact No. 1");
+        labelContact1.setEnabled(false);
+
+        textMemCon1.setEnabled(false);
+
+        textMemCon2.setEnabled(false);
+
+        labelContact2.setText("Contact No. 2");
+        labelContact2.setEnabled(false);
+
+        textMemEmail.setEnabled(false);
+
+        labelEmail.setText("E-mail");
+        labelEmail.setEnabled(false);
+
+        textRemark.setEditable(false);
+        textRemark.setColumns(20);
+        textRemark.setRows(5);
+        textRemark.setEnabled(false);
+        jScrollPane1.setViewportView(textRemark);
+
+        labelRemarks.setText("Remarks");
+        labelRemarks.setEnabled(false);
+
+        javax.swing.GroupLayout panelNonLayout = new javax.swing.GroupLayout(panelNon);
+        panelNon.setLayout(panelNonLayout);
+        panelNonLayout.setHorizontalGroup(
+            panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelNonLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelNonLayout.createSequentialGroup()
+                        .addComponent(labelFirstname)
+                        .addGap(18, 18, 18)
+                        .addComponent(textFirstName))
+                    .addGroup(panelNonLayout.createSequentialGroup()
+                        .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelMidinit)
+                            .addComponent(labelLastname))
+                        .addGap(9, 9, 9)
+                        .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textMidInit)
+                            .addComponent(textLastName)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelNonLayout.createSequentialGroup()
+                        .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelContact1)
+                            .addComponent(labelContact2)
+                            .addComponent(labelEmail))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textMemEmail)
+                            .addComponent(textMemCon2)
+                            .addComponent(textMemCon1)))
+                    .addGroup(panelNonLayout.createSequentialGroup()
+                        .addComponent(labelRemarks)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        panelNonLayout.setVerticalGroup(
+            panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelNonLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelFirstname)
+                    .addComponent(textFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelMidinit)
+                    .addComponent(textMidInit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelLastname)
+                    .addComponent(textLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelContact1)
+                    .addComponent(textMemCon1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textMemCon2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelContact2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textMemEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelEmail))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelRemarks)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Purchase Goods"));
+
+        jLabel1.setText("Company");
+
+        jLabel2.setText("Status");
+
+        radioMember.setText("Member");
+        radioMember.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radioMemberStateChanged(evt);
+            }
+        });
+        radioMember.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                radioMemberItemStateChanged(evt);
+            }
+        });
+
+        radioNew.setText("New Non-Member");
+        radioNew.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radioNewStateChanged(evt);
+            }
+        });
+        radioNew.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                radioNewItemStateChanged(evt);
+            }
+        });
+
+        listNames.setEnabled(false);
+        listNames.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listNamesMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(listNames);
+
+        labelName.setText("Name");
+        labelName.setEnabled(false);
+
+        jLabel7.setText("Amount");
+        jLabel7.setEnabled(false);
+
+        jLabel8.setText("Balance");
+        jLabel8.setEnabled(false);
+
+        jLabel12.setText("Description");
+        jLabel12.setEnabled(false);
+
+        textAmount.setEnabled(false);
+
+        textBalance.setEnabled(false);
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setEnabled(false);
+        jScrollPane3.setViewportView(jTextArea1);
+
+        radioOld.setText("Old Non-Member");
+        radioOld.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radioOldStateChanged(evt);
+            }
+        });
+        radioOld.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                radioOldItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator1)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
+                        .addContainerGap())
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(comboCompany, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(radioMember)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(radioOld)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(radioNew)))
+                        .addContainerGap())
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
+                        .addGap(38, 38, 38)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textAmount)
+                            .addComponent(textBalance))
+                        .addGap(10, 10, 10))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jScrollPane3)
+                        .addContainerGap())
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel12)
+                            .addComponent(labelName))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboCompany, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(23, 23, 23)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(radioMember)
+                    .addComponent(radioNew)
+                    .addComponent(radioOld))
+                .addGap(13, 13, 13)
+                .addComponent(labelName)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(textAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(textBalance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        jButton1.setText("Next");
+        jButton1.setEnabled(false);
+
+        jButton2.setText("Back");
+        jButton2.setEnabled(false);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonCancel)
+                        .addGap(240, 240, 240)
+                        .addComponent(buttonConfirm))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelNon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(buttonClear)
+                        .addGap(22, 22, 22)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelNon, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonConfirm)
+                    .addComponent(buttonCancel)
+                    .addComponent(jButton2)
+                    .addComponent(buttonClear)
+                    .addComponent(jButton1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jSeparator2)
         );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void textMemAd3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textMemAd3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textMemAd3ActionPerformed
+
+    private void buttonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelActionPerformed
+        this.dispose();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonCancelActionPerformed
+
+    private void buttonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearActionPerformed
+
+        textFirstName.setText("");
+        textLastName.setText("");
+        textMidInit.setText("");
+        textMemAd1.setText("");
+        textMemAd2.setText("");
+        textMemAd3.setText("");
+        textMemCon1.setText("");
+        textMemCon2.setText("");
+        textMemEmail.setText("");
+        textRemark.setText("");
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonClearActionPerformed
+
+    public void setMemberLastName() {
+        this.memberLastName = textLastName.getText();
+    }
+
+    public void setMemberMiddleName() {
+        this.memberMiddleName = textMidInit.getText();
+    }
+
+    public void setMemberRemarks() {
+        this.memberRemarks = textRemark.getText();
+    }
+    
+    public void setCompanyIDText(String companyIDText) {
+        this.companyIDText = (String) comboCompany.getSelectedItem();
+    }
+    
+    public void setMemberAddress1() {
+        this.memberAddress1 = textMemAd1.getText();
+    }
+
+    public void setMemberAddress2() {
+        this.memberAddress2 = textMemAd2.getText();
+    }
+
+    public void setMemberAddress3() {
+        this.memberAddress3 = textMemAd3.getText();
+    }
+
+    public void setMemberContact1() {
+        this.memberContact1 = textMemCon1.getText();
+    }
+
+    public void setMemberContact2() {
+        this.memberContact2 = textMemCon2.getText();
+    }
+
+    public void setMemberEmail() {
+        this.memberEmail = textMemEmail.getText();
+    }
+    
+    public void setMemberFirstName() {
+        this.memberFirstName = textFirstName.getText();
+    }
+    
+    public int getCompanyIdCombo(int comboID)
+    {
+        int companyID = 0;
+        companyID = arrayList.get(comboID);
+        return companyID;
+    }
+    
+    public void getNameList(String query)
+    {      
+        listModel.clear();
+        Statement stmt = null;       
+        this.connect();
+        conn = this.getConnection();
+        String nameTemp = "";
+        try
+        {
+            stmt = conn.createStatement();
+        }
+                
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+		
+        ResultSet rs;
+        try
+        {
+            String firstname = "";
+            String lastname = "";
+            String midinit = "";
+            int id;
+            rs = stmt.executeQuery(query);
+            while(rs.next())
+            {                
+                nameTemp += rs.getString("lastname");
+                nameTemp += ", " + rs.getString("firstname");
+                nameTemp += " " + rs.getString("midinit");
+                firstname = rs.getString("firstname");
+                lastname = rs.getString("lastname");
+                midinit = rs.getString("midinit");
+                id = rs.getInt("memberid");
+                arrayMemberid.add(id);
+                arrayFirstName.add(firstname);
+                arrayLastName.add(lastname);
+                arrayMidName.add(midinit);
+                listModel.addElement(nameTemp);
+                nameTemp = "";
+                //System.out.println(nameTemp);
+            }
+        this.disconnect();      
+        }
+        catch (SQLException e)
+        {
+        
+        }
+    }
+        
+    public void returnParams()
+    {        
+        final String query = "select compid, compname from company order by compname";
+        
+        ResultSet rs;
+        this.connect();
+        Statement stmt = null;
+        
+        try
+        {
+            stmt = conn.createStatement();
+        }
+                
+	catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        
+        try
+        {
+            companyList compList = new companyList();
+            rs = stmt.executeQuery(query);
+            int index = 0;
+            while(rs.next())
+            {
+                comboCompany.addItem(rs.getString("compname"));
+                System.out.println(rs.getInt("compid") + " : " + rs.getString("compname"));
+                arrayList.add(rs.getInt("compid"));
+                arrayListCompany.add(rs.getString("compname"));
+            }
+            this.disconnect();      
+	}
+        
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+	}   
+    }
+        
+    public void connect()
+    {
+        dbDriver = paramDB.getDbClass();
+        dbUrl = paramDB.getDbUrl();
+        password = paramDB.getPassword(); // CHANGE PASSWORD
+        username = paramDB.getName();
+                
+        try
+        {
+            Class.forName(dbDriver).newInstance();
+            conn = DriverManager.getConnection(dbUrl,username,password);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+        
+    public Connection getConnection()
+    {
+	return conn;
+    }
+	
+    public void disconnect()
+    {
+       try
+       {
+            conn.close();
+       } 
+       catch (Exception ex)
+       {
+            ex.printStackTrace();
+       }
+    }
+    
+    private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
+
+        this.setMemberAddress1();
+        this.setMemberAddress2();
+        this.setMemberAddress3();
+        this.setMemberContact1();
+        this.setMemberContact2();
+        this.setMemberEmail();
+        this.setMemberFirstName();
+        this.setMemberLastName();
+        this.setMemberMiddleName();
+        this.setMemberRemarks();
+
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonConfirmActionPerformed
+
+    private void radioNewStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radioNewStateChanged
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioNewStateChanged
+
+    private void radioMemberStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radioMemberStateChanged
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioMemberStateChanged
+
+    private void listNamesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listNamesMouseClicked
+
+
+        int selectedid = arrayMemberid.get(listNames.getSelectedIndex());
+        System.out.println(selectedid);
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_listNamesMouseClicked
+
+    private void radioOldStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radioOldStateChanged
+
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioOldStateChanged
+
+    private void radioNewItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioNewItemStateChanged
+
+        if(radioNew.isSelected())
+        {
+            panelNon.setEnabled(true);
+            labelName.setEnabled(false);
+            listNames.setEnabled(false);
+        }
+        else
+        {
+            panelNon.setEnabled(false);
+        }
+                
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioNewItemStateChanged
+
+    private void radioOldItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioOldItemStateChanged
+
+        listModel.clear();
+        if(radioOld.isSelected())
+        {
+            labelName.setEnabled(true);
+            listNames.setEnabled(true);
+            final String query = "Select memberid,firstname,lastname,midinit from nonmember order by lastname";
+            this.getNameList(query);
+        }
+        else
+        {
+            
+        }
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioOldItemStateChanged
+
+    private void radioMemberItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioMemberItemStateChanged
+
+        listModel.clear();
+        if(radioMember.isSelected())
+        {
+            labelName.setEnabled(true);
+            listNames.setEnabled(true);
+            final String query = "Select memberid,firstname,lastname,midinit from member order by lastname";
+            this.getNameList(query);
+        }
+        else
+        {
+            
+        }
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioMemberItemStateChanged
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(addPurchaseGoods.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(addPurchaseGoods.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(addPurchaseGoods.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(addPurchaseGoods.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new addPurchaseGoods().setVisible(true);
+            }
+        });
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonCancel;
+    private javax.swing.JButton buttonClear;
+    private javax.swing.JButton buttonConfirm;
+    private javax.swing.ButtonGroup buttonGroup;
+    private javax.swing.JComboBox comboCompany;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel labelContact1;
+    private javax.swing.JLabel labelContact2;
+    private javax.swing.JLabel labelEmail;
+    private javax.swing.JLabel labelFirstname;
+    private javax.swing.JLabel labelLastname;
+    private javax.swing.JLabel labelMidinit;
+    private javax.swing.JLabel labelName;
+    private javax.swing.JLabel labelRemarks;
+    private javax.swing.JList listNames;
+    private javax.swing.JPanel panelNon;
+    private javax.swing.JRadioButton radioMember;
+    private javax.swing.JRadioButton radioNew;
+    private javax.swing.JRadioButton radioOld;
+    private javax.swing.JTextField textAmount;
+    private javax.swing.JTextField textBalance;
+    private javax.swing.JTextField textFirstName;
+    private javax.swing.JTextField textLastName;
+    private javax.swing.JTextField textMemAd1;
+    private javax.swing.JTextField textMemAd2;
+    private javax.swing.JTextField textMemAd3;
+    private javax.swing.JTextField textMemCon1;
+    private javax.swing.JTextField textMemCon2;
+    private javax.swing.JTextField textMemEmail;
+    private javax.swing.JTextField textMidInit;
+    private javax.swing.JTextArea textRemark;
     // End of variables declaration//GEN-END:variables
 }

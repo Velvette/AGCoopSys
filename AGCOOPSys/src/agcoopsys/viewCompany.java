@@ -30,6 +30,7 @@ public class viewCompany extends javax.swing.JPanel {
     int rep = 0;
     DbUtils tableUtils = new DbUtils();
     String query = "Select compid,compname,contactperson,contactno1,contactno2,email from company order by compname";
+    addCompany aC = new addCompany();
     
     public viewCompany() {
         
@@ -147,7 +148,6 @@ public class viewCompany extends javax.swing.JPanel {
     {
             int index = listCompany.getSelectedRow();
             String i = listCompany.getValueAt(index, 0).toString();
-            addCompany aC = new addCompany();
             aC.setVisible(true);
             aC.setLocationRelativeTo(null);
             aC.setResizable(false);

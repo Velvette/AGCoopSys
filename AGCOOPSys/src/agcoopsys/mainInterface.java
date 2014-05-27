@@ -4,6 +4,7 @@
  */
 package agcoopsys;
 
+import java.awt.Dialog;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +17,11 @@ public class mainInterface extends javax.swing.JFrame {
     viewMember vM = new viewMember();
     viewSupplier vS = new viewSupplier();
     viewLoan vL = new viewLoan();
+    addMember aM = new addMember();
+    addSupplier aS = new addSupplier();
+    addCompany aC = new addCompany();
+    addPurchaseGoods aP = new addPurchaseGoods();
+    
     processBillStatement pB = new processBillStatement();
     
     public mainInterface() {
@@ -46,7 +52,6 @@ public class mainInterface extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         menuCompany = new javax.swing.JMenuItem();
         menuMember = new javax.swing.JMenuItem();
-        menuNonMember = new javax.swing.JMenuItem();
         menuSupplier = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         menuLoans = new javax.swing.JMenuItem();
@@ -153,14 +158,6 @@ public class mainInterface extends javax.swing.JFrame {
         });
         jMenu1.add(menuMember);
 
-        menuNonMember.setText("Non-Member");
-        menuNonMember.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuNonMemberActionPerformed(evt);
-            }
-        });
-        jMenu1.add(menuNonMember);
-
         menuSupplier.setText("Supplier");
         menuSupplier.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -192,6 +189,11 @@ public class mainInterface extends javax.swing.JFrame {
         jMenu5.add(jSeparator6);
 
         menuPurchaseGoods.setText("Purchase goods");
+        menuPurchaseGoods.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuPurchaseGoodsActionPerformed(evt);
+            }
+        });
         jMenu5.add(menuPurchaseGoods);
 
         jMenuBar1.add(jMenu5);
@@ -329,8 +331,7 @@ public class mainInterface extends javax.swing.JFrame {
         String agcoopSupplier = "agcoopsys.viewSupplier";
         try{
             if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCompany))
-            {
-                addCompany aC = new addCompany();
+            { 
                 aC.setVisible(true);
                 aC.setLocationRelativeTo(null);
                 aC.setTitle("Add Company - Information");
@@ -339,7 +340,6 @@ public class mainInterface extends javax.swing.JFrame {
         
             else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopMember))
             {
-                addMember aM = new addMember();
                 aM.setVisible(true);
                 aM.setLocationRelativeTo(null);
                 aM.setTitle("Add Member - Information");
@@ -348,7 +348,6 @@ public class mainInterface extends javax.swing.JFrame {
         
             else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopSupplier))
             {
-                addSupplier aS = new addSupplier();
                 aS.setVisible(true);
                 aS.setLocationRelativeTo(null);
                 aS.setTitle("Add Member - Information");
@@ -536,10 +535,16 @@ public class mainInterface extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_formWindowClosing
 
-    private void menuNonMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNonMemberActionPerformed
+    private void menuPurchaseGoodsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPurchaseGoodsActionPerformed
 
+        aP.setVisible(true);
+        aP.setLocationRelativeTo(null);
+        aP.setResizable(false);
+        aP.setTitle("Purchase Goods");
+        
+        
         // TODO add your handling code here:
-    }//GEN-LAST:event_menuNonMemberActionPerformed
+    }//GEN-LAST:event_menuPurchaseGoodsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -600,7 +605,6 @@ public class mainInterface extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuLoans;
     private javax.swing.JMenuItem menuMember;
     private javax.swing.JMenuItem menuMemberLoan;
-    private javax.swing.JMenuItem menuNonMember;
     private javax.swing.JMenuItem menuPurchaseGoods;
     private javax.swing.JMenuItem menuStatement;
     private javax.swing.JMenuItem menuSupplier;
