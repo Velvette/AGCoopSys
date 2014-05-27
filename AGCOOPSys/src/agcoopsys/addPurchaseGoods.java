@@ -11,7 +11,10 @@ import java.sql.ResultSet;
 import java.sql.RowId;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.DefaultListModel;
 
 /**
@@ -33,6 +36,8 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private String companyIDText;
     private String status;
     private int memberid;
+    private String dateText;
+    
     
     public String dbUrl;
     public String dbDriver;
@@ -48,11 +53,15 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     ArrayList<String> arrayMidName = new ArrayList<>();
     ArrayList<Integer> arrayMemberid = new ArrayList<>();
     
+    DateFormat df;
+    
     public DefaultListModel listModel = new DefaultListModel();
         
     public addPurchaseGoods() {
         initComponents();
         this.returnParams();
+        df = new SimpleDateFormat("yyyy-MM-dd");
+        df.setLenient(false);
         listNames.setModel(listModel);
         buttonGroup.add(radioNew);
         buttonGroup.add(radioOld);
@@ -110,6 +119,8 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         textDesc = new javax.swing.JTextArea();
         radioOld = new javax.swing.JRadioButton();
+        labelBill = new javax.swing.JLabel();
+        textBill = new javax.swing.JTextField();
         jSeparator2 = new javax.swing.JSeparator();
         buttonNext = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
@@ -362,6 +373,11 @@ public class addPurchaseGoods extends javax.swing.JFrame {
             }
         });
 
+        labelBill.setText("Bill Date");
+        labelBill.setEnabled(false);
+
+        textBill.setEditable(false);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -370,9 +386,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
-                        .addContainerGap())
+                    .addComponent(jScrollPane2)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -385,25 +399,21 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(radioOld)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(radioNew)))
-                        .addContainerGap())
+                                .addComponent(radioNew))))
+                    .addComponent(jScrollPane3)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labelAmount)
-                            .addComponent(labelBalance))
-                        .addGap(38, 38, 38)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textAmount)
-                            .addComponent(textBalance))
-                        .addGap(10, 10, 10))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane3)
-                        .addContainerGap())
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelBalance)
+                            .addComponent(labelName)
                             .addComponent(labelDesc)
-                            .addComponent(labelName))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addComponent(labelBill))
+                        .addGap(22, 22, 22)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textBalance, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(textAmount)
+                            .addComponent(textBill))))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -420,23 +430,27 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                     .addComponent(radioOld))
                 .addGap(13, 13, 13)
                 .addComponent(labelName)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelAmount)
-                    .addComponent(textAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(7, 7, 7)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelBalance)
-                    .addComponent(textBalance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(labelDesc)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelAmount))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textBalance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelBalance))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelBill)
+                    .addComponent(textBill, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(labelDesc)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(6, 6, 6))
         );
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -473,7 +487,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                         .addComponent(buttonBack, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(buttonClear)
-                        .addGap(22, 22, 22)
+                        .addGap(18, 18, 18)
                         .addComponent(buttonNext, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -481,17 +495,19 @@ public class addPurchaseGoods extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelNon, javax.swing.GroupLayout.PREFERRED_SIZE, 487, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelNon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonConfirm)
-                    .addComponent(buttonCancel)
-                    .addComponent(buttonBack)
-                    .addComponent(buttonClear)
-                    .addComponent(buttonNext))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(buttonConfirm)
+                        .addComponent(buttonCancel))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(buttonBack)
+                        .addComponent(buttonClear)
+                        .addComponent(buttonNext)))
+                .addContainerGap())
             .addComponent(jSeparator2)
         );
 
@@ -519,8 +535,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         textMemCon2.setText("");
         textMemEmail.setText("");
         textRemark.setText("");
-
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_buttonClearActionPerformed
 
     public void setMemberLastName() {
@@ -700,19 +715,8 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
 
-        this.setMemberAddress1();
-        this.setMemberAddress2();
-        this.setMemberAddress3();
-        this.setMemberContact1();
-        this.setMemberContact2();
-        this.setMemberEmail();
-        this.setMemberFirstName();
-        this.setMemberLastName();
-        this.setMemberMiddleName();
-        this.setMemberRemarks();
-
-
-        // TODO add your handling code here:
+       
+        
     }//GEN-LAST:event_buttonConfirmActionPerformed
 
     private void radioNewStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radioNewStateChanged
@@ -742,7 +746,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
 
     public void enabledFalse()
     {
-                    panelNon.setEnabled(false);
+            panelNon.setEnabled(false);
             labelFirstname.setEnabled(false);
             labelLastname.setEnabled(false);
             labelMidinit.setEnabled(false);
@@ -891,6 +895,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         this.setMemberContact2();
         this.setMemberEmail();
         this.setMemberRemarks();
+        
         int i = this.getCompanyIdCombo(comboCompany.getSelectedIndex());
         int id = this.commitAndGetId(i);
         this.enabledFalse();
@@ -899,13 +904,24 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         labelBalance.setEnabled(true);
         labelDesc.setEnabled(true);
         
-        
     }
     
     public void goodsHeader()
     {
-        
+        String current = "";
+        try
+        {
+            Date date = df.parse(textBill.getText());
+            Date currentDate = new Date();
+            dateText = df.format(date);
+            current = df.format(currentDate);
+        }
+        catch(Exception e)
+        {
+            
+        }
     }
+    
     
     private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
 
@@ -965,6 +981,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel labelAmount;
     private javax.swing.JLabel labelBalance;
+    private javax.swing.JLabel labelBill;
     private javax.swing.JLabel labelContact1;
     private javax.swing.JLabel labelContact2;
     private javax.swing.JLabel labelDesc;
@@ -982,6 +999,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private javax.swing.JRadioButton radioOld;
     private javax.swing.JTextField textAmount;
     private javax.swing.JTextField textBalance;
+    private javax.swing.JTextField textBill;
     private javax.swing.JTextArea textDesc;
     private javax.swing.JTextField textFirstName;
     private javax.swing.JTextField textLastName;
