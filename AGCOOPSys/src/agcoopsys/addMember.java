@@ -64,7 +64,8 @@ public class addMember extends javax.swing.JFrame {
     public Connection conn;
     ConnectToDatabaseSys paramDB = new ConnectToDatabaseSys();
     
-    public addMember() {
+    public addMember()
+    {
         this.df = new SimpleDateFormat("yyyy-MM-dd");
         df.setLenient(false);
         initComponents();
@@ -76,7 +77,6 @@ public class addMember extends javax.swing.JFrame {
         Date current = new Date();
         current = cal.getTime();
         textDateHired.setText(df.format(current));
-        
     }
 
     public void setCompanyIDText(String companyIDText) {
@@ -799,8 +799,6 @@ public class addMember extends javax.swing.JFrame {
         {
             e.printStackTrace();
 	}   
-              
-        
     }
        
     public void connect()
