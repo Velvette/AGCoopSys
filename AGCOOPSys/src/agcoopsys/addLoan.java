@@ -499,7 +499,7 @@ public class addLoan extends javax.swing.JFrame {
 
         if(paramDB.checkDuplicateLoan(memberID,loanType))
         {
-            this.firstBreakCommit();
+           // this.firstBreakCommit();
             this.secondBreakCommit();
         }
         else
@@ -587,17 +587,17 @@ public class addLoan extends javax.swing.JFrame {
         String insertString = "";
         Calendar calendar = Calendar.getInstance();
         Statement stmt = null;
-        
+        this.connect();
         try
         {
              stmt = conn.createStatement();
         }
         catch(Exception e)
         {
-            
+           e.printStackTrace();
         }
         
-        this.connect();
+        
         try
         {           
             for(int i=0; i<terms;i++)
@@ -616,10 +616,12 @@ public class addLoan extends javax.swing.JFrame {
         }
         catch(Exception o)
         {
+            o.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE); 
         }
         
-        finally{
+        finally
+        {
             this.disconnect();
         }
         
