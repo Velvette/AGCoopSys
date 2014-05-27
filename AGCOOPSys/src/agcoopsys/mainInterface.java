@@ -46,12 +46,12 @@ public class mainInterface extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         menuCompany = new javax.swing.JMenuItem();
         menuMember = new javax.swing.JMenuItem();
+        menuNonMember = new javax.swing.JMenuItem();
         menuSupplier = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         menuLoans = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         menuMemberLoan = new javax.swing.JMenuItem();
-        menuNonMember = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         menuPurchaseGoods = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
@@ -153,6 +153,14 @@ public class mainInterface extends javax.swing.JFrame {
         });
         jMenu1.add(menuMember);
 
+        menuNonMember.setText("Non-Member");
+        menuNonMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuNonMemberActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuNonMember);
+
         menuSupplier.setText("Supplier");
         menuSupplier.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -181,9 +189,6 @@ public class mainInterface extends javax.swing.JFrame {
             }
         });
         jMenu5.add(menuMemberLoan);
-
-        menuNonMember.setText("Non-Member loan");
-        jMenu5.add(menuNonMember);
         jMenu5.add(jSeparator6);
 
         menuPurchaseGoods.setText("Purchase goods");
@@ -245,14 +250,14 @@ public class mainInterface extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonDelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 7, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2)
                         .addComponent(labelSearch)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(textSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(10, 10, 10)
                         .addComponent(buttonSearch)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 553, Short.MAX_VALUE)
                         .addComponent(buttonRefresh)))
@@ -530,6 +535,11 @@ public class mainInterface extends javax.swing.JFrame {
             this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         // TODO add your handling code here:
     }//GEN-LAST:event_formWindowClosing
+
+    private void menuNonMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNonMemberActionPerformed
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuNonMemberActionPerformed
 
     /**
      * @param args the command line arguments
