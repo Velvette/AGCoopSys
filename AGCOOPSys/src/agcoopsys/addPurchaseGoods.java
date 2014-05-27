@@ -6,7 +6,9 @@ package agcoopsys;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.RowId;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private String memberRemarks; 
     private String companyIDText;
     private String status;
-    
+    private int memberid;
     
     public String dbUrl;
     public String dbDriver;
@@ -77,7 +79,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         textFirstName = new javax.swing.JTextField();
         textMidInit = new javax.swing.JTextField();
         textLastName = new javax.swing.JTextField();
-        jPanel1 = new javax.swing.JPanel();
+        panelAddress = new javax.swing.JPanel();
         textMemAd3 = new javax.swing.JTextField();
         textMemAd2 = new javax.swing.JTextField();
         textMemAd1 = new javax.swing.JTextField();
@@ -100,17 +102,17 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         listNames = new javax.swing.JList();
         labelName = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        labelAmount = new javax.swing.JLabel();
+        labelBalance = new javax.swing.JLabel();
+        labelDesc = new javax.swing.JLabel();
         textAmount = new javax.swing.JTextField();
         textBalance = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        textDesc = new javax.swing.JTextArea();
         radioOld = new javax.swing.JRadioButton();
         jSeparator2 = new javax.swing.JSeparator();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        buttonNext = new javax.swing.JButton();
+        buttonBack = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -155,8 +157,8 @@ public class addPurchaseGoods extends javax.swing.JFrame {
 
         textLastName.setEnabled(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Address"));
-        jPanel1.setEnabled(false);
+        panelAddress.setBorder(javax.swing.BorderFactory.createTitledBorder("Address"));
+        panelAddress.setEnabled(false);
 
         textMemAd3.setEnabled(false);
         textMemAd3.addActionListener(new java.awt.event.ActionListener() {
@@ -169,21 +171,21 @@ public class addPurchaseGoods extends javax.swing.JFrame {
 
         textMemAd1.setEnabled(false);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelAddressLayout = new javax.swing.GroupLayout(panelAddress);
+        panelAddress.setLayout(panelAddressLayout);
+        panelAddressLayout.setHorizontalGroup(
+            panelAddressLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAddressLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(panelAddressLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(textMemAd1)
                     .addComponent(textMemAd2, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(textMemAd3))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        panelAddressLayout.setVerticalGroup(
+            panelAddressLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAddressLayout.createSequentialGroup()
                 .addGap(7, 7, 7)
                 .addComponent(textMemAd1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -236,7 +238,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                         .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textMidInit)
                             .addComponent(textLastName)))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelAddress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelNonLayout.createSequentialGroup()
                         .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labelContact1)
@@ -269,7 +271,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                     .addComponent(labelLastname)
                     .addComponent(textLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(panelNonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelContact1)
@@ -330,23 +332,23 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         labelName.setText("Name");
         labelName.setEnabled(false);
 
-        jLabel7.setText("Amount");
-        jLabel7.setEnabled(false);
+        labelAmount.setText("Amount");
+        labelAmount.setEnabled(false);
 
-        jLabel8.setText("Balance");
-        jLabel8.setEnabled(false);
+        labelBalance.setText("Balance");
+        labelBalance.setEnabled(false);
 
-        jLabel12.setText("Description");
-        jLabel12.setEnabled(false);
+        labelDesc.setText("Description");
+        labelDesc.setEnabled(false);
 
         textAmount.setEnabled(false);
 
         textBalance.setEnabled(false);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setEnabled(false);
-        jScrollPane3.setViewportView(jTextArea1);
+        textDesc.setColumns(20);
+        textDesc.setRows(5);
+        textDesc.setEnabled(false);
+        jScrollPane3.setViewportView(textDesc);
 
         radioOld.setText("Old Non-Member");
         radioOld.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -387,8 +389,8 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8))
+                            .addComponent(labelAmount)
+                            .addComponent(labelBalance))
                         .addGap(38, 38, 38)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textAmount)
@@ -399,7 +401,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel12)
+                            .addComponent(labelDesc)
                             .addComponent(labelName))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
@@ -424,14 +426,14 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
+                    .addComponent(labelAmount)
                     .addComponent(textAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(7, 7, 7)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
+                    .addComponent(labelBalance)
                     .addComponent(textBalance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel12)
+                .addComponent(labelDesc)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -439,11 +441,16 @@ public class addPurchaseGoods extends javax.swing.JFrame {
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jButton1.setText("Next");
-        jButton1.setEnabled(false);
+        buttonNext.setText("Next");
+        buttonNext.setEnabled(false);
+        buttonNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonNextActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Back");
-        jButton2.setEnabled(false);
+        buttonBack.setText("Back");
+        buttonBack.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -463,11 +470,11 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panelNon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buttonBack, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(buttonClear)
                         .addGap(22, 22, 22)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(buttonNext, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -475,15 +482,15 @@ public class addPurchaseGoods extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelNon, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(panelNon, javax.swing.GroupLayout.PREFERRED_SIZE, 487, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonConfirm)
                     .addComponent(buttonCancel)
-                    .addComponent(jButton2)
+                    .addComponent(buttonBack)
                     .addComponent(buttonClear)
-                    .addComponent(jButton1))
+                    .addComponent(buttonNext))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jSeparator2)
         );
@@ -517,11 +524,11 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonClearActionPerformed
 
     public void setMemberLastName() {
-        this.memberLastName = textLastName.getText();
+        this.memberLastName = textLastName.getText().toUpperCase();
     }
 
     public void setMemberMiddleName() {
-        this.memberMiddleName = textMidInit.getText();
+        this.memberMiddleName = textMidInit.getText().toUpperCase();
     }
 
     public void setMemberRemarks() {
@@ -533,15 +540,15 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     }
     
     public void setMemberAddress1() {
-        this.memberAddress1 = textMemAd1.getText();
+        this.memberAddress1 = textMemAd1.getText().toUpperCase();
     }
 
     public void setMemberAddress2() {
-        this.memberAddress2 = textMemAd2.getText();
+        this.memberAddress2 = textMemAd2.getText().toUpperCase();
     }
 
     public void setMemberAddress3() {
-        this.memberAddress3 = textMemAd3.getText();
+        this.memberAddress3 = textMemAd3.getText().toUpperCase();
     }
 
     public void setMemberContact1() {
@@ -557,7 +564,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     }
     
     public void setMemberFirstName() {
-        this.memberFirstName = textFirstName.getText();
+        this.memberFirstName = textFirstName.getText().toUpperCase();
     }
     
     public int getCompanyIdCombo(int comboID)
@@ -690,7 +697,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
             ex.printStackTrace();
        }
     }
-    
+        
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
 
         this.setMemberAddress1();
@@ -721,8 +728,8 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private void listNamesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listNamesMouseClicked
 
 
-        int selectedid = arrayMemberid.get(listNames.getSelectedIndex());
-        System.out.println(selectedid);
+        memberid = arrayMemberid.get(listNames.getSelectedIndex());
+        System.out.println(memberid);
         
         // TODO add your handling code here:
     }//GEN-LAST:event_listNamesMouseClicked
@@ -733,11 +740,63 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_radioOldStateChanged
 
+    public void enabledFalse()
+    {
+                    panelNon.setEnabled(false);
+            labelFirstname.setEnabled(false);
+            labelLastname.setEnabled(false);
+            labelMidinit.setEnabled(false);
+            labelRemarks.setEnabled(false);
+            panelAddress.setEnabled(false);
+            labelContact1.setEnabled(false);
+            labelContact2.setEnabled(false);
+            labelEmail.setEnabled(false);
+            textFirstName.setEnabled(false);
+            textLastName.setEnabled(false);
+            textMidInit.setEnabled(false);
+            textMemAd1.setEnabled(false);
+            textMemAd2.setEnabled(false);
+            textMemAd3.setEnabled(false);
+            textMemCon1.setEnabled(false);
+            textMemCon2.setEnabled(false);
+            textRemark.setEnabled(false);
+            textMemEmail.setEnabled(false);
+            buttonNext.setEnabled(false);
+            buttonBack.setEnabled(false);
+            buttonCancel.setEnabled(false);
+            textRemark.setEnabled(false);
+            status = "N";
+            labelName.setEnabled(false);
+            listNames.setEnabled(false);
+    }
     private void radioNewItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioNewItemStateChanged
 
         if(radioNew.isSelected())
         {
             panelNon.setEnabled(true);
+            labelFirstname.setEnabled(true);
+            labelLastname.setEnabled(true);
+            labelMidinit.setEnabled(true);
+            labelRemarks.setEnabled(true);
+            panelAddress.setEnabled(true);
+            labelContact1.setEnabled(true);
+            labelContact2.setEnabled(true);
+            labelEmail.setEnabled(true);
+            textFirstName.setEnabled(true);
+            textLastName.setEnabled(true);
+            textMidInit.setEnabled(true);
+            textMemAd1.setEnabled(true);
+            textMemAd2.setEnabled(true);
+            textMemAd3.setEnabled(true);
+            textMemCon1.setEnabled(true);
+            textMemCon2.setEnabled(true);
+            textRemark.setEnabled(true);
+            textMemEmail.setEnabled(true);
+            buttonNext.setEnabled(true);
+            buttonBack.setEnabled(true);
+            buttonCancel.setEnabled(true);
+            textRemark.setEnabled(true);
+            status = "N";
             labelName.setEnabled(false);
             listNames.setEnabled(false);
         }
@@ -758,6 +817,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
             listNames.setEnabled(true);
             final String query = "Select memberid,firstname,lastname,midinit from nonmember order by lastname";
             this.getNameList(query);
+            status = "N";
         }
         else
         {
@@ -776,6 +836,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
             listNames.setEnabled(true);
             final String query = "Select memberid,firstname,lastname,midinit from member order by lastname";
             this.getNameList(query);
+            status = "M";
         }
         else
         {
@@ -784,6 +845,73 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         
         // TODO add your handling code here:
     }//GEN-LAST:event_radioMemberItemStateChanged
+
+    public int commitAndGetId(int i)
+    {
+        String query = "insert into nonmember (lastname,firstname,midinit,address1,address2,address3,contactno1,contactno2,email,remarks,compid) values ('"+memberLastName+"','"+memberFirstName+"','"+memberMiddleName+"','"+memberAddress1+"','"+memberAddress2+"','"+memberAddress3+"','"+memberContact1+"','"+memberContact2+"','"+memberEmail+"','"+memberRemarks+"','"+i+"')";
+        String query1 = "select max(memberid) as memberid from nonmember";
+        this.connect();
+        Statement stmt = null;
+        ResultSet rs;
+        int id = 0;
+        try
+        {
+            stmt = conn.createStatement();
+        }
+        catch(Exception e)
+        {
+            
+        }
+        
+        try
+        {
+            stmt.executeQuery(query);
+            rs = stmt.executeQuery(query1);
+            if(rs.next());
+                id = rs.getInt("memberid");
+        }
+        catch(Exception o)
+        {
+            o.printStackTrace();
+        }
+        finally{
+            this.disconnect();
+        }
+        return id;
+    }
+    public void newAddNonMember()
+    {
+        this.setMemberFirstName();
+        this.setMemberLastName();
+        this.setMemberMiddleName();
+        this.setMemberAddress1();
+        this.setMemberAddress2();
+        this.setMemberAddress3();
+        this.setMemberContact1();
+        this.setMemberContact2();
+        this.setMemberEmail();
+        this.setMemberRemarks();
+        int i = this.getCompanyIdCombo(comboCompany.getSelectedIndex());
+        int id = this.commitAndGetId(i);
+        this.enabledFalse();
+        
+        labelAmount.setEnabled(true);
+        labelBalance.setEnabled(true);
+        labelDesc.setEnabled(true);
+        
+        
+    }
+    
+    public void goodsHeader()
+    {
+        
+    }
+    
+    private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
+
+        this.newAddNonMember();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonNextActionPerformed
 
     /**
      * @param args the command line arguments
@@ -820,28 +948,26 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonCancel;
     private javax.swing.JButton buttonClear;
     private javax.swing.JButton buttonConfirm;
     private javax.swing.ButtonGroup buttonGroup;
+    private javax.swing.JButton buttonNext;
     private javax.swing.JComboBox comboCompany;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel labelAmount;
+    private javax.swing.JLabel labelBalance;
     private javax.swing.JLabel labelContact1;
     private javax.swing.JLabel labelContact2;
+    private javax.swing.JLabel labelDesc;
     private javax.swing.JLabel labelEmail;
     private javax.swing.JLabel labelFirstname;
     private javax.swing.JLabel labelLastname;
@@ -849,12 +975,14 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private javax.swing.JLabel labelName;
     private javax.swing.JLabel labelRemarks;
     private javax.swing.JList listNames;
+    private javax.swing.JPanel panelAddress;
     private javax.swing.JPanel panelNon;
     private javax.swing.JRadioButton radioMember;
     private javax.swing.JRadioButton radioNew;
     private javax.swing.JRadioButton radioOld;
     private javax.swing.JTextField textAmount;
     private javax.swing.JTextField textBalance;
+    private javax.swing.JTextArea textDesc;
     private javax.swing.JTextField textFirstName;
     private javax.swing.JTextField textLastName;
     private javax.swing.JTextField textMemAd1;
