@@ -792,7 +792,6 @@ public class addPurchaseGoods extends javax.swing.JFrame {
             textMemEmail.setEnabled(false);
             buttonNext.setEnabled(false);
             buttonBack.setEnabled(false);
-            buttonCancel.setEnabled(false);
             textRemark.setEnabled(false);
             status = "N";
             labelName.setEnabled(false);
@@ -828,6 +827,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
             status = "N";
             labelName.setEnabled(false);
             listNames.setEnabled(false);
+            buttonConfirm.setEnabled(false);
         }
         else
         {
@@ -842,6 +842,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         listModel.clear();
         if(radioOld.isSelected())
         {
+            this.enabledFalse();
             arrayMemberid.clear();
             labelName.setEnabled(true);
             listNames.setEnabled(true);
@@ -860,6 +861,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         listModel.clear();
         if(radioMember.isSelected())
         {
+            this.enabledFalse();
             arrayMemberid.clear();
             labelName.setEnabled(true);
             listNames.setEnabled(true);
@@ -1009,6 +1011,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         this.setMemberContact2();
         this.setMemberEmail();
         this.setMemberRemarks();
+        buttonConfirm.setEnabled(true);
         
         if(memberFirstName.isEmpty() && memberLastName.isEmpty() && memberMiddleName.isEmpty())
             JOptionPane.showMessageDialog(null, "Error: Names cannot be empty", "Error", JOptionPane.ERROR_MESSAGE); 
