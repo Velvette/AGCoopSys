@@ -138,10 +138,11 @@ public class processBillStatement extends javax.swing.JPanel {
     
     public void processBill()
     {
+        queryBank bank = new queryBank();
         Date date = new Date();
         String currentDate = df.format(date);
         int compid = this.getCompanyIdCombo(comboCompany.getSelectedIndex());
-        String tempQuery = "insert into joincompany_member_hdr values ('"+currentDate+"')";
+        String tempQuery = "insert into joincompany_member_hdr (billdt) values ('"+currentDate+"')";
 	Statement stmt = null;       
         int billid = 0;
 	this.connect();
@@ -157,46 +158,65 @@ public class processBillStatement extends javax.swing.JPanel {
         }
 		
 	ResultSet rs;
+        String compnameTemp = null;
+        int compidTemp = 0;
+        int memberidTemp = 0;
+        String lastnameTemp = null;
+        String firstnameTemp = null;
+        String midinitTemp = null;
         
         try
         {
             stmt.executeQuery(tempQuery);
-            tempQuery = "select max(billid) as billid";
+            tempQuery = bank.maxBillId();
             rs = stmt.executeQuery(tempQuery);
             if(rs.next())
                 billid = rs.getInt("billid");
             
-            tempQuery = "insert into joincompany_member (billid) values ('"+billid+"')";
-            stmt.executeQuery(tempQuery);
+            rs = null;
+            System.out.println(billid);
+            tempQuery = bank.joinDistinct();
+            rs = stmt.executeQuery(tempQuery);
+            if(rs.next())
+            {
+                compnameTemp = rs.getString("compname");
+                compidTemp = rs.getInt("compid");
+                memberidTemp = rs.getInt("memberid");
+                lastnameTemp = rs.getString("lastname");
+                firstnameTemp = rs.getString("firstname");
+                midinitTemp = rs.getString("midinit");
+            }
+            
         }
         catch(Exception x)
         {
-            
+            x.printStackTrace();
         }
         
-	try
+        rs = null;
+        ResultSet ps;
+        try
         {
             //STEP ZERO : INITIATE BILLID
-            tempQuery = "insert into joincompany_member select compname,company.compid,memberid,lastname,firstname,midinit from company  inner join member on member.compid = company.compid";
+            tempQuery = "insert into joincompany_member (compname,compid,memberid,lastname,firstname,midinit,billid) values('"+compnameTemp+"','"+compidTemp+"','"+memberidTemp+"','"+lastnameTemp+"','"+firstnameTemp+"','"+midinitTemp+"','"+billid+"')";
             //STEP ONE - INSERT COMPANY - MEMBER JOIN
             stmt.addBatch(tempQuery);            
             //STEP TWO
-            tempQuery = "insert into current_month select distinct memberid, loanid, mon_amort,loantype from (select memberid,loan_hdr.loanid,loan_dtl.amordate,loan_dtl.mon_amort,loan_hdr.loantype \n" +
-                        "from loan_hdr inner join loan_dtl on loan_hdr.loanid = loan_dtl.loanid\n" +
-                        "where amordate between '"+finalFrom+"' and '"+finalUntil+"') order by memberid";
+            tempQuery = bank.currentMonthPeriod(finalFrom, finalUntil);
+            
             stmt.addBatch(tempQuery);
             //STEP THREE
             int[] executeBatch = stmt.executeBatch();
-            tempQuery = "select * from joincompany_member join current_month on current_month.memberid = joincompany_member.memberid where compid ="+compid;
+            tempQuery = bank.selectJoinCompanyMember(compid);
             
-            rs = stmt.executeQuery(tempQuery);
-            while(rs.next())
+            ps = stmt.executeQuery(tempQuery);
+            while(ps.next())
             {
-                firstname.add(rs.getString("firstname"));
-                lastname.add(rs.getString("lastname"));
-                midinit.add(rs.getString("midinit"));
-                loanType.add(rs.getString("loantype"));
-                monAmort.add(rs.getFloat("mon_amort"));
+                firstname.add(ps.getString("firstname"));
+                lastname.add(ps.getString("lastname"));
+                midinit.add(ps.getString("midinit"));
+                loanType.add(ps.getString("loantype"));
+                monAmort.add(ps.getFloat("mon_amort"));
             }
         }
         
@@ -209,8 +229,12 @@ public class processBillStatement extends javax.swing.JPanel {
         {
             this.disconnect();
         }
+        for(int i = 0; i<firstname.size();i++)
+        {
+            System.out.println(lastname.get(i) + ", " + firstname.get(i) + " " + midinit.get(i) + " -- " + loanType + " || " + monAmort);
+        }
     }
-    
+        
     public int getCompanyIdCombo(int comboID)
     {
         int companyID = 0;

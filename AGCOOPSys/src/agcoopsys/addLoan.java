@@ -535,11 +535,9 @@ public class addLoan extends javax.swing.JFrame {
 
     public void firstBreakCommit()
     {
-       String query = "insert into loan_hdr (memberid, loantype, grantdt,startdt,enddt,loanamt,montopay,interestrt, interestamt,payableamt,balance,amortization,checkno)"
-                + "values('"+memberID+"','"+loanType+"','"+currentdtString+"','"+startdtString+"','"+enddtString+"','"+principal+"','"+terms+
-                "','"+interestrt+"','"+interest+"','"+totalPayment+"','"+totalPayment+"','"+monthlyAmortization+"','"+checkNo+"')";
+       queryBank bank = new queryBank();
+       String query = bank.loanFirstCommit(memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
        
-        //System.out.println(query);
         this.connect();
         Statement stmt = null;
         
