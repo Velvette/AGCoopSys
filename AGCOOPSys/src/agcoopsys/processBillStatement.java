@@ -3,7 +3,20 @@
  * and open the template in the editor.
  */
 package agcoopsys;
+import java.sql.Connection;
 
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.HashMap;
+ 
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -123,7 +136,7 @@ public class processBillStatement extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }
-	
+    	
     public void disconnect()
     {
        try
@@ -218,13 +231,16 @@ public class processBillStatement extends javax.swing.JPanel {
                 loanType.add(ps.getString("loantype"));
                 monAmort.add(ps.getFloat("mon_amort"));
             }
+            this.billReport();
         }
         
         catch (SQLException e)
         {
             e.printStackTrace();
-	}
-        
+	} catch (JRException ex) {
+            Logger.getLogger(processBillStatement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      
         finally
         {
             this.disconnect();
@@ -279,6 +295,17 @@ public class processBillStatement extends javax.swing.JPanel {
             this.processBill();
             this.printResults();
         }
+    }
+    
+    public void billReport() throws JRException
+    {
+        JasperReport jasperReport = null;
+        JasperPrint jasperPrint = null;
+        
+        HashMap jasperParameter = new HashMap();
+        jasperReport = JasperCompileManager.compileReport("C://Users//Lenovo//Documents//GitHub//AGCoopSys//AGCOOPSys//src//BillingStatement.jrxml");       
+        jasperPrint = JasperFillManager.fillReport(jasperReport,jasperParameter, conn);
+        JasperExportManager.exportReportToPdfFile(jasperPrint, "C://Users//Lenovo//Documents//GitHub//AGCoopSys//AGCOOPSys//src//BillingStatement.pdf");
     }
     
     
