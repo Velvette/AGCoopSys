@@ -138,10 +138,12 @@ public class processBillStatement extends javax.swing.JPanel {
     
     public void processBill()
     {
+        Date date = new Date();
+        String currentDate = df.format(date);
         int compid = this.getCompanyIdCombo(comboCompany.getSelectedIndex());
-        String tempQuery = "insert into joincompany_member select compname,company.compid,memberid,lastname,firstname,midinit from company  inner join member on member.compid = company.compid";
-
+        String tempQuery = "insert into joincompany_member_hdr values ('"+currentDate+"')";
 	Statement stmt = null;       
+        int billid = 0;
 	this.connect();
                 
 	try
@@ -155,8 +157,27 @@ public class processBillStatement extends javax.swing.JPanel {
         }
 		
 	ResultSet rs;
+        
+        try
+        {
+            stmt.executeQuery(tempQuery);
+            tempQuery = "select max(billid) as billid";
+            rs = stmt.executeQuery(tempQuery);
+            if(rs.next())
+                billid = rs.getInt("billid");
+            
+            tempQuery = "insert into joincompany_member (billid) values ('"+billid+"')";
+            stmt.executeQuery(tempQuery);
+        }
+        catch(Exception x)
+        {
+            
+        }
+        
 	try
         {
+            //STEP ZERO : INITIATE BILLID
+            tempQuery = "insert into joincompany_member select compname,company.compid,memberid,lastname,firstname,midinit from company  inner join member on member.compid = company.compid";
             //STEP ONE - INSERT COMPANY - MEMBER JOIN
             stmt.addBatch(tempQuery);            
             //STEP TWO
