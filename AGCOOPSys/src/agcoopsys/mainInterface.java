@@ -60,6 +60,7 @@ public class mainInterface extends javax.swing.JFrame {
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         menuPurchaseGoods = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         menuStatement = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
@@ -199,6 +200,10 @@ public class mainInterface extends javax.swing.JFrame {
         jMenuBar1.add(jMenu5);
 
         jMenu2.setText("Reports");
+
+        jMenuItem1.setText("jMenuItem1");
+        jMenu2.add(jMenuItem1);
+
         jMenuBar1.add(jMenu2);
 
         jMenu4.setText("Process");
@@ -592,6 +597,7 @@ public class mainInterface extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
