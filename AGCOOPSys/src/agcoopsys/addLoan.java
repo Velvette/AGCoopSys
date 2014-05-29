@@ -499,7 +499,7 @@ public class addLoan extends javax.swing.JFrame {
 
         if(paramDB.checkDuplicateLoan(memberID,loanType))
         {
-           // this.firstBreakCommit();
+            this.firstBreakCommit();
             this.secondBreakCommit();
         }
         else

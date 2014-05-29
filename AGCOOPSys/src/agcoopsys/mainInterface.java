@@ -489,7 +489,7 @@ public class mainInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonSearchActionPerformed
 
     private void menuStatementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuStatementActionPerformed
-
+        
         viewTab.add("Billing Statement", pB);
         
         // TODO add your handling code here:
