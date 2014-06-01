@@ -393,6 +393,7 @@ public class processBillStatement extends javax.swing.JPanel {
             rs = stmt.executeQuery(tempQuery);
             int prevId = 0;
             int reset = 0;
+            int overTotal = 0;
             System.out.println("here1");
             tempQuery = "insert all\n";
             while(rs.next())
@@ -407,6 +408,7 @@ public class processBillStatement extends javax.swing.JPanel {
                     goodsamt = this.getBalance(prevId);
                     cashamt = this.getCashamt(prevId);
                     total = regamt+emeramt+educamt+cashamt+goodsamt+calamityamt;
+                    overTotal += total;
                     tempQuery += bank.commitToBill_DTL(billid, prevId, membername, contribution, cashid, cashamt, regid, regamt, educid, educamt, calamityid, calamityamt, emerid, emeramt, goodsamt, total, compid); 
                 }
                 loanType = rs.getString("loantype");
@@ -441,15 +443,19 @@ public class processBillStatement extends javax.swing.JPanel {
             goodsamt = this.getBalance(prevId);
             cashamt = this.getCashamt(prevId);
             total = regamt+emeramt+educamt+cashamt+goodsamt+calamityamt;
+            overTotal += total;
             tempQuery += bank.commitToBill_DTL(billid, prevId, membername, contribution, cashid, cashamt, regid, regamt, educid, educamt, calamityid, calamityamt, emerid, emeramt, goodsamt, total, compid);
             tempQuery += "SELECT * FROM dual";
-            System.out.println(tempQuery);
             
             stmt.executeUpdate(tempQuery);
             
             tempQuery = bank.commitDTL_Temp(billid);
-            //System.out.println("LAST QUERY" + tempQuery);
             stmt.executeQuery(tempQuery);
+            
+            tempQuery = bank.updateBillAmount(billid, overTotal);
+            stmt.executeQuery(tempQuery);
+            
+            
             this.billReport();
         }
         catch (Exception e)
@@ -490,7 +496,7 @@ public class processBillStatement extends javax.swing.JPanel {
         float balance = 0;
         queryBank bank = new queryBank();
         Statement stmt = null;
-        String tempQuery = bank.getCashloan(memberid, fromText, finalUntil);
+        String tempQuery = bank.getGoodsMember(memberid, fromText, finalUntil);
         ResultSet rs;
         try
         {

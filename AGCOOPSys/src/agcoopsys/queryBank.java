@@ -70,15 +70,21 @@ public class queryBank {
         return query;
     }
     
-    public String getGoods(int memberid, String fromStart, String fromUntil)
+    public String getGoodsMember(int memberid, String fromStart, String fromUntil)
     {
-        String query = "SELECT BALANCE FROM (select * from goods_sold_dtl natural join goods_sold_hdr where billingdt between '"+fromStart+"' AND '"+fromUntil+"') WHERE MEMBERID =" + memberid;
+        String query = "SELECT BALANCE,STATUS FROM (select * from goods_sold_dtl natural join goods_sold_hdr where billingdt between '"+fromStart+"' AND '"+fromUntil+"') WHERE MEMBERID =" + memberid+"and status = 'Y'";
         return query;
     }
     
     public String commitDTL_Temp(int billid)
     {
         String query = "insert into billdtl_temp (select * from bill_dtl where billid="+billid+")";
+        return query;
+    }
+    
+    public String updateBillAmount(int billid,int overTotal)
+    {
+        String query = "update bill_hdr set bill_amt="+overTotal+" where billid="+billid;
         return query;
     }
 }

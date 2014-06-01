@@ -442,7 +442,6 @@ public class mainInterface extends javax.swing.JFrame {
                     Logger.getLogger(mainInterface.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        // TODO add your handling code here:
     }//GEN-LAST:event_buttonDeleteActionPerformed
 
     private void buttonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditActionPerformed
