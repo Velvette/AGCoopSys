@@ -194,6 +194,8 @@ public class viewLoan extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         listMember = new javax.swing.JList();
+        jLabel1 = new javax.swing.JLabel();
+        textPayment = new javax.swing.JLabel();
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -204,7 +206,7 @@ public class viewLoan extends javax.swing.JPanel {
 
             },
             new String [] {
-                "AMORTIZATION DATE", "MON AMORTIZATION", "MON INTEREST", "null"
+                "MONTHLY SCHEDULE", "MONTHLY PAYMENT", "INTEREST", "PREMIUM"
             }
         ) {
             Class[] types = new Class [] {
@@ -232,7 +234,7 @@ public class viewLoan extends javax.swing.JPanel {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Loan Details"));
@@ -268,7 +270,7 @@ public class viewLoan extends javax.swing.JPanel {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Members"));
@@ -291,6 +293,12 @@ public class viewLoan extends javax.swing.JPanel {
             .addComponent(jScrollPane1)
         );
 
+        jLabel1.setText("Total Payment");
+
+        textPayment.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        textPayment.setText("0");
+        textPayment.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -303,7 +311,12 @@ public class viewLoan extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -315,8 +328,13 @@ public class viewLoan extends javax.swing.JPanel {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(textPayment))
+                        .addGap(13, 13, 13)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -403,9 +421,10 @@ public class viewLoan extends javax.swing.JPanel {
 
     public void getListDetails(String id)
     {
+        float total = 0;
         try
         {
-            String tempQuery = "select amordate,mon_amort,mon_interest from loan_dtl where loanid="+id+" order by amordate";
+            String tempQuery = "select amordate as monthly_schedule,mon_amort as monthly_payment,mon_interest as interest, mon_premium as premium from loan_dtl where loanid="+id+" order by amordate";
         
             Statement stmt = null;       
             this.connect();
@@ -422,26 +441,44 @@ public class viewLoan extends javax.swing.JPanel {
             }
 		
             ResultSet rs;
+            ResultSet ps;
             try
             {
                 rs = stmt.executeQuery(tempQuery);
+                
                 try
-                {
-                    tableUtils.updateTableModelData((DefaultTableModel) listDetails.getModel(), rs, 3);
+                {                    
+                    tableUtils.updateTableModelData((DefaultTableModel) listDetails.getModel(), rs, 4);
                 }
                 catch (Exception ex)
                 {
                     Logger.getLogger(viewMember.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-	}
-        finally{
-            this.disconnect();
-        }
+            catch(Exception e)
+            {
+            
+            }
+            
+            try
+            {
+                ps = stmt.executeQuery(tempQuery);
+                
+                while(ps.next())
+                {
+                    total += ps.getFloat("monthly_payment");
+                    textPayment.setText(String.valueOf(total));
+                }
+            }
+            catch(Exception e)
+            {
+                
+            }
+            
+            finally
+            {
+                this.disconnect();
+            }
         }
         
         catch(Exception e)
@@ -451,6 +488,7 @@ public class viewLoan extends javax.swing.JPanel {
     }
      
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -461,5 +499,6 @@ public class viewLoan extends javax.swing.JPanel {
     private javax.swing.JTable listDetails;
     private javax.swing.JTable listLoan;
     private javax.swing.JList listMember;
+    private javax.swing.JLabel textPayment;
     // End of variables declaration//GEN-END:variables
 }

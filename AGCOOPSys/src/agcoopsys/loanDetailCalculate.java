@@ -118,6 +118,26 @@ public class loanDetailCalculate {
         return arrayInterest;
     }
     
+    public float[] getPremiumRecur(int terms, float balance)
+    {
+        float[] arrayPremium = new float[terms];
+        float interestRecur = 0;
+        float principal = 0;
+        for(int i = 0; i < terms; i++)
+        {
+            // COMPUTATION FOR ITNEREST - AMORTIZATION - PRINCIPAL
+            interestRecur = monthlyInterest * balance;
+            interestRecur = (float) (Math.round(interestRecur * 100.00) / 100.00);
+            principal = monthlyPayment - interestRecur;
+            principal = (float) (Math.round(principal * 100.00) / 100.00);
+            balance -= principal;
+            balance = (float) (Math.round(balance * 100.00) / 100.00);
+            arrayPremium[i] = principal;
+            System.out.println(arrayPremium[i]);
+        }
+        return arrayPremium;
+    }
+    
     public void reset()
     {
         totPrincipal = 0;

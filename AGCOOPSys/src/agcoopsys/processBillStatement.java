@@ -76,7 +76,7 @@ public class processBillStatement extends javax.swing.JPanel {
     {
         textFrom.setText("");
         textUntil.setText("");
-        textBill.setText("");
+        //textBill.setText("");
     }
 
     public void setTextFromDate()
@@ -196,7 +196,7 @@ public class processBillStatement extends javax.swing.JPanel {
             
             rs = null;
             System.out.println(billid);
-            tempQuery = bank.joinDistinct();
+            tempQuery = bank.joinDistinct(compid);
             rs = stmt.executeQuery(tempQuery);
             if(rs.next())
             {
@@ -308,9 +308,9 @@ public class processBillStatement extends javax.swing.JPanel {
         JasperReport jasperReport = null;
         JasperPrint jasperPrint = null;
         HashMap jasperParameter = new HashMap();
-        jasperReport = JasperCompileManager.compileReport("C://Users//admin//Documents//GitHub//AGCoopSys//AGCOOPSys//src//BillingStatement.jrxml");       
+        jasperReport = JasperCompileManager.compileReport("src//BillingStatement.jrxml");       
         jasperPrint = JasperFillManager.fillReport(jasperReport,jasperParameter, conn);
-        JasperExportManager.exportReportToPdfFile(jasperPrint, "C://Users//admin//Documents//GitHub//AGCoopSys//AGCOOPSys//src//Billing Statement( "+dFrom+" -- "+dUntil+" ).pdf");
+        JasperExportManager.exportReportToPdfFile(jasperPrint, "Reports//SOA//Billing Statement( "+dFrom+" -- "+dUntil+" ).pdf");
     }
     
     public void processBillNew()
@@ -380,8 +380,10 @@ public class processBillStatement extends javax.swing.JPanel {
         try
         {
             stmt.executeQuery(tempQuery);
-            tempQuery = bank.joinDistinct();
+            tempQuery = bank.joinDistinct(compid);
             stmt.executeQuery(tempQuery);
+            tempQuery = bank.joinDistinctNon(compid);
+            stmt.executeQuery(tempQuery);             
         } 
         catch (SQLException ex)
         {
@@ -389,7 +391,7 @@ public class processBillStatement extends javax.swing.JPanel {
         }
         try {
             
-            tempQuery = "select * from current_month natural join member";
+            tempQuery = "select * from current_month natural join member where compid="+compid;
             rs = stmt.executeQuery(tempQuery);
             int prevId = 0;
             int reset = 0;
@@ -409,7 +411,7 @@ public class processBillStatement extends javax.swing.JPanel {
                     cashamt = this.getCashamt(prevId);
                     total = regamt+emeramt+educamt+cashamt+goodsamt+calamityamt;
                     overTotal += total;
-                    tempQuery += bank.commitToBill_DTL(billid, prevId, membername, contribution, cashid, cashamt, regid, regamt, educid, educamt, calamityid, calamityamt, emerid, emeramt, goodsamt, total, compid); 
+                    tempQuery += bank.commitToBill_DTL(billid, prevId, membername, contribution, cashid, cashamt, regid, regamt, educid, educamt, calamityid, calamityamt, emerid, emeramt, goodsamt, total, compid, "Y"); 
                 }
                 loanType = rs.getString("loantype");
                 switch(loanType)
@@ -444,10 +446,12 @@ public class processBillStatement extends javax.swing.JPanel {
             cashamt = this.getCashamt(prevId);
             total = regamt+emeramt+educamt+cashamt+goodsamt+calamityamt;
             overTotal += total;
-            tempQuery += bank.commitToBill_DTL(billid, prevId, membername, contribution, cashid, cashamt, regid, regamt, educid, educamt, calamityid, calamityamt, emerid, emeramt, goodsamt, total, compid);
+            tempQuery += bank.commitToBill_DTL(billid, prevId, membername, contribution, cashid, cashamt, regid, regamt, educid, educamt, calamityid, calamityamt, emerid, emeramt, goodsamt, total, compid, "Y");
             tempQuery += "SELECT * FROM dual";
             
             stmt.executeUpdate(tempQuery);
+            
+            this.processGoods(stmt, billid, fromText, finalUntil, compid);
             
             tempQuery = bank.commitDTL_Temp(billid);
             stmt.executeQuery(tempQuery);
@@ -464,6 +468,79 @@ public class processBillStatement extends javax.swing.JPanel {
         }
         finally{
             this.disconnect();
+        }
+    }
+    
+    public void processGoods(Statement stmt, int billid, String fromStart, String fromUntil, int compid)
+    {
+        //JOIN COMPANY NON MEMBER
+        queryBank bank = new queryBank();
+        String query = bank.nonmemberGoods(fromStart, fromUntil);
+        ResultSet rs = null;
+        try
+        {
+            rs = stmt.executeQuery(query);  
+            query = "insert all\n";
+            int reset = 0;
+            int previd = 0;
+            int memberid = 0;
+            
+            String firstname = "";
+            String lastname = "";
+            String midinit = "";
+            String membername = "";
+            
+            float balance = 0;
+            
+                while(rs.next())
+                {
+                    memberid = rs.getInt("memberid");
+                    System.out.println("insde empty : " + memberid);
+                    if(reset == 0)
+                    {
+                        previd = memberid;
+                    }
+                
+                    if(memberid != previd)
+                    {
+                        query += bank.commitToBill_DTL(billid, previd, membername,0,0,0,0,0,0,0,0,0,0,0,balance,balance, compid, "N");
+                        
+                    }
+                
+                    lastname = rs.getString("lastname");
+                    firstname = rs.getString("firstname");
+                    midinit = rs.getString("midinit");
+                    membername = lastname + ", " + "firstname" + " " + midinit;
+                    balance = rs.getFloat("balance");
+                    previd = memberid;
+                    reset++;
+                }
+                try
+                { 
+                    lastname = rs.getString("lastname");
+                    firstname = rs.getString("firstname");
+                    midinit = rs.getString("midinit");
+                    membername = lastname + ", " + "firstname" + " " + midinit;
+                    balance = rs.getFloat("balance");
+                    query += bank.commitToBill_DTL(billid, previd, membername,0,0,0,0,0,0,0,0,0,0,0,balance,balance, compid, "N");
+                    
+                }
+                catch(Exception e)
+                {
+                    
+                }
+                
+                System.out.println(query);
+                query += "SELECT * FROM dual";
+                if(reset>0)
+                stmt.executeUpdate(query);
+      
+            }
+        
+        
+        catch(SQLException ex)
+        {
+            Logger.getLogger(processBillStatement.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -532,8 +609,6 @@ public class processBillStatement extends javax.swing.JPanel {
         textFrom = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         textUntil = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        textBill = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         jButton2 = new javax.swing.JButton();
         buttonProcess = new javax.swing.JButton();
@@ -546,8 +621,6 @@ public class processBillStatement extends javax.swing.JPanel {
         jLabel2.setText("Date from");
 
         jLabel3.setText("Date until");
-
-        jLabel4.setText("Bill date");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -562,15 +635,12 @@ public class processBillStatement extends javax.swing.JPanel {
                         .addComponent(comboCompany, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addComponent(jLabel4))
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(textUntil)
-                            .addComponent(textFrom)
-                            .addComponent(textBill, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(textUntil, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                            .addComponent(textFrom))))
                 .addContainerGap(150, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -580,11 +650,7 @@ public class processBillStatement extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(comboCompany, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(textBill, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
@@ -640,7 +706,7 @@ public class processBillStatement extends javax.swing.JPanel {
                     .addComponent(buttonClear))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(155, Short.MAX_VALUE))
+                .addContainerGap(158, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -668,11 +734,9 @@ public class processBillStatement extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTextField textBill;
     private javax.swing.JTextField textFrom;
     private javax.swing.JTextField textUntil;
     // End of variables declaration//GEN-END:variables

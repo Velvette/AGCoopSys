@@ -18,9 +18,9 @@ public class queryBank {
         return query;
     }
     
-    public String joinDistinct()
+    public String joinDistinct(int compid)
     {
-        String query = "insert into joincompany_member (select distinct compname,company.compid,memberid,lastname,firstname,midinit from company  inner join member on member.compid=company.compid)";
+        String query = "insert into joincompany_member (select distinct compname,company.compid,memberid,lastname,firstname,midinit from company  inner join member on member.compid=company.compid where member.compid="+compid+")";
         return query;
     }
     
@@ -40,7 +40,7 @@ public class queryBank {
     
     public String selectJoinCompanyMember(int compid)
     {
-        String query = "select distinct * from joincompany_member join current_month on current_month.memberid = joincompany_member.memberid where compid ="+compid+" order by memberid";
+            String query = "select distinct * from joincompany_member join current_month on current_month.memberid = joincompany_member.memberid where compid ="+compid+" order by current_month.memberid";
         return query;
     }
     
@@ -56,14 +56,14 @@ public class queryBank {
         return query;
     }
     
-    public String commitToBill_DTL(int billid,int memberid, String membername, float contribution, int cashid, float cashamt, int regid, float regamt, int educid, float educamt, int calamityid, float calamityamt, int emerid, float emeramt, float goodsamt,float total,int compid)
+    public String commitToBill_DTL(int billid,int memberid, String membername, float contribution, int cashid, float cashamt, int regid, float regamt, int educid, float educamt, int calamityid, float calamityamt, int emerid, float emeramt, float goodsamt,float total,int compid, String isMember)
     {
-        String query = "into bill_dtl (billid,memberid,membername,contribution,cash_loanid,cash_amount,reg_loanid,reg_amount,educ_loanid,educ_amount,calamity_loanid,calamity_amount,emer_loanid,emer_amount,goods_amount,mem_total,compid) values"+
-                "('"+billid+"','"+memberid+"','"+membername+"','"+contribution+"','"+cashid+"','"+cashamt+"','"+regid+"','"+regamt+"','"+educid+"','"+educamt+"','"+calamityid+"','"+calamityamt+"','"+emerid+"','"+emeramt+"','"+goodsamt+"','"+total+"','"+compid+"')\n";
+        String query = "into bill_dtl (billid,memberid,membername,contribution,cash_loanid,cash_amount,reg_loanid,reg_amount,educ_loanid,educ_amount,calamity_loanid,calamity_amount,emer_loanid,emer_amount,goods_amount,mem_total,compid,ismember) values"+
+                "('"+billid+"','"+memberid+"','"+membername+"','"+contribution+"','"+cashid+"','"+cashamt+"','"+regid+"','"+regamt+"','"+educid+"','"+educamt+"','"+calamityid+"','"+calamityamt+"','"+emerid+"','"+emeramt+"','"+goodsamt+"','"+total+"','"+compid+"','"+isMember+"')\n";
         //System.out.println(query);
         return query;
     }
-    
+        
     public String getCashloan(int memberid,String fromStart, String fromUntil)
     {
         String query = "SELECT * FROM (select * from cashloan where billingdt between '"+fromStart+"' AND '"+fromUntil+"') WHERE MEMBERID='"+memberid+"'";
@@ -72,8 +72,14 @@ public class queryBank {
     
     public String getGoodsMember(int memberid, String fromStart, String fromUntil)
     {
-        String query = "SELECT BALANCE,STATUS FROM (select * from goods_sold_dtl natural join goods_sold_hdr where billingdt between '"+fromStart+"' AND '"+fromUntil+"') WHERE MEMBERID =" + memberid+"and status = 'Y'";
+        String query = "select distinct sum(balance) as balance from goods_Sold_dtl join goods_sold_hdr on goods_sold_dtl.invid = goods_sold_hdr.invid where billingdt between '"+fromStart+"' AND '"+fromUntil+"' and memberid="+memberid;
         return query;
+    }
+    
+    public String nonmemberGoods(String fromStart, String fromUntil)
+    {
+       String query = "select lastname,firstname,midinit,balance,memberid from (select memberid,balance from goods_sold_dtl natural join goods_sold_hdr where ismember = 'N' and billingdt between '"+fromStart+"' AND '"+fromUntil+"') natural join joincompany_nonmember";
+       return query; 
     }
     
     public String commitDTL_Temp(int billid)
@@ -84,7 +90,13 @@ public class queryBank {
     
     public String updateBillAmount(int billid,int overTotal)
     {
-        String query = "update bill_hdr set bill_amt="+overTotal+" where billid="+billid;
+        String query = "update bill_hdr set billamt="+overTotal+" where billid="+billid;
         return query;
     }
+    
+    public String joinDistinctNon(int compid)
+    {
+        String query = "insert into joincompany_nonmember (select distinct compname,company.compid,memberid,lastname,firstname,midinit from company  inner join nonmember on nonmember.compid=company.compid where nonmember.compid="+compid+")";
+        return query;
+    }    
 }

@@ -17,8 +17,6 @@ import javax.swing.table.DefaultTableModel;
 
 public class viewMember extends javax.swing.JPanel {
 
-    
-    
     public viewMember()
     {
         initComponents();
@@ -182,7 +180,7 @@ public class viewMember extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "LASTNAME", "MID INIT", "FIRSTNAME", "CONTACT 1", "CONTACT 2", "E-MAIL", "COMPANY NAME", "REMARKS"
+                "ID", "LASTNAME", "FIRSTNAME", "INITIAL", "CONTACT 1", "CONTACT 2", "E-MAIL", "COMPANY NAME", "REMARKS"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -203,6 +201,7 @@ public class viewMember extends javax.swing.JPanel {
         listMember.getColumnModel().getColumn(3).setResizable(false);
         listMember.getColumnModel().getColumn(3).setPreferredWidth(100);
         listMember.getColumnModel().getColumn(4).setResizable(false);
+        listMember.getColumnModel().getColumn(5).setResizable(false);
         listMember.getColumnModel().getColumn(6).setResizable(false);
         listMember.getColumnModel().getColumn(7).setResizable(false);
         listMember.getColumnModel().getColumn(8).setResizable(false);

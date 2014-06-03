@@ -570,13 +570,18 @@ public class addLoan extends javax.swing.JFrame {
         this.getID();
         Date repEnd;
         repEnd = startdt;
+        
         float arrayInterest[] = new float[terms];
+        float arrayPremium[] = new float[terms];
+        
         arrayInterest = loanCalculate.getInterestRecur(terms, principal);
-        this.getInsertAmortDates(repEnd, terms, arrayInterest, loanID, monthlyAmortization);
+        arrayPremium = loanCalculate.getPremiumRecur(terms, principal);
+        
+        this.getInsertAmortDates(repEnd, terms, arrayInterest,arrayPremium, loanID, monthlyAmortization);
     }
     
     
-    public void getInsertAmortDates(Date repEnd, int terms, float[] arrayInterest, int loanID, float monthlyAmortization)
+    public void getInsertAmortDates(Date repEnd, int terms, float[] arrayInterest,float[] arrayPremium, int loanID, float monthlyAmortization)
     {
         DateFormat df;
         df = new SimpleDateFormat("yyyy-MM-dd");
@@ -595,7 +600,6 @@ public class addLoan extends javax.swing.JFrame {
            e.printStackTrace();
         }
         
-        
         try
         {           
             for(int i=0; i<terms;i++)
@@ -603,8 +607,8 @@ public class addLoan extends javax.swing.JFrame {
                 repEndString = df.format(repEnd);
                 //System.out.println(repEndString);
                 calendar.setTime(repEnd);
-                insertString = "insert into loan_dtl (loanid,amordate,mon_amort,mon_interest) values ('"+loanID+"','"+repEndString+"','"+monthlyAmortization+"','"+arrayInterest[i]+"')";
-                
+                insertString = "insert into loan_dtl (loanid,amordate,mon_amort,mon_interest,mon_premium) values ('"+loanID+"',to_date('"+repEndString+"', 'yyyy-MM-dd'),'"+monthlyAmortization+"','"+arrayInterest[i]+"','"+arrayPremium[i]+"')";
+                System.out.println(insertString);
                 stmt.addBatch(insertString);
                 calendar.add(Calendar.MONTH, 1);
                 repEnd = calendar.getTime();

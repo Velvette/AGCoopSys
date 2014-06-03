@@ -17,6 +17,7 @@ public class mainInterface extends javax.swing.JFrame {
     viewMember vM = new viewMember();
     viewSupplier vS = new viewSupplier();
     viewLoan vL = new viewLoan();
+    viewNonMember vNM = new viewNonMember();
     addMember aM = new addMember();
     addSupplier aS = new addSupplier();
     addCompany aC = new addCompany();
@@ -52,6 +53,7 @@ public class mainInterface extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         menuCompany = new javax.swing.JMenuItem();
         menuMember = new javax.swing.JMenuItem();
+        menuNonMember = new javax.swing.JMenuItem();
         menuSupplier = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         menuLoans = new javax.swing.JMenuItem();
@@ -158,6 +160,14 @@ public class mainInterface extends javax.swing.JFrame {
             }
         });
         jMenu1.add(menuMember);
+
+        menuNonMember.setText("Non-Member");
+        menuNonMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuNonMemberActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuNonMember);
 
         menuSupplier.setText("Supplier");
         menuSupplier.addActionListener(new java.awt.event.ActionListener() {
@@ -396,6 +406,7 @@ public class mainInterface extends javax.swing.JFrame {
         vC.getList();
         vS.getList();
         vL.getList();
+        vNM.getList();
         
     }//GEN-LAST:event_buttonRefreshActionPerformed
 
@@ -546,9 +557,13 @@ public class mainInterface extends javax.swing.JFrame {
         aP.setResizable(false);
         aP.setTitle("Purchase Goods");
         
-        
-        // TODO add your handling code here:
     }//GEN-LAST:event_menuPurchaseGoodsActionPerformed
+
+    private void menuNonMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNonMemberActionPerformed
+        viewTab.add("Non-Member",vNM);
+        vNM.getList();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuNonMemberActionPerformed
 
     /**
      * @param args the command line arguments
@@ -610,6 +625,7 @@ public class mainInterface extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuLoans;
     private javax.swing.JMenuItem menuMember;
     private javax.swing.JMenuItem menuMemberLoan;
+    private javax.swing.JMenuItem menuNonMember;
     private javax.swing.JMenuItem menuPurchaseGoods;
     private javax.swing.JMenuItem menuStatement;
     private javax.swing.JMenuItem menuSupplier;

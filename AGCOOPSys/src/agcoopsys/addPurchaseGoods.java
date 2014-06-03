@@ -12,9 +12,12 @@ import java.sql.RowId;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
@@ -39,10 +42,17 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     ArrayList<String> arrayNonMemberName = new ArrayList<>();
     ArrayList<Integer> arrayNonMemberid = new ArrayList<>();
     
+    ArrayList<Object> arrayPersonToAdd = new ArrayList<>();
+        
+    int isMember = 0;
+    float totalAmount = 0;
+    
     DateFormat df;
     
     public DefaultListModel listModelMember = new DefaultListModel();
     public DefaultListModel listModelNonMember = new DefaultListModel();
+    public DefaultListModel listPurchasing = new DefaultListModel();
+    
     ArrayList<String> arrayQuery = new ArrayList<>();
         
     public addPurchaseGoods() {
@@ -55,6 +65,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         
         listMember.setModel(listModelMember);
         listNonMember.setModel(listModelNonMember);
+        listPurchase.setModel(listPurchasing);
         
         this.getListMember();
         this.getListNonMember();
@@ -159,8 +170,8 @@ public class addPurchaseGoods extends javax.swing.JFrame {
 
         buttonCancel = new javax.swing.JButton();
         buttonConfirm = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        panelDetail = new javax.swing.JPanel();
+        labelBill = new javax.swing.JLabel();
         textBillDate = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         tabPane = new javax.swing.JTabbedPane();
@@ -169,7 +180,6 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         listNonMember = new javax.swing.JList();
         buttonAdd = new javax.swing.JButton();
-        buttonAddNonMember = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         listPurchase = new javax.swing.JList();
         jPanel1 = new javax.swing.JPanel();
@@ -182,9 +192,13 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         textAmount = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        textDesc = new javax.swing.JTextArea();
         buttonNext = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
+        buttonRemove = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        textRemarks = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -196,33 +210,34 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         });
 
         buttonConfirm.setText("Confirm");
+        buttonConfirm.setEnabled(false);
         buttonConfirm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonConfirmActionPerformed(evt);
             }
         });
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Detail Header"));
+        panelDetail.setBorder(javax.swing.BorderFactory.createTitledBorder("Detail Header"));
 
-        jLabel1.setText("Billing Date");
+        labelBill.setText("Billing Date");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelDetailLayout = new javax.swing.GroupLayout(panelDetail);
+        panelDetail.setLayout(panelDetailLayout);
+        panelDetailLayout.setHorizontalGroup(
+            panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDetailLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(labelBill)
                 .addGap(18, 18, 18)
                 .addComponent(textBillDate, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        panelDetailLayout.setVerticalGroup(
+            panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDetailLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelBill)
                     .addComponent(textBillDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -249,8 +264,6 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                 buttonAddActionPerformed(evt);
             }
         });
-
-        buttonAddNonMember.setText("Add Non Member");
 
         jScrollPane4.setViewportView(listPurchase);
 
@@ -293,13 +306,27 @@ public class addPurchaseGoods extends javax.swing.JFrame {
 
         jLabel4.setText("Description");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane3.setViewportView(jTextArea1);
+        textDesc.setColumns(20);
+        textDesc.setRows(5);
+        jScrollPane3.setViewportView(textDesc);
 
-        buttonNext.setText("Next");
+        buttonNext.setText("Next>>");
+        buttonNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonNextActionPerformed(evt);
+            }
+        });
 
         buttonBack.setText("Back");
+
+        buttonRemove.setText("<<Remove");
+        buttonRemove.setEnabled(false);
+
+        jLabel1.setText("Remarks");
+
+        textRemarks.setColumns(20);
+        textRemarks.setRows(5);
+        jScrollPane5.setViewportView(textRemarks);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -311,35 +338,38 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(buttonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buttonAddNonMember)
-                        .addGap(18, 18, 18)
                         .addComponent(buttonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tabPane)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelDetail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(textAmount, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(labelName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonBack, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buttonNext, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(buttonNext)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(buttonConfirm, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonRemove)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(buttonConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane5))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -352,20 +382,25 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(panelDetail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(buttonCancel)
-                                    .addComponent(buttonAdd)
-                                    .addComponent(buttonAddNonMember)))
+                                    .addComponent(buttonAdd)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(buttonConfirm))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(buttonConfirm)
+                                    .addComponent(buttonRemove)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(66, 66, 66)
                         .addComponent(jLabel2)
@@ -435,16 +470,46 @@ public class addPurchaseGoods extends javax.swing.JFrame {
 
     }//GEN-LAST:event_buttonConfirmActionPerformed
 
+    private void enabledFalse()
+    {
+        buttonAdd.setEnabled(false);
+        tabPane.setEnabled(false);
+        textBillDate.setEnabled(false);
+        panelDetail.setEnabled(false);
+        labelBill.setEnabled(false);
+        listMember.setEnabled(false);
+        listNonMember.setEnabled(false);
+    }
+    
+    private void enabledTrue()
+    {
+        buttonAdd.setEnabled(true);
+        tabPane.setEnabled(true);
+        textBillDate.setEnabled(true);
+        panelDetail.setEnabled(true);
+        labelBill.setEnabled(true);
+        listMember.setEnabled(true);
+        listNonMember.setEnabled(true);
+    }
+    
     private void buttonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddActionPerformed
 
+        String holdName = "";
+        //CHECK IF BILLDATE IS FILLED
+        //THEN PROCEED TO ADD DETAILS FOR COMMIT
         if(tabPane.getSelectedIndex() == 0)
         {
-            
+            holdName = arrayMemberName.get(listMember.getSelectedIndex());
+            labelName.setText(holdName);
+            this.enabledFalse();
         }
         else
         {
-            
+            holdName = arrayNonMemberName.get(listNonMember.getSelectedIndex());
+            labelName.setText(holdName);
+            this.enabledFalse();
         }
+        
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonAddActionPerformed
 
@@ -454,11 +519,138 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tabPaneStateChanged
 
+    private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
+
+        float amount = 0;
+        addPurchasePerson person = new addPurchasePerson();
+        
+        try
+        {
+            amount = Float.parseFloat(textAmount.getText());
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        String desc = textDesc.getText();
+        int memberid;
+        String status;
+        
+        if(isMember == 0)
+        {
+            memberid = arrayMemberid.get(listMember.getSelectedIndex());
+            String memberAdd = arrayMemberName.get(listMember.getSelectedIndex()) + "   :  " + amount;
+            listPurchasing.addElement(memberAdd);
+            status = "Y";
+        }
+        else
+        {
+            memberid = arrayNonMemberid.get(listNonMember.getSelectedIndex());
+            String memberAdd = arrayNonMemberName.get(listNonMember.getSelectedIndex()) + "  :  " + amount;
+            listPurchasing.addElement(arrayNonMemberName.get(listNonMember.getSelectedIndex()));
+            status = "N";
+        }
+        
+        person.setBalance(amount);
+        person.setMemberid(memberid);
+        person.setStatus(status);
+        
+        arrayPersonToAdd.add(person);
+        
+        totalAmount += amount;
+        labelAmount.setText(String.valueOf(totalAmount));
+        buttonConfirm.setEnabled(true);
+        this.enabledTrue();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonNextActionPerformed
+
 
     
     public void goodsHeader()
     {
-
+        this.connect();
+        Statement stmt = null;
+        Date billDate = null;
+        try
+        {
+            billDate = df.parse(textBillDate.getText());
+        }
+        catch (ParseException ex)
+        {
+            Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String dateBill = df.format(billDate);
+        
+        String remarks = textRemarks.getText();
+        
+        try
+        {
+            stmt = conn.createStatement();
+        }
+        
+        catch(SQLException ex)
+        {
+            Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        addPurchasePerson person = new addPurchasePerson();
+        int loopIndex = arrayPersonToAdd.size();
+        
+        String headerQuery = "insert into goods_sold_hdr (invdt,billingdt,invamt,remarks) values"+
+                "('"+current+"','"+dateBill+"','"+totalAmount+"','"+remarks+"')";
+        
+        try
+        {
+            stmt.executeQuery(headerQuery);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        headerQuery = "select max(invid) as invid from goods_sold_hdr";
+        ResultSet rs = null;
+        try
+        {
+            rs = stmt.executeQuery(headerQuery);
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        int invid = 0;
+        try
+        {
+            if(rs.next())
+            {
+                invid = rs.getInt("invid");
+            }
+        }
+        
+        catch (SQLException ex)
+        {
+            Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        String query = "insert all\n";
+        for(int i = 0; i<loopIndex; i++)
+        {
+            person = (addPurchasePerson) arrayPersonToAdd.get(i);
+            query += "into goods_sold_dtl (invid,memberid,amount,balance,description,ismember) values"+
+                    "('"+invid+"','"+person.getMemberid()+"','"+person.getBalance()+"','"+person.getBalance()+"','"+person.getDesc()+"','"+person.getStatus()+"')\n";
+        }
+        query += "select * from dual";
+        try
+        {
+            stmt.executeQuery(query);
+            JOptionPane.showMessageDialog(null, "Database Update: Success", "Updating database", JOptionPane.INFORMATION_MESSAGE);
+        } 
+        catch (SQLException ex) {
+            Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        finally{
+            this.disconnect();
+        }
     }
     
     
@@ -499,32 +691,35 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdd;
-    private javax.swing.JButton buttonAddNonMember;
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonCancel;
     private javax.swing.JButton buttonConfirm;
     private javax.swing.JButton buttonNext;
+    private javax.swing.JButton buttonRemove;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel labelAmount;
+    private javax.swing.JLabel labelBill;
     private javax.swing.JLabel labelName;
     private javax.swing.JList listMember;
     private javax.swing.JList listNonMember;
     private javax.swing.JList listPurchase;
+    private javax.swing.JPanel panelDetail;
     private javax.swing.JTabbedPane tabPane;
     private javax.swing.JTextField textAmount;
     private javax.swing.JTextField textBillDate;
+    private javax.swing.JTextArea textDesc;
+    private javax.swing.JTextArea textRemarks;
     // End of variables declaration//GEN-END:variables
 }

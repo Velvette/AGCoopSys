@@ -39,8 +39,8 @@
               <Table columnCount="9" rowCount="0">
                 <Column editable="false" title="ID" type="java.lang.Object"/>
                 <Column editable="false" title="LASTNAME" type="java.lang.Object"/>
-                <Column editable="false" title="MID INIT" type="java.lang.Object"/>
                 <Column editable="false" title="FIRSTNAME" type="java.lang.Object"/>
+                <Column editable="false" title="INITIAL" type="java.lang.Object"/>
                 <Column editable="false" title="CONTACT 1" type="java.lang.Object"/>
                 <Column editable="false" title="CONTACT 2" type="java.lang.Object"/>
                 <Column editable="false" title="E-MAIL" type="java.lang.Object"/>
@@ -75,7 +75,7 @@
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
                   <Title/>
                   <Editor/>
                   <Renderer/>

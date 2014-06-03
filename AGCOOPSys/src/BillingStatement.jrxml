@@ -14,16 +14,16 @@
 		</conditionalStyle>
 	</style>
 	<queryString>
-		<![CDATA[SELECT DISTINCT ISMEMBER,CONTRIBUTION,MEMBERNAME,CONTACTNO1,COMPNAME,ADDRESS1,ADDRESS2,ADDRESS3,MEMBERNAME,CASH_AMOUNT,REG_AMOUNT,CALAMITY_AMOUNT,EDUC_AMOUNT,EMER_AMOUNT,GOODS_AMOUNT,MEM_TOTAL FROM BILLDTL_TEMP INNER JOIN COMPANY ON BILLDTL_TEMP.COMPID = COMPANY.COMPID ORDER BY BILLDTL_TEMP.MEMBERNAME]]>
+		<![CDATA[SELECT DISTINCT ISMEMBER,CONTRIBUTION,CONTACTNO1,COMPNAME,ADDRESS1,ADDRESS2,ADDRESS3,MEMBERNAME,CASH_AMOUNT,REG_AMOUNT,CALAMITY_AMOUNT,EDUC_AMOUNT,EMER_AMOUNT,GOODS_AMOUNT,MEM_TOTAL FROM (SELECT DISTINCT ISMEMBER,CONTRIBUTION,MEMBERNAME,CONTACTNO1,COMPNAME,ADDRESS1,ADDRESS2,ADDRESS3,CASH_AMOUNT,REG_AMOUNT,CALAMITY_AMOUNT,EDUC_AMOUNT,EMER_AMOUNT,GOODS_AMOUNT,MEM_TOTAL FROM BILLDTL_TEMP INNER JOIN COMPANY ON BILLDTL_TEMP.COMPID = COMPANY.COMPID ORDER BY BILLDTL_TEMP.MEMBERNAME)]]>
 	</queryString>
 	<field name="ISMEMBER" class="java.lang.String"/>
 	<field name="CONTRIBUTION" class="java.math.BigDecimal"/>
-	<field name="MEMBERNAME" class="java.lang.String"/>
 	<field name="CONTACTNO1" class="java.lang.String"/>
 	<field name="COMPNAME" class="java.lang.String"/>
 	<field name="ADDRESS1" class="java.lang.String"/>
 	<field name="ADDRESS2" class="java.lang.String"/>
 	<field name="ADDRESS3" class="java.lang.String"/>
+	<field name="MEMBERNAME" class="java.lang.String"/>
 	<field name="CASH_AMOUNT" class="java.math.BigDecimal"/>
 	<field name="REG_AMOUNT" class="java.math.BigDecimal"/>
 	<field name="CALAMITY_AMOUNT" class="java.math.BigDecimal"/>
@@ -53,6 +53,9 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COMPNAME}]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement x="0" y="52" width="797" height="1" uuid="3ffe4018-5c0f-4948-8406-14fd9dfefd3b"/>
+			</line>
 			<staticText>
 				<reportElement x="0" y="0" width="145" height="20" uuid="ddc5eef1-bf53-4790-b1ee-74f7920b8c96"/>
 				<textElement>
@@ -74,9 +77,6 @@
 				</textElement>
 				<text><![CDATA[AG COOPERATIVE]]></text>
 			</staticText>
-			<line>
-				<reportElement x="0" y="52" width="797" height="1" uuid="3ffe4018-5c0f-4948-8406-14fd9dfefd3b"/>
-			</line>
 		</band>
 	</title>
 	<pageHeader>
@@ -150,7 +150,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="18" splitType="Stretch">
+		<band height="38" splitType="Stretch">
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="797" height="18" uuid="bfebd7d2-05de-4901-a29e-4f23d7e0ae98"/>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00">
