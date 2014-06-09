@@ -252,6 +252,12 @@ public class addCompany extends javax.swing.JFrame {
 
     private void buttonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearActionPerformed
 
+        this.reset();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonClearActionPerformed
+
+    public void reset()
+    {
         textCompanyName.setText("");
         textCompanyAd1.setText("");
         textCompanyAd2.setText("");
@@ -260,9 +266,8 @@ public class addCompany extends javax.swing.JFrame {
         textCompanyContactPerson.setText("");
         textCompanyContact1.setText("");
         textCompanyContact2.setText("");
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonClearActionPerformed
-
+    }
+    
     private void textCompanyAd1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textCompanyAd1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textCompanyAd1ActionPerformed

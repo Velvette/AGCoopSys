@@ -174,6 +174,10 @@ public class viewLoan extends javax.swing.JPanel {
         {
             this.listMemberMouseClicked(null);
             this.listLoanMouseClicked(null);
+            DefaultTableModel removeModel = (DefaultTableModel) listDetails.getModel();
+            removeModel.setRowCount(0);
+            textPayment1.setText("0");
+            textPayment.setText("0");
         }
         catch(Exception e)
         {
@@ -195,7 +199,9 @@ public class viewLoan extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         listMember = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
-        textPayment = new javax.swing.JLabel();
+        textPayment = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        textPayment1 = new javax.swing.JTextField();
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -230,11 +236,11 @@ public class viewLoan extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
+            .addComponent(jScrollPane3)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Loan Details"));
@@ -266,7 +272,7 @@ public class viewLoan extends javax.swing.JPanel {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,11 +299,25 @@ public class viewLoan extends javax.swing.JPanel {
             .addComponent(jScrollPane1)
         );
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Total Payment");
 
-        textPayment.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        textPayment.setBackground(new java.awt.Color(0, 0, 0));
+        textPayment.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        textPayment.setForeground(new java.awt.Color(0, 204, 0));
+        textPayment.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textPayment.setText("0");
         textPayment.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setText("Total Interest");
+
+        textPayment1.setBackground(new java.awt.Color(0, 0, 0));
+        textPayment1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        textPayment1.setForeground(new java.awt.Color(255, 0, 0));
+        textPayment1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        textPayment1.setText("0");
+        textPayment1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -313,10 +333,13 @@ public class viewLoan extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(textPayment1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(textPayment)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -333,7 +356,9 @@ public class viewLoan extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(textPayment))
+                            .addComponent(textPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(textPayment1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(13, 13, 13)))
                 .addContainerGap())
         );
@@ -341,15 +366,18 @@ public class viewLoan extends javax.swing.JPanel {
 
     private void listMemberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listMemberMouseClicked
 
+        
         try
         {
             try
             {
 
                 int select = listMember.getSelectedIndex();
+                listMember.setSelectedIndex(select);
                 String tempFirst = arrayFirstName.get(select);
                 String tempLast = arrayLastName.get(select);
                 String tempMid = arrayMidName.get(select);
+                System.out.println("MemberID:  "+lastname + " : " + select);
                 String tempQuery = "select loanid,status,loantype,grantdt,startdt,enddt,loanamt,montopay,interestrt,interestamt,payableamt,balance from loan_hdr where memberid = (select memberid from member where firstname = '"+ tempFirst +"' and lastname = '"+tempLast+"' and midinit = '"+tempMid+"')";
         
                 Statement stmt = null;       
@@ -422,9 +450,10 @@ public class viewLoan extends javax.swing.JPanel {
     public void getListDetails(String id)
     {
         float total = 0;
+        float totalInterest = 0;
         try
         {
-            String tempQuery = "select amordate as monthly_schedule,mon_amort as monthly_payment,mon_interest as interest, mon_premium as premium from loan_dtl where loanid="+id+" order by amordate";
+            String tempQuery = "select TO_DATE(amordate, 'YYYY-MM-DD') as monthly_schedule,mon_amort as monthly_payment,mon_interest as interest, mon_premium as premium from loan_dtl where loanid="+id+" order by amordate";
         
             Statement stmt = null;       
             this.connect();
@@ -467,7 +496,9 @@ public class viewLoan extends javax.swing.JPanel {
                 while(ps.next())
                 {
                     total += ps.getFloat("monthly_payment");
+                    totalInterest += ps.getFloat("interest");
                     textPayment.setText(String.valueOf(total));
+                    textPayment1.setText(String.valueOf(totalInterest));
                 }
             }
             catch(Exception e)
@@ -489,6 +520,7 @@ public class viewLoan extends javax.swing.JPanel {
      
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -499,6 +531,7 @@ public class viewLoan extends javax.swing.JPanel {
     private javax.swing.JTable listDetails;
     private javax.swing.JTable listLoan;
     private javax.swing.JList listMember;
-    private javax.swing.JLabel textPayment;
+    private javax.swing.JTextField textPayment;
+    private javax.swing.JTextField textPayment1;
     // End of variables declaration//GEN-END:variables
 }

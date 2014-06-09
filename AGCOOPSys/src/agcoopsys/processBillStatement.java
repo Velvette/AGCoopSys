@@ -29,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.table.DefaultTableModel;
-
 /**
  *
  * @author admin
@@ -63,6 +61,7 @@ public class processBillStatement extends javax.swing.JPanel {
     ArrayList<String> loanType = new ArrayList<>();
     ArrayList<Float> monAmort = new ArrayList<>();
         
+    String progressText = "";
     
     public processBillStatement() {
         initComponents();
@@ -303,6 +302,7 @@ public class processBillStatement extends javax.swing.JPanel {
     
     public void billReport() throws JRException
     {
+        String companyName = (String) comboCompany.getSelectedItem();
         String dFrom = bill.format(fromDate);
         String dUntil = bill.format(untilDate);
         JasperReport jasperReport = null;
@@ -310,7 +310,7 @@ public class processBillStatement extends javax.swing.JPanel {
         HashMap jasperParameter = new HashMap();
         jasperReport = JasperCompileManager.compileReport("src//BillingStatement.jrxml");       
         jasperPrint = JasperFillManager.fillReport(jasperReport,jasperParameter, conn);
-        JasperExportManager.exportReportToPdfFile(jasperPrint, "Reports//SOA//Billing Statement( "+dFrom+" -- "+dUntil+" ).pdf");
+        JasperExportManager.exportReportToPdfFile(jasperPrint, "Reports//SOA//"+companyName+" - Bill Statement("+dFrom+"-"+dUntil+").pdf");
     }
     
     public void processBillNew()
@@ -322,14 +322,17 @@ public class processBillStatement extends javax.swing.JPanel {
         Statement stmt = null;
         int billid = 0;
         String tempQuery = bank.bill_hdr(fromText, finalUntil, currentDate, compid);
-       
         
         this.connect();
         
         try
         {
             stmt = conn.createStatement();
+            //progressText = "Connecting to Database..\n";
+            //textProgress.append(progressText);
             stmt.executeQuery(tempQuery);
+            //progressText = "Creating Bill Header..\n";
+            //textProgress.append(progressText);
         }
         catch(Exception e)
         {
@@ -381,9 +384,14 @@ public class processBillStatement extends javax.swing.JPanel {
         {
             stmt.executeQuery(tempQuery);
             tempQuery = bank.joinDistinct(compid);
+            progressText = ("Joining Members - Company..\n");
             stmt.executeQuery(tempQuery);
+          //  progressText = ("Joining (Success)..\n Joining Non-Members - Company..\n");
+          //  textProgress.append(progressText);
             tempQuery = bank.joinDistinctNon(compid);
-            stmt.executeQuery(tempQuery);             
+            stmt.executeQuery(tempQuery);    
+          //  progressText = ("Joining (Success)..\n");
+            //textProgress.append(progressText);
         } 
         catch (SQLException ex)
         {
@@ -393,6 +401,10 @@ public class processBillStatement extends javax.swing.JPanel {
             
             tempQuery = "select * from current_month natural join member where compid="+compid;
             rs = stmt.executeQuery(tempQuery);
+            
+           // progressText = "Gathering Member Loans..\n";
+           // textProgress.append(progressText);
+            int memberCount = 0;
             int prevId = 0;
             int reset = 0;
             int overTotal = 0;
@@ -406,7 +418,9 @@ public class processBillStatement extends javax.swing.JPanel {
                 
                 if(memberid != prevId)
                 { 
-                    System.out.println("commit: " + membername);
+                    //System.out.println("commit: " + membername);
+                   // progressText = ("Current Member #:" + memberCount + " : " + membername);
+                   // textProgress.append(progressText);
                     goodsamt = this.getBalance(prevId);
                     cashamt = this.getCashamt(prevId);
                     total = regamt+emeramt+educamt+cashamt+goodsamt+calamityamt;
@@ -436,22 +450,99 @@ public class processBillStatement extends javax.swing.JPanel {
                 midinit = rs.getString("midinit");
                 membername = lastname + ", " + firstname + " " + midinit;
                 
-                System.out.println("outside:" + membername);
+                //System.out.println("outside:" + membername);
 
                 reset++;
                 prevId = memberid;
+                memberCount++;
             }
-            System.out.println("commit: " + membername);
-            goodsamt = this.getBalance(prevId);
-            cashamt = this.getCashamt(prevId);
-            total = regamt+emeramt+educamt+cashamt+goodsamt+calamityamt;
-            overTotal += total;
-            tempQuery += bank.commitToBill_DTL(billid, prevId, membername, contribution, cashid, cashamt, regid, regamt, educid, educamt, calamityid, calamityamt, emerid, emeramt, goodsamt, total, compid, "Y");
-            tempQuery += "SELECT * FROM dual";
-            
-            stmt.executeUpdate(tempQuery);
-            
+            if(memberid != 0)
+            {
+            //System.out.println("commit: " + membername);
+                //progressText = ("Current Member #:" + memberCount + " : " + membername);
+                //textProgress.append(progressText);
+                goodsamt = this.getBalance(prevId);
+                cashamt = this.getCashamt(prevId);
+                total = regamt+emeramt+educamt+cashamt+goodsamt+calamityamt;
+                overTotal += total;
+                tempQuery += bank.commitToBill_DTL(billid, prevId, membername, contribution, cashid, cashamt, regid, regamt, educid, educamt, calamityid, calamityamt, emerid, emeramt, goodsamt, total, compid, "Y");
+                tempQuery = "SELECT * FROM dual";
+                
+                
+                stmt.executeUpdate(tempQuery);
+            }
             this.processGoods(stmt, billid, fromText, finalUntil, compid);
+            
+            
+            //textProgress.append("\n----------------Execute : Database Commit----------------");
+            
+            //GET POEPLE WITH GOODS
+            tempQuery = bank.memberGoodsNoLoans(fromText, finalUntil, compid);
+            rs = null;
+            rs = stmt.executeQuery(tempQuery);
+            try
+            {
+                lastname = "";
+                firstname = "";
+                midinit = "";
+                float balance = 0;
+                membername = "";
+                memberid = 0;
+                
+                while(rs.next())
+                {
+                    lastname = rs.getString("lastname");
+                    firstname = rs.getString("firstname");
+                    midinit = rs.getString("midinit");
+                    membername = lastname + ", " + firstname + " " + midinit;
+                    balance = rs.getFloat("balance");
+                    memberid = rs.getInt("memberid");
+                    tempQuery = bank.commitMemberNoLoans(billid, memberid, membername, balance,compid);
+                    System.out.println(tempQuery);
+                    stmt.addBatch(tempQuery);
+                }
+                stmt.executeBatch();
+            }
+            
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+            
+            
+            //NON MEMBER
+            tempQuery = bank.nonmemberGoods(fromText, finalUntil, compid);
+            rs = null;
+            rs = stmt.executeQuery(tempQuery);
+            try
+            {
+                lastname = "";
+                firstname = "";
+                midinit = "";
+                float balance = 0;
+                membername = "";
+                memberid = 0;
+                
+                while(rs.next())
+                {
+                    lastname = rs.getString("lastname");
+                    firstname = rs.getString("firstname");
+                    midinit = rs.getString("midinit");
+                    membername = lastname + ", " + firstname + " " + midinit;
+                    balance = rs.getFloat("balance");
+                    memberid = rs.getInt("memberid");
+                    tempQuery = bank.commitNonMemberGoods(billid, memberid, membername, balance,compid);
+                    System.out.println(tempQuery);
+                    stmt.addBatch(tempQuery);
+                }
+                stmt.executeBatch();
+            }
+            
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+            
             
             tempQuery = bank.commitDTL_Temp(billid);
             stmt.executeQuery(tempQuery);
@@ -460,7 +551,9 @@ public class processBillStatement extends javax.swing.JPanel {
             stmt.executeQuery(tempQuery);
             
             
-            this.billReport();
+            
+            
+            this.billReport(); //this report
         }
         catch (Exception e)
         {
@@ -469,6 +562,8 @@ public class processBillStatement extends javax.swing.JPanel {
         finally{
             this.disconnect();
         }
+        
+        
     }
     
     public void processGoods(Statement stmt, int billid, String fromStart, String fromUntil, int compid)
@@ -613,6 +708,9 @@ public class processBillStatement extends javax.swing.JPanel {
         jButton2 = new javax.swing.JButton();
         buttonProcess = new javax.swing.JButton();
         buttonClear = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        textProgress = new javax.swing.JTextArea();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Billing Statement"));
 
@@ -641,7 +739,7 @@ public class processBillStatement extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(textUntil, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
                             .addComponent(textFrom))))
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -677,6 +775,25 @@ public class processBillStatement extends javax.swing.JPanel {
             }
         });
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("File Detail"));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        textProgress.setEditable(false);
+        textProgress.setColumns(20);
+        textProgress.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        textProgress.setRows(5);
+        jScrollPane1.setViewportView(textProgress);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -684,21 +801,30 @@ public class processBillStatement extends javax.swing.JPanel {
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buttonClear, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31)
-                        .addComponent(buttonProcess, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(31, 31, 31)
+                                .addComponent(buttonClear, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 202, Short.MAX_VALUE)
+                                .addComponent(buttonProcess, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
@@ -706,7 +832,9 @@ public class processBillStatement extends javax.swing.JPanel {
                     .addComponent(buttonClear))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(158, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -735,9 +863,12 @@ public class processBillStatement extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTextField textFrom;
+    private javax.swing.JTextArea textProgress;
     private javax.swing.JTextField textUntil;
     // End of variables declaration//GEN-END:variables
 }

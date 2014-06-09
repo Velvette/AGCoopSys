@@ -18,10 +18,12 @@ public class mainInterface extends javax.swing.JFrame {
     viewSupplier vS = new viewSupplier();
     viewLoan vL = new viewLoan();
     viewNonMember vNM = new viewNonMember();
+    
     addMember aM = new addMember();
     addSupplier aS = new addSupplier();
     addCompany aC = new addCompany();
     addPurchaseGoods aP = new addPurchaseGoods();
+    addNonMember aNM = new addNonMember();
     
     processBillStatement pB = new processBillStatement();
     
@@ -344,9 +346,12 @@ public class mainInterface extends javax.swing.JFrame {
         String agcoopCompany = "agcoopsys.viewCompany";
         String agcoopMember = "agcoopsys.viewMember";
         String agcoopSupplier = "agcoopsys.viewSupplier";
+        String agcoopNonMember = "agcoopsys.viewNonMember";
+        
         try{
             if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCompany))
             { 
+                aC.reset();
                 aC.setVisible(true);
                 aC.setLocationRelativeTo(null);
                 aC.setTitle("Add Company - Information");
@@ -355,6 +360,7 @@ public class mainInterface extends javax.swing.JFrame {
         
             else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopMember))
             {
+                aM.reset();
                 aM.setVisible(true);
                 aM.setLocationRelativeTo(null);
                 aM.setTitle("Add Member - Information");
@@ -363,11 +369,20 @@ public class mainInterface extends javax.swing.JFrame {
         
             else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopSupplier))
             {
+                aS.reset();
                 aS.setVisible(true);
                 aS.setLocationRelativeTo(null);
-                aS.setTitle("Add Member - Information");
+                aS.setTitle("Add Supplier - Information");
                 aS.setResizable(false);
                 
+            }
+            else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopNonMember))
+            {
+                aNM.reset();
+                aNM.setVisible(true);
+                aNM.setLocationRelativeTo(null);
+                aNM.setTitle("Add Non-Member - Information");
+                aNM.setResizable(false);
             }
         }
         catch(Exception e)
@@ -416,6 +431,7 @@ public class mainInterface extends javax.swing.JFrame {
         String agcoopMember = "agcoopsys.viewMember";
         String agcoopSupplier = "agcoopsys.viewSupplier";
         String agcoopLoan = "agcoopsys.viewLoan";
+        String agcoopNonMember = "agcoopsys.viewNonMember";
         
             int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete?", "Delete - Information", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION)
@@ -445,6 +461,12 @@ public class mainInterface extends javax.swing.JFrame {
                         vL.deleteLoan();
                         vL.getList();
                     }
+                    else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopNonMember))
+                    {
+                        //DELETE NON MEMBER
+                        vNM.deleteNonMember();
+                        vNM.getList();
+                    }
                     
                 }
             
@@ -460,6 +482,8 @@ public class mainInterface extends javax.swing.JFrame {
         String agcoopCompany = "agcoopsys.viewCompany";
         String agcoopMember = "agcoopsys.viewMember";
         String agcoopSupplier = "agcoopsys.viewSupplier";
+        String agcoopNonMember = "agcoopsys.viewNonMember";
+        
         try{
             if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCompany))
             {
@@ -474,6 +498,10 @@ public class mainInterface extends javax.swing.JFrame {
             else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopSupplier))
             {
                 vS.editSupplier();
+            }
+            else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopNonMember))
+            {
+                //EDIT NON MEMBER
             }
         }
         catch(Exception e)

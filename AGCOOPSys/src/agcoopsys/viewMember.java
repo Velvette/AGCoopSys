@@ -16,7 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class viewMember extends javax.swing.JPanel {
-
+    
+    addLoan aL = new addLoan();
     public viewMember()
     {
         initComponents();
@@ -155,7 +156,7 @@ public class viewMember extends javax.swing.JPanel {
     {
         int index = listMember.getSelectedRow();
         String i = listMember.getValueAt(index, 0).toString();
-        addLoan aL = new addLoan();
+        aL.allReset();
         aL.setVisible(true);
         aL.setLocationRelativeTo(null);
         aL.setResizable(false);

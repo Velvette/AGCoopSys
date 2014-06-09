@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="test" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c5cd91b6-ae7e-4581-a881-052a89293bcf">
+	<property name="ireport.zoom" value="1.0000000000000009"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Lenovo\\Documents\\GitHub\\AGCoopSys\\AGCOOPSys\\src\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT DISTINCT ISMEMBER,CONTRIBUTION,CONTACTNO1,COMPNAME,ADDRESS1,ADDRESS2,ADDRESS3,MEMBERNAME,CASH_AMOUNT,REG_AMOUNT,CALAMITY_AMOUNT,EDUC_AMOUNT,EMER_AMOUNT,GOODS_AMOUNT,MEM_TOTAL FROM (SELECT DISTINCT ISMEMBER,CONTRIBUTION,MEMBERNAME,CONTACTNO1,COMPNAME,ADDRESS1,ADDRESS2,ADDRESS3,CASH_AMOUNT,REG_AMOUNT,CALAMITY_AMOUNT,EDUC_AMOUNT,EMER_AMOUNT,GOODS_AMOUNT,MEM_TOTAL FROM BILLDTL_TEMP INNER JOIN COMPANY ON BILLDTL_TEMP.COMPID = COMPANY.COMPID ORDER BY BILLDTL_TEMP.MEMBERNAME)]]>
+	</queryString>
+	<field name="ISMEMBER" class="java.lang.String"/>
+	<field name="CONTRIBUTION" class="java.math.BigDecimal"/>
+	<field name="CONTACTNO1" class="java.lang.String"/>
+	<field name="COMPNAME" class="java.lang.String"/>
+	<field name="ADDRESS1" class="java.lang.String"/>
+	<field name="ADDRESS2" class="java.lang.String"/>
+	<field name="ADDRESS3" class="java.lang.String"/>
+	<field name="MEMBERNAME" class="java.lang.String"/>
+	<field name="CASH_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="REG_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="CALAMITY_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="EDUC_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="EMER_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="GOODS_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="MEM_TOTAL" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="314" y="10" width="426" height="53" uuid="aef67cb9-1ed5-43b9-b540-8c4be772f938"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="44" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[AG COOPERATIVE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="128" height="20" uuid="e349c51a-2f0b-4b90-b37a-4b221c73bf6a"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<text><![CDATA[Statement processed:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="31" width="100" height="20" uuid="143b5023-af6d-4f38-99be-248b89d43edc"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<text><![CDATA[Company:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="31" width="100" height="20" uuid="83f4e164-6b48-435e-8ba5-9a37ef635096"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPNAME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="143" y="0" width="100" height="20" uuid="550f0673-c82c-4fd4-baab-59751b5db9a8"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="9" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="752" height="1" uuid="6f0fb5cd-b6f3-4e7c-a55a-6e81b490afb1"/>
+			</line>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="752" height="125" uuid="4a0fbbc3-5931-452e-9085-9356a74c935e"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "test_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="108">
+			<subreport>
+				<reportElement x="0" y="8" width="752" height="100" uuid="16205682-ad13-4788-bd3e-3c838e2636e1"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "test_subreport2.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="632" y="34" width="80" height="20" uuid="12b43543-03b5-450b-b688-5c9121d2ddd0"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="712" y="34" width="40" height="20" uuid="db3b1511-df4a-426d-89e0-b0f75d7d2141"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

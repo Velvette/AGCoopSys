@@ -6,7 +6,6 @@ package agcoopsys;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,10 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import net.proteanit.sql.DbUtils;
 
 /**
  *
@@ -115,6 +111,11 @@ public class addLoan extends javax.swing.JFrame {
         jLabel3.setText("Type");
 
         comboTypeOfLoan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Regular", "Calamity", "Educational", "Emergency", "Cashloan" }));
+        comboTypeOfLoan.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboTypeOfLoanItemStateChanged(evt);
+            }
+        });
         comboTypeOfLoan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboTypeOfLoanActionPerformed(evt);
@@ -141,7 +142,7 @@ public class addLoan extends javax.swing.JFrame {
 
         jLabel7.setText("End Date");
 
-        textEndDate.setEditable(false);
+        textEndDate.setEnabled(false);
 
         jLabel8.setText("Interest Rate");
 
@@ -180,6 +181,12 @@ public class addLoan extends javax.swing.JFrame {
         buttonCompute.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonComputeActionPerformed(evt);
+            }
+        });
+
+        textCheckNo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textCheckNoActionPerformed(evt);
             }
         });
 
@@ -401,7 +408,6 @@ public class addLoan extends javax.swing.JFrame {
         String errorMessage = "";
         boolean error = true;
 
-        
         try
         {
             loanCalculate.setMonthlyInterest(Float.parseFloat(textInterest.getText())); 
@@ -427,25 +433,8 @@ public class addLoan extends javax.swing.JFrame {
             error = false;
         }
         
-        if(error)
-        {
-           loanCalculate.getAmortization();
-           principal = Float.parseFloat(textPrincipal.getText());
-           monthlyAmortization = loanCalculate.getMonthlyPayment();
-           interest = loanCalculate.getInterest();
-           interestrt = Float.parseFloat(textInterest.getText());
-           totalPayment = loanCalculate.getTotAmortization();
-           terms = Integer.parseInt(textTerms.getText());
-           checkNo = textCheckNo.getText();
-           labelAmortization.setText(Float.toString(monthlyAmortization));
-           labelTotalPayment.setText(Float.toString(totalPayment));
-           labelTotalInterest.setText(Float.toString(loanCalculate.getTotInterest()));
-           labelTotalPrincipal.setText(Float.toString(principal));
-           Date grantdt = new Date();
-           currentDate = grantdt;
-           loanType = comboTypeOfLoan.getSelectedItem().toString();
-            
-           switch (loanType) {
+        loanType = comboTypeOfLoan.getSelectedItem().toString();
+                   switch (loanType) {
                 case "Regular":
                     loanType = "R";
                     break;
@@ -458,38 +447,97 @@ public class addLoan extends javax.swing.JFrame {
                 case "Emergency":
                     loanType = "M";
                     break;
-            }
+                case "Cashloan":
+                    loanType = "A";
+                    break;
+           }
+        Date grantdt = new Date();
+        currentDate = grantdt;
+        checkNo = textCheckNo.getText();
+        
+        if(error && !loanType.equals("A"))
+        {
+           loanCalculate.getAmortization();
+           principal = Float.parseFloat(textPrincipal.getText());
+           monthlyAmortization = loanCalculate.getMonthlyPayment();
+           interest = loanCalculate.getInterest();
+           interestrt = Float.parseFloat(textInterest.getText());
+           totalPayment = loanCalculate.getTotAmortization();
+           terms = Integer.parseInt(textTerms.getText());
            
+           labelAmortization.setText(Float.toString(monthlyAmortization));
+           labelTotalPayment.setText(Float.toString(totalPayment));
+           labelTotalInterest.setText(Float.toString(loanCalculate.getTotInterest()));
+           labelTotalPrincipal.setText(Float.toString(principal));
+           
+                          
            if(textStartDate.getText().length() != 0)
            {
-            try
-            {  
-                startdt = (Date) df.parse(textStartDate.getText());
-                tempCal = (Date) df.parse(textStartDate.getText());
+                try
+                {  
+                    startdt = (Date) df.parse(textStartDate.getText());
+                    tempCal = (Date) df.parse(textStartDate.getText());
                 
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(startdt);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(startdt);
                 
-                cal.set(Calendar.MONTH, (cal.get(Calendar.MONTH)+ Integer.parseInt(textTerms.getText())-1));
+                    cal.set(Calendar.MONTH, (cal.get(Calendar.MONTH)+ Integer.parseInt(textTerms.getText())-1));
                 
-                enddt = cal.getTime();
-                startdtString = df.format(startdt);
-                enddtString = df.format(enddt);
-                currentdtString = df.format(currentDate);
-                textEndDate.setText(enddtString);
+                    enddt = cal.getTime();
+                    startdtString = df.format(startdt);
+                    enddtString = df.format(enddt);
+                    currentdtString = df.format(currentDate);
+                    textEndDate.setText(enddtString);
                 
-                //System.out.println(loanType);
-                //System.out.println("current:" + startdtString + " ||| " + "end: " + enddtString);
-            } 
-            catch (ParseException | NumberFormatException q)
-            { 
+                    //System.out.println(loanType);
+                    //System.out.println("current:" + startdtString + " ||| " + "end: " + enddtString);
+                } 
+                catch (ParseException | NumberFormatException q)
+                { 
                 
-            }
-            
+                } 
            }
+           
+           comboTypeOfLoan.setEnabled(false);
            buttonConfirm.setEnabled(true);
            buttonCompute.setEnabled(false);
            
+        }
+        
+        else
+        {
+           
+            totalPayment = loanCalculate.getCashloan();
+            
+            labelAmortization.setText("0");
+            labelTotalInterest.setText(Float.toString(loanCalculate.getInterest()));
+            labelTotalPayment.setText(Float.toString(totalPayment));
+            labelTotalPrincipal.setText(textPrincipal.getText());
+            
+            
+            if(textEndDate.getText().length() != 0)
+            {
+                 try
+                 {  
+                    //startdt = (Date) df.parse(textStartDate.getText());
+                    enddt = (Date) df.parse(textEndDate.getText());
+                    enddtString = df.format(enddt);
+                    currentdtString = df.format(currentDate);
+                    textEndDate.setText(enddtString);
+                    
+                    //System.out.println(loanType);
+                    //System.out.println("current:" + startdtString + " ||| " + "end: " + enddtString);
+                } 
+                catch (ParseException | NumberFormatException q)
+                { 
+                    q.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Date Format: YYYY-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
+                } 
+           }
+           
+           comboTypeOfLoan.setEnabled(false);
+           buttonConfirm.setEnabled(true);
+           buttonCompute.setEnabled(false);
         }
         
         // TODO add your handling code here:
@@ -499,12 +547,19 @@ public class addLoan extends javax.swing.JFrame {
 
         if(paramDB.checkDuplicateLoan(memberID,loanType))
         {
-            this.firstBreakCommit();
-            this.secondBreakCommit();
+            if(!"A".equals(loanType))
+            {
+                this.firstBreakCommit();
+                this.secondBreakCommit();
+            }
+            else
+                this.firstBreakCommit();
+                        
         }
         else
             JOptionPane.showMessageDialog(null, "Error: Current type of loan exists", "Error", JOptionPane.ERROR_MESSAGE); 
-                
+        
+        comboTypeOfLoan.setEnabled(true);
         buttonConfirm.setEnabled(false);
         buttonCompute.setEnabled(true);
         loanCalculate.reset();
@@ -512,12 +567,6 @@ public class addLoan extends javax.swing.JFrame {
 
     private void comboTypeOfLoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboTypeOfLoanActionPerformed
 
-        if(comboTypeOfLoan.getSelectedItem().equals("Cashloan"))
-        {
-            textTerms.setEditable(false);
-        }
-        else
-            textTerms.setEditable(true);
         
     }//GEN-LAST:event_comboTypeOfLoanActionPerformed
 
@@ -533,36 +582,95 @@ public class addLoan extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonCancelActionPerformed
 
+    private void textCheckNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textCheckNoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textCheckNoActionPerformed
+
+    private void comboTypeOfLoanItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTypeOfLoanItemStateChanged
+
+        if(comboTypeOfLoan.getSelectedItem().toString().equals("Cashloan"))
+        {
+            textEndDate.setEnabled(true);
+            textStartDate.setEnabled(false);
+            textStartDate.setEditable(false);
+            textTerms.setEditable(false);
+        }
+        else
+        {
+            textEndDate.setEnabled(false);
+            textStartDate.setEnabled(true);
+            textTerms.setEditable(true);
+            textStartDate.setEditable(true);
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboTypeOfLoanItemStateChanged
+
     public void firstBreakCommit()
     {
-       queryBank bank = new queryBank();
-       String query = bank.loanFirstCommit(memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
+       if(!loanType.equals("A"))
+       {
+            queryBank bank = new queryBank();
+            String query = bank.loanFirstCommit(memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
        
-        this.connect();
-        Statement stmt = null;
+            this.connect();
+            Statement stmt = null;
         
-        try
-        {
-            stmt = conn.createStatement();
-        }
-        catch(Exception e)
-        {
+            try
+            {
+                stmt = conn.createStatement();
+            }
+            catch(Exception e)
+            {
             
-        }
+            }
         
-        try
-        {
-            stmt.addBatch(query);
-            stmt.executeBatch();
-        }
-        catch (SQLException ex)
-        {
+            try
+            {
+                stmt.addBatch(query);
+                stmt.executeBatch();
+            }
+            catch (SQLException ex)
+            {
             
-        }
+            }
         
-        finally{
-            this.disconnect();
-        }
+            finally{
+                this.disconnect();
+            }
+       }
+       else
+       {
+            queryBank bank = new queryBank();
+            String query = bank.loanCashloan(memberID, currentdtString, enddtString, principal, interestrt, interest, totalPayment,checkNo);
+       
+            this.connect();
+            Statement stmt = null;
+        
+            try
+            {
+                stmt = conn.createStatement();
+            }
+            catch(Exception e)
+            {
+            
+            }
+        
+            try
+            {
+                stmt.addBatch(query);
+                stmt.executeBatch();
+                JOptionPane.showMessageDialog(null, "Database Update: Success", "Updating database", JOptionPane.INFORMATION_MESSAGE);
+            }
+            catch (SQLException ex)
+            {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        
+            finally{
+                this.disconnect();
+            }    
+       }
     }
     
     public void secondBreakCommit()
@@ -580,7 +688,6 @@ public class addLoan extends javax.swing.JFrame {
         this.getInsertAmortDates(repEnd, terms, arrayInterest,arrayPremium, loanID, monthlyAmortization);
     }
     
-    
     public void getInsertAmortDates(Date repEnd, int terms, float[] arrayInterest,float[] arrayPremium, int loanID, float monthlyAmortization)
     {
         DateFormat df;
@@ -591,6 +698,7 @@ public class addLoan extends javax.swing.JFrame {
         Calendar calendar = Calendar.getInstance();
         Statement stmt = null;
         this.connect();
+        float penalty = 0;
         try
         {
              stmt = conn.createStatement();
@@ -607,7 +715,7 @@ public class addLoan extends javax.swing.JFrame {
                 repEndString = df.format(repEnd);
                 //System.out.println(repEndString);
                 calendar.setTime(repEnd);
-                insertString = "insert into loan_dtl (loanid,amordate,mon_amort,mon_interest,mon_premium) values ('"+loanID+"',to_date('"+repEndString+"', 'yyyy-MM-dd'),'"+monthlyAmortization+"','"+arrayInterest[i]+"','"+arrayPremium[i]+"')";
+                insertString = "insert into loan_dtl (loanid,amordate,mon_amort,mon_interest,mon_premium,mon_penalty) values ('"+loanID+"',to_date('"+repEndString+"', 'yyyy-MM-dd'),'"+monthlyAmortization+"','"+arrayInterest[i]+"','"+arrayPremium[i]+"','"+penalty+"')";
                 System.out.println(insertString);
                 stmt.addBatch(insertString);
                 calendar.add(Calendar.MONTH, 1);
@@ -661,6 +769,32 @@ public class addLoan extends javax.swing.JFrame {
         finally{
             this.disconnect();
         }
+    }
+    
+    public void allReset()
+    {
+        textInterest.setText("");
+        textCheckNo.setText("");
+        textPrincipal.setText("");
+        textTerms.setText("");
+        textEndDate.setText("");
+        textStartDate.setText("");
+        textStartDate.setEnabled(true);
+        textStartDate.setEditable(true);
+        textEndDate.setEnabled(true);        
+        
+        labelAmortization.setText("");
+        labelTotalPayment.setText("");
+        labelTotalInterest.setText("");
+        labelTotalPrincipal.setText("");
+               
+        comboTypeOfLoan.setSelectedIndex(0);
+        comboTypeOfLoan.setEnabled(true);
+        buttonCompute.setEnabled(true);
+        buttonConfirm.setEnabled(true);
+        labelMember.setText("");
+        
+        
     }
     /**
      * @param args the command line arguments

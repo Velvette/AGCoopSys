@@ -9,10 +9,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -191,7 +187,14 @@ public class ConnectToDatabaseSys {
         
     public boolean checkDuplicateLoan(String memberID, String loantype)
     {
-        String query = "select * from loan_hdr where memberid="+memberID+" and status='A' and loantype='"+loantype+"'";
+        String query = "";
+        if(!loantype.equals("A"))
+        {
+            query = "select * from loan_hdr where memberid="+memberID+" and status='A' and loantype='"+loantype+"'";
+        }
+        else
+            query = "select * from cashloan where memberid="+memberID+" and status='A'";
+        
         PreparedStatement stmt = null;
         Connection con = null;
         ResultSet rs;

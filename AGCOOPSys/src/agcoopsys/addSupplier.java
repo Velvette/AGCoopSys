@@ -398,18 +398,11 @@ public class addSupplier extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonCancelActionPerformed
 
     private void buttonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearActionPerformed
-
-        textSupplierName.setText("");
-        textSupBalance.setText("0");
-        textSupAd1.setText("");
-        textSupAd2.setText("");
-        textSupAd3.setText("");
-        textSupEmail.setText("");
-        textSupCon1.setText("");
-        textSupCon2.setText("");
+        
+        this.reset();
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonClearActionPerformed
-
+    
     public void checkInputEditSupplier(String id)
     {
         ResultSet rs;
@@ -452,6 +445,19 @@ public class addSupplier extends javax.swing.JFrame {
             e.printStackTrace();
 	}   
         choice = 1;
+    }
+    
+    public void reset()
+    {
+        textSupplierName.setText("");
+        textSupAd1.setText("");
+        textSupAd2.setText("");
+        textSupAd3.setText("");
+        textSupBalance.setText("0");
+        textSupCon1.setText("");
+        textSupCon2.setText("");
+        textSupEmail.setText("");
+        textSupContactPerson.setText("");
     }
     /**
      * @param args the command line arguments

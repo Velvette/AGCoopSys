@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -90,7 +91,36 @@ public class viewNonMember extends javax.swing.JPanel {
         }
         
     }
+    
+        public void deleteNonMember()
+    {
+        try
+        {
+            int index = listMember.getSelectedRow();
+            String i = listMember.getValueAt(index, 0).toString();
         
+            String query = "delete from nonmember where memberid ="+i;
+            ConnectToDatabaseSys connectDB = new ConnectToDatabaseSys();
+            connectDB.accessLoopDatabase(query);
+        }
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null, "Error: Select row to delete", "Error", JOptionPane.ERROR_MESSAGE); 
+        }
+    }
+        
+        public void editMember() 
+    {
+            int index = listMember.getSelectedRow();
+            String i = listMember.getValueAt(index, 0).toString();
+            addNonMember aM = new addNonMember();
+            aM.setVisible(true);
+            aM.setLocationRelativeTo(null);
+            aM.setResizable(false);
+            aM.setTitle("Edit Member - Information");
+            aM.checkInputEditMember(i);
+    }
+    
     public void connect()
     {
         dbDriver = paramDB.getDbClass();
@@ -171,11 +201,11 @@ public class viewNonMember extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables

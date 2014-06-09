@@ -4,6 +4,9 @@
  */
 package agcoopsys;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.FocusTraversalPolicy;
 import java.sql.Connection;
 import java.util.Date;
 import java.sql.DriverManager;
@@ -64,6 +67,7 @@ public class addMember extends javax.swing.JFrame {
     public Connection conn;
     ConnectToDatabaseSys paramDB = new ConnectToDatabaseSys();
     
+    
     public addMember()
     {
         this.df = new SimpleDateFormat("yyyy-MM-dd");
@@ -79,6 +83,7 @@ public class addMember extends javax.swing.JFrame {
         textDateHired.setText(df.format(current));
     }
 
+    
     public void setCompanyIDText(String companyIDText) {
         this.companyIDText = (String) comboCompany.getSelectedItem();
     }
@@ -168,6 +173,9 @@ public class addMember extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup = new javax.swing.ButtonGroup();
+        textFirstName = new javax.swing.JTextField();
+        textMidInit = new javax.swing.JTextField();
+        textLastName = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         textTotal = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
@@ -178,11 +186,8 @@ public class addMember extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         radioEmployed = new javax.swing.JRadioButton();
-        textMidInit = new javax.swing.JTextField();
         radioResigned = new javax.swing.JRadioButton();
-        textLastName = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        textFirstName = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -548,6 +553,14 @@ public class addMember extends javax.swing.JFrame {
     }//GEN-LAST:event_radioEmployedItemStateChanged
 
     private void buttonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearActionPerformed
+        
+        this.reset();
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonClearActionPerformed
+
+    public void reset()
+    {
         Calendar cal = Calendar.getInstance();
         Date current = new Date();
         current = cal.getTime();
@@ -565,12 +578,10 @@ public class addMember extends javax.swing.JFrame {
         textDateHired.setText(df.format(current));
         textDateResigned.setText("");
         textRemark.setText("");
-        radioEmployed.setSelected(false);
+        radioEmployed.setSelected(true);
         radioResigned.setSelected(false);
-        
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonClearActionPerformed
-
+    }
+    
     private void textShareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textShareActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textShareActionPerformed
@@ -705,6 +716,7 @@ public class addMember extends javax.swing.JFrame {
                         memberContact1+"',contactno2='"+memberContact2+"',email='"+memberEmail+"',compid='"+companyID+"',contribution='"+memberContribution+"',contribtotal='"+memberTotal+"',maxshare='"+memberShares+"',status='"+memberEmploymentStatus+"',hiredt='"+
                         memberHired+"',resigndt='"+memberResigned+"',remarks='"+memberRemarks+"' where memberid="+memberID;
             }
+            choice = 0;
             //System.out.println(query);
             ConnectToDatabaseSys connectDB = new ConnectToDatabaseSys();
             connectDB.accessInputDatabase(query);

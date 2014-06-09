@@ -9,6 +9,7 @@ package agcoopsys;
  * @author admin
  */
 public class loanDetailCalculate {
+    
     float monthlyPayment;
     float principalBalance;
     float monthlyInterest;
@@ -18,6 +19,7 @@ public class loanDetailCalculate {
     float totInterest = 0;
     float interest = 0;
     float interestRecur = 0;
+    float cashPayment = 0;
     
 
     public void setMonthlyInterest(float monthlyInterest) {
@@ -57,6 +59,8 @@ public class loanDetailCalculate {
         return interest;
     }
     
+    
+        
     public void getAmortization()
     {
         float principal = 0;
@@ -87,7 +91,15 @@ public class loanDetailCalculate {
         totAmortization = (float) (Math.round(totAmortization * 100.00)/100.00);
         totInterest = (float) (Math.round(totInterest * 100.00)/100.00);
         monthlyPayment = (float) (Math.round(monthlyPayment * 100.00)/100.00);
-        System.out.println(totInterest);
+        //System.out.println(totInterest);
+    }
+    
+    public float getCashloan()
+    {
+        float principal = this.principalBalance;
+        interest = principal * monthlyInterest;
+        float cashBalance = (principal * monthlyInterest) + principal;
+        return cashBalance;
     }
     
     public float getInterestRateComp(float interest, int number)
@@ -144,5 +156,7 @@ public class loanDetailCalculate {
         totAmortization = 0;
         totInterest = 0;
         monthlyPayment = 0;
+        interest = 0;
+        cashPayment = 0;
     }
 }

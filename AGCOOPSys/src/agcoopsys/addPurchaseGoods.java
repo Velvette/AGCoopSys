@@ -71,6 +71,21 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         this.getListNonMember();
     }
     
+    public void reset()
+    {
+        textBillDate.setText("");
+        listModelMember.clear();
+        listModelNonMember.clear();
+        labelName.setText("");
+        textAmount.setText("0");
+        textDesc.setText("");
+        totalAmount = 0;
+        labelAmount.setText("0.0");
+        listPurchasing.clear();
+        textRemarks.setText("");
+        
+    }
+    
     public void getListMember()
     {
         final String tempQuery = "SELECT * from member";
@@ -78,7 +93,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         Statement stmt = null;       
         this.connect();
         conn = this.getConnection();
-        
+                
         try
         {
             stmt = conn.createStatement();
@@ -145,6 +160,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
                 nameTemp += ", " + rs.getString("firstname");
                 nameTemp += " " + rs.getString("midinit");
                 memberid = rs.getInt("memberid");
+                arrayNonMemberName.add(nameTemp);
                 arrayNonMemberid.add(memberid);
                 listModelNonMember.addElement(nameTemp);
                 nameTemp = "";
@@ -272,7 +288,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         jLabel6.setText("Total amount");
 
         labelAmount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        labelAmount.setText("0");
+        labelAmount.setText("0.0");
         labelAmount.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -299,18 +315,37 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         jLabel2.setText("Name");
+        jLabel2.setEnabled(false);
 
         labelName.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel3.setText("Amount");
+        jLabel3.setEnabled(false);
+
+        textAmount.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        textAmount.setText("0");
+        textAmount.setEnabled(false);
+        textAmount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textAmountActionPerformed(evt);
+            }
+        });
+        textAmount.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                textAmountFocusGained(evt);
+            }
+        });
 
         jLabel4.setText("Description");
+        jLabel4.setEnabled(false);
 
         textDesc.setColumns(20);
         textDesc.setRows(5);
+        textDesc.setEnabled(false);
         jScrollPane3.setViewportView(textDesc);
 
         buttonNext.setText("Next>>");
+        buttonNext.setEnabled(false);
         buttonNext.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonNextActionPerformed(evt);
@@ -318,14 +353,27 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         });
 
         buttonBack.setText("Back");
+        buttonBack.setEnabled(false);
+        buttonBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonBackActionPerformed(evt);
+            }
+        });
 
         buttonRemove.setText("<<Remove");
         buttonRemove.setEnabled(false);
+        buttonRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRemoveActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Remarks");
+        jLabel1.setEnabled(false);
 
         textRemarks.setColumns(20);
         textRemarks.setRows(5);
+        textRemarks.setEnabled(false);
         jScrollPane5.setViewportView(textRemarks);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -467,7 +515,6 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
 
         this.goodsHeader();
-
     }//GEN-LAST:event_buttonConfirmActionPerformed
 
     private void enabledFalse()
@@ -479,6 +526,14 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         labelBill.setEnabled(false);
         listMember.setEnabled(false);
         listNonMember.setEnabled(false);
+        
+        textAmount.setEnabled(true);
+        textDesc.setEnabled(true);
+        jLabel3.setEnabled(true);
+        jLabel4.setEnabled(true);
+        buttonNext.setEnabled(true);
+        buttonBack.setEnabled(true);
+        
     }
     
     private void enabledTrue()
@@ -490,11 +545,18 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         labelBill.setEnabled(true);
         listMember.setEnabled(true);
         listNonMember.setEnabled(true);
+        
+        textAmount.setEnabled(false);
+        textDesc.setEnabled(false);
+        jLabel3.setEnabled(false);
+        jLabel4.setEnabled(false);
     }
     
     private void buttonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddActionPerformed
 
         String holdName = "";
+        
+        textAmount.setText("0");
         //CHECK IF BILLDATE IS FILLED
         //THEN PROCEED TO ADD DETAILS FOR COMMIT
         if(tabPane.getSelectedIndex() == 0)
@@ -502,12 +564,15 @@ public class addPurchaseGoods extends javax.swing.JFrame {
             holdName = arrayMemberName.get(listMember.getSelectedIndex());
             labelName.setText(holdName);
             this.enabledFalse();
+            isMember = 0;
         }
-        else
+        else if(tabPane.getSelectedIndex() == 1)
         {
-            holdName = arrayNonMemberName.get(listNonMember.getSelectedIndex());
-            labelName.setText(holdName);
-            this.enabledFalse();
+           holdName = arrayNonMemberName.get(listNonMember.getSelectedIndex());
+           labelName.setText(holdName);
+           this.enabledFalse();
+           isMember = 1;
+           // System.out.println("asd");
         }
         
         // TODO add your handling code here:
@@ -523,6 +588,14 @@ public class addPurchaseGoods extends javax.swing.JFrame {
 
         float amount = 0;
         addPurchasePerson person = new addPurchasePerson();
+        
+        
+        jLabel1.setEnabled(true);
+        textRemarks.setEnabled(true);
+        buttonBack.setEnabled(false);
+        buttonNext.setEnabled(false);
+        
+        
         
         try
         {
@@ -560,9 +633,59 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         totalAmount += amount;
         labelAmount.setText(String.valueOf(totalAmount));
         buttonConfirm.setEnabled(true);
+        buttonRemove.setEnabled(true);
+        
+        listPurchase.setSelectedIndex(0);
         this.enabledTrue();
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_buttonNextActionPerformed
+
+    private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
+
+        this.enabledTrue();
+        textAmount.setText("0");
+        buttonBack.setEnabled(false);
+        buttonNext.setEnabled(false);
+        
+        
+    }//GEN-LAST:event_buttonBackActionPerformed
+
+    private void buttonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemoveActionPerformed
+
+        addPurchasePerson person = (addPurchasePerson) arrayPersonToAdd.get(listPurchase.getSelectedIndex());
+        float tempAmount = Float.parseFloat(labelAmount.getText());
+        float tempChangedAmount = tempAmount - person.getBalance(); // CHANGE VALUE OF LABEL
+        labelAmount.setText(Float.toString(tempChangedAmount));
+        
+        arrayPersonToAdd.remove(listPurchase.getSelectedIndex()); //FIRST :- BEFORE DELETE IN JLIST
+        listPurchasing.remove(listPurchase.getSelectedIndex());
+        
+        try
+        {
+            listPurchase.setSelectedIndex(0);
+        }
+        catch(Exception e)
+        {
+            
+        }
+        
+        if(listPurchase.getSelectedIndex() == -1)
+        {
+            buttonRemove.setEnabled(false);
+            buttonConfirm.setEnabled(false);
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonRemoveActionPerformed
+
+    private void textAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textAmountActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textAmountActionPerformed
+
+    private void textAmountFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_textAmountFocusGained
+
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textAmountFocusGained
 
 
     
@@ -571,85 +694,104 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         this.connect();
         Statement stmt = null;
         Date billDate = null;
-        try
+        int error = 0;
+        String dateBill = "";
+        String errorMessages = "";
+        
+        try // GET BILL DATE
         {
             billDate = df.parse(textBillDate.getText());
+            dateBill = df.format(billDate);
         }
         catch (ParseException ex)
         {
             Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
+            error++;
+            errorMessages += "BIll date: Must not be empty\n";
         }
-        String dateBill = df.format(billDate);
         
-        String remarks = textRemarks.getText();
-        
-        try
+        if(error == 0)
         {
-            stmt = conn.createStatement();
-        }
+            String remarks = textRemarks.getText();
         
-        catch(SQLException ex)
-        {
-            Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            try
+            {
+                stmt = conn.createStatement();
+            }
         
-        addPurchasePerson person = new addPurchasePerson();
-        int loopIndex = arrayPersonToAdd.size();
+            catch(SQLException ex)
+            {
+                Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
+            }
         
-        String headerQuery = "insert into goods_sold_hdr (invdt,billingdt,invamt,remarks) values"+
+            addPurchasePerson person = new addPurchasePerson();
+            int loopIndex = arrayPersonToAdd.size();
+        
+            String headerQuery = "insert into goods_sold_hdr (invdt,billingdt,invamt,remarks) values"+
                 "('"+current+"','"+dateBill+"','"+totalAmount+"','"+remarks+"')";
         
-        try
-        {
-            stmt.executeQuery(headerQuery);
-        }
-        catch (SQLException ex) {
-            Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        headerQuery = "select max(invid) as invid from goods_sold_hdr";
-        ResultSet rs = null;
-        try
-        {
-            rs = stmt.executeQuery(headerQuery);
-        }
-        catch (SQLException ex)
-        {
-            Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        int invid = 0;
-        try
-        {
-            if(rs.next())
+            try
             {
-                invid = rs.getInt("invid");
+            stmt.executeQuery(headerQuery);
+            }
+            catch (SQLException ex) {
+                Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+            headerQuery = "select max(invid) as invid from goods_sold_hdr";
+            ResultSet rs = null;
+            try
+            {
+                rs = stmt.executeQuery(headerQuery);
+            }
+            catch (SQLException ex)
+            {
+                Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            int invid = 0;
+            
+            try
+            {
+                if(rs.next())
+                {
+                    invid = rs.getInt("invid");
+                }
+            }
+        
+            catch (SQLException ex)
+            {
+                Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+            //OPTIMIZE WITH BATCH QUERY - NOT YET FINAL
+            String query = "insert all\n";
+            for(int i = 0; i<loopIndex; i++)
+            {
+                person = (addPurchasePerson) arrayPersonToAdd.get(i);
+                query += "into goods_sold_dtl (invid,memberid,amount,balance,description,ismember) values"+
+                    "('"+invid+"','"+person.getMemberid()+"','"+person.getBalance()+"','"+person.getBalance()+"','"+person.getDesc()+"','"+person.getStatus()+"')\n";
+            
+            }
+            query += "select * from dual";
+            System.out.println(query);
+            try
+            {
+                stmt.executeQuery(query);
+                JOptionPane.showMessageDialog(null, "Database Update: Success", "Updating database", JOptionPane.INFORMATION_MESSAGE);
+            } 
+            catch (SQLException ex) {
+                Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+            finally
+            {
+                this.disconnect();
             }
         }
-        
-        catch (SQLException ex)
+        else
         {
-            Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        String query = "insert all\n";
-        for(int i = 0; i<loopIndex; i++)
-        {
-            person = (addPurchasePerson) arrayPersonToAdd.get(i);
-            query += "into goods_sold_dtl (invid,memberid,amount,balance,description,ismember) values"+
-                    "('"+invid+"','"+person.getMemberid()+"','"+person.getBalance()+"','"+person.getBalance()+"','"+person.getDesc()+"','"+person.getStatus()+"')\n";
-        }
-        query += "select * from dual";
-        try
-        {
-            stmt.executeQuery(query);
-            JOptionPane.showMessageDialog(null, "Database Update: Success", "Updating database", JOptionPane.INFORMATION_MESSAGE);
-        } 
-        catch (SQLException ex) {
-            Logger.getLogger(addPurchaseGoods.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        finally{
-            this.disconnect();
+            JOptionPane.showMessageDialog(null, errorMessages, "Error: Goods Purchased", JOptionPane.ERROR_MESSAGE);
         }
     }
     

@@ -220,6 +220,7 @@
         </Property>
       </Properties>
       <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="comboTypeOfLoanItemStateChanged"/>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="comboTypeOfLoanActionPerformed"/>
       </Events>
     </Component>
@@ -259,7 +260,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="textEndDate">
       <Properties>
-        <Property name="editable" type="boolean" value="false"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
@@ -355,6 +356,9 @@
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="textCheckNo">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textCheckNoActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel12">
       <Properties>

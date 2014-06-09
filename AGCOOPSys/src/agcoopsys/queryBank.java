@@ -18,6 +18,12 @@ public class queryBank {
         return query;
     }
     
+    public String loanCashloan(String memberID, String currentdtString, String enddtString,float principal, float interestrt, float interest, float totalPayment,String checkNo)
+    {
+        String query = "insert into cashloan (memberid,grantdt,billingdt,loanamt,interestrt,interestamt,balance,releasedamt,checkno) values ('"+memberID+"','"+currentdtString+"','"+enddtString+"','"+principal+"','"+interestrt+"','"+interest+"','"+totalPayment+"','"+totalPayment+"','"+checkNo+"')";
+        return query;
+    }
+    
     public String joinDistinct(int compid)
     {
         String query = "insert into joincompany_member (select distinct compname,company.compid,memberid,lastname,firstname,midinit from company  inner join member on member.compid=company.compid where member.compid="+compid+")";
@@ -81,6 +87,7 @@ public class queryBank {
        String query = "select lastname,firstname,midinit,balance,memberid from (select memberid,balance from goods_sold_dtl natural join goods_sold_hdr where ismember = 'N' and billingdt between '"+fromStart+"' AND '"+fromUntil+"') natural join joincompany_nonmember";
        return query; 
     }
+   
     
     public String commitDTL_Temp(int billid)
     {
@@ -99,4 +106,29 @@ public class queryBank {
         String query = "insert into joincompany_nonmember (select distinct compname,company.compid,memberid,lastname,firstname,midinit from company  inner join nonmember on nonmember.compid=company.compid where nonmember.compid="+compid+")";
         return query;
     }    
+    
+    public String memberGoodsNoLoans(String fromStart, String fromUntil,int compid)
+    {
+        String query = "select memberid,sum(balance) as balance, firstname, midinit, lastname,compid,contribution from (SELECT * FROM (SELECT MEMBERID,balance FROM (select MEMBERID,sum(BALANCE) as balance from (select INVID,MEMBERID,BALANCE from goods_sold_Dtl where ismember = 'Y') natural join GOODS_SOLD_HDR where billingdt between '"+fromStart+"' AND '"+fromUntil+"' group by memberid, balance) MINUS (SELECT MEMBERID,mem_total as balance FROM BILLDTL_TEMP)) NATURAL JOIN MEMBER where compid ="+compid+") group by memberid, firstname, midinit, lastname, compid, \n" +
+"contribution";
+        return query;
+    }
+    
+    public String nonmemberGoods(String fromStart, String fromUntil, int compid)
+    {
+        String query = "select memberid,sum(balance) as balance, firstname, midinit, lastname,compid from (SELECT * FROM (SELECT MEMBERID,balance FROM (select MEMBERID,sum(BALANCE) as balance from (select INVID,MEMBERID,BALANCE from goods_sold_Dtl where ismember = 'N') natural join GOODS_SOLD_HDR where billingdt between '"+fromStart+"' AND '"+fromUntil+"' group by memberid, balance) MINUS (SELECT MEMBERID,mem_total as balance FROM BILLDTL_TEMP)) NATURAL JOIN NONMEMBER where compid ="+compid+") group by memberid, firstname, midinit, lastname, compid";
+        return query;
+    }
+    
+    public String commitMemberNoLoans(int billid, int memberid, String membername, float goodsamt, int compid)
+    {
+        String query = "insert into bill_dtl (billid,memberid,membername,goods_amount,mem_total,COMPID) VALUES ('"+billid+"','"+memberid+"','"+membername+"','"+goodsamt+"','"+goodsamt+"','"+compid+"')";
+        return query;
+    }
+    
+    public String commitNonMemberGoods(int billid,int memberid, String membername, float goodsamt, int compid)
+    {
+        String query = "insert into bill_dtl (billid,memberid,membername,goods_amount,mem_total,COMPID, ismember) VALUES ('"+billid+"','"+memberid+"','"+membername+"','"+goodsamt+"','"+goodsamt+"','"+compid+"','N')";
+        return query;
+    }
 }

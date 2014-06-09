@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BillStatements" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="65b35a05-98cb-4f1d-ab26-d33fcab25dcb">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="72"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Lenovo\\Documents\\GitHub\\AGCoopSys\\AGCOOPSys\\src\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT DISTINCT ISMEMBER,CONTRIBUTION,CONTACTNO1,COMPNAME,ADDRESS1,ADDRESS2,ADDRESS3,MEMBERNAME,CASH_AMOUNT,REG_AMOUNT,CALAMITY_AMOUNT,EDUC_AMOUNT,EMER_AMOUNT,GOODS_AMOUNT,MEM_TOTAL FROM (SELECT DISTINCT ISMEMBER,CONTRIBUTION,MEMBERNAME,CONTACTNO1,COMPNAME,ADDRESS1,ADDRESS2,ADDRESS3,CASH_AMOUNT,REG_AMOUNT,CALAMITY_AMOUNT,EDUC_AMOUNT,EMER_AMOUNT,GOODS_AMOUNT,MEM_TOTAL FROM BILLDTL_TEMP INNER JOIN COMPANY ON BILLDTL_TEMP.COMPID = COMPANY.COMPID ORDER BY BILLDTL_TEMP.MEMBERNAME)]]>
+	</queryString>
+	<field name="COMPNAME" class="java.lang.String"/>
+	<field name="ADDRESS1" class="java.lang.String"/>
+	<field name="ADDRESS2" class="java.lang.String"/>
+	<field name="ADDRESS3" class="java.lang.String"/>
+	<field name="CONTACTNO1" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="85" splitType="Stretch">
+			<staticText>
+				<reportElement x="327" y="0" width="475" height="53" uuid="72562fc2-e362-470c-858b-b1f93fd573e8"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="46" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[AG COOPERATIVE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="149" height="20" uuid="bfff4bb8-f3e4-4b8f-9e0a-7f445490ac8a"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Statement processed:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="112" height="20" uuid="08a451c1-8c9d-49aa-a0ea-a72d517d7505"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Company:]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="159" y="0" width="112" height="20" uuid="df0b67aa-8f55-4e99-bc42-d60b78e6b2db"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="137" y="20" width="112" height="20" uuid="2ec31dfd-9952-4927-93e9-a5c2f96cbabc"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPNAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="137" y="40" width="100" height="20" uuid="c37c7318-dcd1-495f-a41f-d323a48cf7bb"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ADDRESS1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="112" height="20" uuid="df351aa8-2836-49b0-a845-9d8b6b100eeb"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Address:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<detail>
+		<band height="134" splitType="Stretch">
+			<subreport>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="802" height="65" uuid="79b25e0f-7b12-40ae-a5a2-501f890164a3"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "memberSubReports.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="0" y="71" width="802" height="63" uuid="2630111f-7eb8-4706-95ff-6d72f8bfface"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "nonmemberSubReports.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="682" y="34" width="80" height="20" uuid="9b81e9f3-6e1f-4526-931d-817e07e95fed"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="762" y="34" width="40" height="20" uuid="21f0ae52-1505-4e60-8244-2faf0fc5f44a"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
