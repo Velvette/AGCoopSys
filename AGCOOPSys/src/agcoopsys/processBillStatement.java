@@ -450,7 +450,7 @@ public class processBillStatement extends javax.swing.JPanel {
                 midinit = rs.getString("midinit");
                 membername = lastname + ", " + firstname + " " + midinit;
                 
-                //System.out.println("outside:" + membername);
+                System.out.println("outside:" + membername);
 
                 reset++;
                 prevId = memberid;
@@ -466,17 +466,19 @@ public class processBillStatement extends javax.swing.JPanel {
                 total = regamt+emeramt+educamt+cashamt+goodsamt+calamityamt;
                 overTotal += total;
                 tempQuery += bank.commitToBill_DTL(billid, prevId, membername, contribution, cashid, cashamt, regid, regamt, educid, educamt, calamityid, calamityamt, emerid, emeramt, goodsamt, total, compid, "Y");
-                tempQuery = "SELECT * FROM dual";
-                
-                
+                tempQuery += "SELECT * FROM dual";
+                System.out.println(tempQuery);
                 stmt.executeUpdate(tempQuery);
             }
-            this.processGoods(stmt, billid, fromText, finalUntil, compid);
+            //this.processGoods(stmt, billid, fromText, finalUntil, compid);
             
             
             //textProgress.append("\n----------------Execute : Database Commit----------------");
             
-            //GET POEPLE WITH GOODS
+            tempQuery = bank.commitDTL_Temp(billid);
+            stmt.executeQuery(tempQuery);
+            
+            //GET POEPLE WITH GOODS NO LOANS
             tempQuery = bank.memberGoodsNoLoans(fromText, finalUntil, compid);
             rs = null;
             rs = stmt.executeQuery(tempQuery);
@@ -498,8 +500,12 @@ public class processBillStatement extends javax.swing.JPanel {
                     balance = rs.getFloat("balance");
                     memberid = rs.getInt("memberid");
                     tempQuery = bank.commitMemberNoLoans(billid, memberid, membername, balance,compid);
+                    //PUSH TO TEMP
                     System.out.println(tempQuery);
                     stmt.addBatch(tempQuery);
+                    tempQuery = bank.commitMemberNoLoansTemp(billid, memberid, membername, balance, compid);
+                    stmt.addBatch(tempQuery);
+                    
                 }
                 stmt.executeBatch();
             }
@@ -532,8 +538,12 @@ public class processBillStatement extends javax.swing.JPanel {
                     balance = rs.getFloat("balance");
                     memberid = rs.getInt("memberid");
                     tempQuery = bank.commitNonMemberGoods(billid, memberid, membername, balance,compid);
+                    //PUSH TO TEMP
                     System.out.println(tempQuery);
                     stmt.addBatch(tempQuery);
+                    tempQuery = bank.commitNonMemberGoodsTemp(billid, memberid, membername, balance, compid);
+                    stmt.addBatch(tempQuery);
+                            
                 }
                 stmt.executeBatch();
             }
@@ -542,17 +552,13 @@ public class processBillStatement extends javax.swing.JPanel {
             {
                 e.printStackTrace();
             }
-            
-            
-            tempQuery = bank.commitDTL_Temp(billid);
-            stmt.executeQuery(tempQuery);
+              
+            //NOW DOUBLE COMMIT TO BILLDTL_TEMP & BILL_DTL (ORIG)
             
             tempQuery = bank.updateBillAmount(billid, overTotal);
             stmt.executeQuery(tempQuery);
             
-            
-            
-            
+                   
             this.billReport(); //this report
         }
         catch (Exception e)
@@ -561,84 +567,9 @@ public class processBillStatement extends javax.swing.JPanel {
         }
         finally{
             this.disconnect();
-        }
-        
-        
+        }        
     }
-    
-    public void processGoods(Statement stmt, int billid, String fromStart, String fromUntil, int compid)
-    {
-        //JOIN COMPANY NON MEMBER
-        queryBank bank = new queryBank();
-        String query = bank.nonmemberGoods(fromStart, fromUntil);
-        ResultSet rs = null;
-        try
-        {
-            rs = stmt.executeQuery(query);  
-            query = "insert all\n";
-            int reset = 0;
-            int previd = 0;
-            int memberid = 0;
-            
-            String firstname = "";
-            String lastname = "";
-            String midinit = "";
-            String membername = "";
-            
-            float balance = 0;
-            
-                while(rs.next())
-                {
-                    memberid = rs.getInt("memberid");
-                    System.out.println("insde empty : " + memberid);
-                    if(reset == 0)
-                    {
-                        previd = memberid;
-                    }
-                
-                    if(memberid != previd)
-                    {
-                        query += bank.commitToBill_DTL(billid, previd, membername,0,0,0,0,0,0,0,0,0,0,0,balance,balance, compid, "N");
-                        
-                    }
-                
-                    lastname = rs.getString("lastname");
-                    firstname = rs.getString("firstname");
-                    midinit = rs.getString("midinit");
-                    membername = lastname + ", " + "firstname" + " " + midinit;
-                    balance = rs.getFloat("balance");
-                    previd = memberid;
-                    reset++;
-                }
-                try
-                { 
-                    lastname = rs.getString("lastname");
-                    firstname = rs.getString("firstname");
-                    midinit = rs.getString("midinit");
-                    membername = lastname + ", " + "firstname" + " " + midinit;
-                    balance = rs.getFloat("balance");
-                    query += bank.commitToBill_DTL(billid, previd, membername,0,0,0,0,0,0,0,0,0,0,0,balance,balance, compid, "N");
-                    
-                }
-                catch(Exception e)
-                {
-                    
-                }
-                
-                System.out.println(query);
-                query += "SELECT * FROM dual";
-                if(reset>0)
-                stmt.executeUpdate(query);
-      
-            }
         
-        
-        catch(SQLException ex)
-        {
-            Logger.getLogger(processBillStatement.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
     public Float getCashamt(int memberid)
     {
         queryBank bank = new queryBank();

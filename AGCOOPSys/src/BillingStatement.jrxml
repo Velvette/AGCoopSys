@@ -6,7 +6,11 @@
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
 	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
-	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<style/>
+		</conditionalStyle>
+	</style>
 	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
@@ -213,7 +217,7 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$F{CONTRIBUTION} == null ? new String("") :
     (Double.valueOf($F{CONTRIBUTION}) < new BigDecimal(0.01).doubleValue()
-        ? new String("") : $F{CONTRIBUTION}) ]]></textFieldExpression>
+        ? new String("") : $F{CONTRIBUTION})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00">
 					<reportElement style="Detail" positionType="Float" x="381" y="0" width="72" height="18" uuid="6612d5e1-3f77-4b43-92c8-fb8f71d4d91a"/>

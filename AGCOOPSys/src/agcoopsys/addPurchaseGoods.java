@@ -74,8 +74,6 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     public void reset()
     {
         textBillDate.setText("");
-        listModelMember.clear();
-        listModelNonMember.clear();
         labelName.setText("");
         textAmount.setText("0");
         textDesc.setText("");
@@ -83,7 +81,8 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         labelAmount.setText("0.0");
         listPurchasing.clear();
         textRemarks.setText("");
-        
+        listPurchasing.clear();
+        arrayPersonToAdd.clear();
     }
     
     public void getListMember()

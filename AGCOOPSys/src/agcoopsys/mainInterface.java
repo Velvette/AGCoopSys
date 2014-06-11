@@ -580,6 +580,7 @@ public class mainInterface extends javax.swing.JFrame {
 
     private void menuPurchaseGoodsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPurchaseGoodsActionPerformed
 
+        aP.reset();
         aP.setVisible(true);
         aP.setLocationRelativeTo(null);
         aP.setResizable(false);
