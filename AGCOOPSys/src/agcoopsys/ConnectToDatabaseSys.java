@@ -151,8 +151,12 @@ public class ConnectToDatabaseSys {
         String query = "";
         if(choice == 0)
             query = "select suppname from supplier where suppname='"+checkThis+"'";
-        else
+        else if(choice==1)//mabelle
             query = "select compname from company where compname='"+checkThis+"'";
+        else if(choice==2)//mabelle
+            query = "select billid from or_hdr where billid='"+checkThis+"'";
+        else if(choice==3)//mabelle
+            query = "select orno from or_hdr where orno='"+checkThis+"'";
         PreparedStatement stmt = null;
         Connection con = null;
         ResultSet rs;

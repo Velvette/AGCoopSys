@@ -1,0 +1,16 @@
+select memberid,sum(balance) as balance, firstname, midinit, lastname,compid,contribution from (SELECT * FROM (SELECT MEMBERID,balance FROM (select MEMBERID,sum(BALANCE) as balance from (select INVID,MEMBERID,BALANCE from goods_sold_Dtl where ismember = 'Y') natural join GOODS_SOLD_HDR where billingdt between '1-MAY-14' AND '30-MAY-14' group by memberid, balance) MINUS (SELECT MEMBERID,mem_total as balance FROM BILLDTL_TEMP)) NATURAL JOIN MEMBER where compid =42) group by memberid, firstname, midinit, lastname, compid,contribution
+
+SELECT BILLID,MEMBERID,mem_total as balance FROM BILL_DTL where billid = 188
+
+SELECT memberid,sum(balance) as balance, firstname, midinit, lastname,compid FROM (SELECT MEMBERID,balance FROM (select MEMBERID,sum(BALANCE) as balance from (select INVID,MEMBERID,BALANCE from goods_sold_Dtl where ismember = 'Y') natural join GOODS_SOLD_HDR where billingdt between '1-MAY-14' AND '30-MAY-14' group by memberid, balance)) NATURAL JOIN MEMBER where compid = 42 group by memberid, firstname,lastname,midinit,compid
+
+select * from (SELECT memberid,sum(balance) as balance, firstname, midinit, lastname,compid FROM (SELECT MEMBERID,balance FROM (select MEMBERID,sum(BALANCE) as balance from (select INVID,MEMBERID,BALANCE from goods_sold_Dtl where ismember = 'Y') natural join GOODS_SOLD_HDR where billingdt between '1-MAY-14' AND '30-MAY-14' group by memberid, balance)) NATURAL JOIN MEMBER where compid = 42 group by memberid, firstname,lastname,midinit,compid) 
+natural join
+(SELECT BILLID,MEMBERID,mem_total as balance FROM BILL_DTL where billid = 188)
+
+SELECT GOODS_SOLD_DTL.MEMBERID FROM GOODS_SOLD_HDR INNER JOIN GOODS_SOLD_DTL ON GOODS_SOLD_HDR.INVID = GOODS_SOLD_DTL.INVID WHERE GOODS_SOLD_HDR.BILLINGDT BETWEEN '1-MAY-14' AND '30-MAY-14'
+
+select distinct * from (SELECT MEMBERID,sum(BALANCE) AS BALANCE FROM GOODS_SOLD_HDR INNER JOIN GOODS_SOLD_DTL ON GOODS_SOLD_HDR.INVID = GOODS_SOLD_DTL.INVID WHERE GOODS_SOLD_HDR.BILLINGDT BETWEEN '1-MAY-14' AND '30-MAY-14' AND ISMEMBER ='Y' GROUP BY MEMBERID) natural join member where compid = 42
+
+
+SELECT * FROM (SELECT * FROM (select distinct MEMBERID from (SELECT MEMBERID,sum(BALANCE) AS BALANCE FROM GOODS_SOLD_HDR INNER JOIN GOODS_SOLD_DTL ON GOODS_SOLD_HDR.INVID = GOODS_SOLD_DTL.INVID WHERE GOODS_SOLD_HDR.BILLINGDT BETWEEN '1-MAY-14' AND '30-MAY-14' AND ISMEMBER ='Y' GROUP BY MEMBERID) natural join member where compid = 42) MINUS (SELECT MEMBERID FROM BILLDTL_TEMP)) NATURAL JOIN (select distinct * from (SELECT MEMBERID,sum(BALANCE) AS BALANCE FROM GOODS_SOLD_HDR INNER JOIN GOODS_SOLD_DTL ON GOODS_SOLD_HDR.INVID = GOODS_SOLD_DTL.INVID WHERE GOODS_SOLD_HDR.BILLINGDT BETWEEN '1-MAY-14' AND '30-MAY-14' AND ISMEMBER ='Y' GROUP BY MEMBERID) natural join member where compid = 42)

@@ -20,13 +20,14 @@ public class queryBank {
     
     public String loanCashloan(String memberID, String currentdtString, String enddtString,float principal, float interestrt, float interest, float totalPayment,String checkNo)
     {
-        String query = "insert into cashloan (memberid,grantdt,billingdt,loanamt,interestrt,interestamt,balance,releasedamt,checkno) values ('"+memberID+"','"+currentdtString+"','"+enddtString+"','"+principal+"','"+interestrt+"','"+interest+"','"+totalPayment+"','"+totalPayment+"','"+checkNo+"')";
+        String query = "insert into cashloan (memberid,grantdt,billingdt,loanamt,interestrt,interestamt,balance,releasedamt,checkno) values ('"+memberID+"','"+currentdtString+"','"+enddtString+"','"+principal+"','"+interestrt+"','"+interest+"','"+totalPayment+"','"+principal+"','"+checkNo+"')";
         return query;
     }
     
     public String joinDistinct(int compid)
     {
         String query = "insert into joincompany_member (select distinct compname,company.compid,memberid,lastname,firstname,midinit from company  inner join member on member.compid=company.compid where member.compid="+compid+")";
+        System.out.println(query);
         return query;
     }
     

@@ -1,0 +1,40 @@
+//NEW BILL STATEMENT
+
+GET LOAN -- 
+
+GET GOODS -- 
+
+
+//QUERY OF COMBINED MEMBER-LOAN-PER.COMPANY
+
+
+SELECT MEMBERID,LOANID,LOANTYPE,AMORTIZATION,LASTNAME,FIRSTNAME,MIDINIT FROM (SELECT LOAN_HDR.LOANID,MEMBERID,LOANTYPE,AMORTIZATION FROM LOAN_HDR 
+INNER JOIN LOAN_DTL ON LOAN_HDR.LOANID = LOAN_DTL.LOANID WHERE AMORDATE BETWEEN '1-MAY-14' AND '30-MAY-14') NATURAL JOIN MEMBER WHERE COMPID = 42 order by memberid
+
+
+//QUERY OF CURRENT-GOODS-CURRENT-MONTH-SEPARATE ON ISMEMBER -- ADDS BALANCE FOR EASY RETRIEVE -- MEMBER
+
+
+select sum(balance) as balance,memberid,ismember,lastname,firstname,midinit from (select distinct balance,memberid,ismember from 
+(Select * from goods_sold_dtl inner join goods_sold_hdr on
+goods_sold_dtl.invid = goods_sold_hdr.invid where billingdt between '1-MAY-14' AND '30-MAY-14') WHERE ISMEMBER = 'Y') 
+natural join member where compid = 42 group by balance,memberid,ismember,lastname,firstname,midinit order by memberid
+
+
+-- NONMEMBER
+
+select sum(balance) as balance,memberid,ismember,lastname,firstname,midinit from (select distinct balance,memberid,ismember from 
+(Select * from goods_sold_dtl inner join goods_sold_hdr on
+goods_sold_dtl.invid = goods_sold_hdr.invid where billingdt between '1-MAY-14' AND '30-MAY-14') WHERE ISMEMBER = 'N') 
+natural join nonmember where compid = 42 group by balance,memberid,ismember,lastname,firstname,midinit order by memberid
+
+-- WITH TOTAL 
+select memberid,balance,(cash_amount+educ_amount+balance+reg_amount+calamity_amount+emer_amount) as total,lastname,firstname,midinit from (select sum(balance) as balance,MEMBERID,lastname,firstname,midinit,cash_amount,calamity_amount,educ_amount,emer_amount,reg_amount from GOODS_CURRENT_MONTH_MEMBER natural join bill_Dtl_member group by balance,memberid,lastname,firstname,midinit,cash_amount,calamity_amount,educ_amount,emer_amount,reg_amount)
+
+-- CATCH ALL THOSE WHO DON'T HAVE LOANS
+
+select * from (select sum(balance) as balance,MEMBERID,lastname,firstname,midinit from GOODS_CURRENT_MONTH_MEMBER natural join bill_Dtl group by balance,memberid,lastname,firstname,midinit ) 
+minus select sum(balance) as balance, memberid,lastname,firstname,midinit  from goods_current_month_member group by balance,memberid,lastname,firstname,midinit 
+
+-- JOIN ALL THOSE IN BILL_TEMP WITH GOODS -- GET BALANCE -- GET TOTAL UPDATE VIA ARRAYLIST
+select sum(balance) as balance,MEMBERID,lastname,firstname,midinit from GOODS_CURRENT_MONTH_MEMBER natural join bill_Dtl group by balance,memberid,lastname,firstname,midinit 

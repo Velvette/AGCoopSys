@@ -14,7 +14,7 @@ public class AGCOOPSys {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        mainInterface mI = new mainInterface();
+        Start mI = new Start();
         mI.setLocationRelativeTo(null);
         mI.setVisible(true);
         mI.setResizable(false);

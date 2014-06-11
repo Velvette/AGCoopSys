@@ -423,7 +423,7 @@ public class processBillStatement extends javax.swing.JPanel {
                    // textProgress.append(progressText);
                     goodsamt = this.getBalance(prevId);
                     cashamt = this.getCashamt(prevId);
-                    total = regamt+emeramt+educamt+cashamt+goodsamt+calamityamt;
+                    total = regamt+emeramt+educamt+cashamt+goodsamt+calamityamt+contribution;
                     overTotal += total;
                     tempQuery += bank.commitToBill_DTL(billid, prevId, membername, contribution, cashid, cashamt, regid, regamt, educid, educamt, calamityid, calamityamt, emerid, emeramt, goodsamt, total, compid, "Y"); 
                 }
@@ -444,7 +444,7 @@ public class processBillStatement extends javax.swing.JPanel {
                             break;
                 }
 
-                
+                contribution = rs.getFloat("contribution");
                 lastname = rs.getString("lastname");
                 firstname = rs.getString("firstname");
                 midinit = rs.getString("midinit");
