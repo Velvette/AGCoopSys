@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BillingStatement" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6d23648e-d6d2-414e-b17f-a579fc0c9a3f">
 	<property name="ireport.zoom" value="2.143588810000002"/>
-	<property name="ireport.x" value="5"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
 	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
-	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
-		<conditionalStyle>
-			<style/>
-		</conditionalStyle>
-	</style>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
 	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
-			<style mode="Opaque" backcolor="#F0EFEF"/>
+			<conditionExpression><![CDATA[$V{ISMEMBER} == "N"]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FF9999"/>
 		</conditionalStyle>
 	</style>
 	<queryString>
@@ -39,6 +35,9 @@
 		<variableExpression><![CDATA[$F{MEM_TOTAL}]]></variableExpression>
 	</variable>
 	<variable name="HOLD" class="java.lang.String"/>
+	<variable name="ISMEMBER" class="java.lang.String">
+		<variableExpression><![CDATA[$F{ISMEMBER}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -88,9 +87,9 @@
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="19" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="199" y="0" width="72" height="18" forecolor="#000000" uuid="87adab39-9256-4575-b8c2-3ab71bdc6fe8"/>
+				<reportElement style="Column header" x="199" y="1" width="72" height="18" forecolor="#000000" uuid="87adab39-9256-4575-b8c2-3ab71bdc6fe8"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -111,7 +110,7 @@
 				<text><![CDATA[CALAMITY]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="469" y="0" width="72" height="18" forecolor="#000000" uuid="3949b908-293a-489a-82da-5bba852746d2"/>
+				<reportElement style="Column header" x="469" y="1" width="72" height="18" forecolor="#000000" uuid="3949b908-293a-489a-82da-5bba852746d2"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -125,21 +124,21 @@
 				<text><![CDATA[EMERGENCY]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="641" y="0" width="72" height="18" forecolor="#000000" uuid="6255b919-2d23-41b9-9734-653bcc9bf78e"/>
+				<reportElement style="Column header" x="641" y="1" width="72" height="18" forecolor="#000000" uuid="6255b919-2d23-41b9-9734-653bcc9bf78e"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[GOODS PURCHAED]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="725" y="0" width="72" height="18" forecolor="#000000" uuid="c663da4e-a98f-417e-9632-c815da3c092c"/>
+				<reportElement style="Column header" x="725" y="1" width="72" height="18" forecolor="#000000" uuid="c663da4e-a98f-417e-9632-c815da3c092c"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[TOTAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="0" y="0" width="72" height="18" forecolor="#000000" uuid="d200e1ce-68e9-4e0a-9b35-82e99f996cff"/>
+				<reportElement style="Column header" x="0" y="1" width="72" height="18" forecolor="#000000" uuid="d200e1ce-68e9-4e0a-9b35-82e99f996cff"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -155,7 +154,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="18" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="797" height="18" uuid="bfebd7d2-05de-4901-a29e-4f23d7e0ae98"/>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00">

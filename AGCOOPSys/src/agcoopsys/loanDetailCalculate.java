@@ -52,6 +52,7 @@ public class loanDetailCalculate {
     }
 
     public float getTotInterest() {
+        totInterest = (float) (Math.round(totInterest * 100.00) / 100.00);
         return totInterest;
     }
 

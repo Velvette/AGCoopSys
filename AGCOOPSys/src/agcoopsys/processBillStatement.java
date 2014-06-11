@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 /**
  *
  * @author admin
@@ -311,6 +312,8 @@ public class processBillStatement extends javax.swing.JPanel {
         jasperReport = JasperCompileManager.compileReport("src//BillingStatement.jrxml");       
         jasperPrint = JasperFillManager.fillReport(jasperReport,jasperParameter, conn);
         JasperExportManager.exportReportToPdfFile(jasperPrint, "Reports//SOA//"+companyName+" - Bill Statement("+dFrom+"-"+dUntil+").pdf");
+        
+        
     }
     
     public void processBillNew()
@@ -423,7 +426,7 @@ public class processBillStatement extends javax.swing.JPanel {
                    // textProgress.append(progressText);
                     goodsamt = this.getBalance(prevId);
                     cashamt = this.getCashamt(prevId);
-                    total = regamt+emeramt+educamt+cashamt+goodsamt+calamityamt;
+                    total = regamt+emeramt+educamt+cashamt+goodsamt+calamityamt+contribution;
                     overTotal += total;
                     tempQuery += bank.commitToBill_DTL(billid, prevId, membername, contribution, cashid, cashamt, regid, regamt, educid, educamt, calamityid, calamityamt, emerid, emeramt, goodsamt, total, compid, "Y"); 
                 }
@@ -444,7 +447,7 @@ public class processBillStatement extends javax.swing.JPanel {
                             break;
                 }
 
-                
+                contribution = rs.getFloat("contribution");
                 lastname = rs.getString("lastname");
                 firstname = rs.getString("firstname");
                 midinit = rs.getString("midinit");
@@ -561,9 +564,13 @@ public class processBillStatement extends javax.swing.JPanel {
                    
             this.billReport(); //this report
         }
-        catch (Exception e)
+        catch (SQLException e)
         {
             e.printStackTrace();
+        }
+        catch(JRException e)
+        {
+            JOptionPane.showMessageDialog(null, "Error: File currently exists\n Delete existing file and try again..", "Error", JOptionPane.ERROR_MESSAGE); 
         }
         finally{
             this.disconnect();

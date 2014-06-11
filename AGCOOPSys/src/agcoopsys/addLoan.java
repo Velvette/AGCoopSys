@@ -95,6 +95,7 @@ public class addLoan extends javax.swing.JFrame {
         buttonCompute = new javax.swing.JButton();
         textCheckNo = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
+        buttonClear = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -142,6 +143,7 @@ public class addLoan extends javax.swing.JFrame {
 
         jLabel7.setText("End Date");
 
+        textEndDate.setEditable(false);
         textEndDate.setEnabled(false);
 
         jLabel8.setText("Interest Rate");
@@ -192,6 +194,13 @@ public class addLoan extends javax.swing.JFrame {
 
         jLabel12.setText("Check No");
 
+        buttonClear.setText("Clear");
+        buttonClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonClearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -224,6 +233,8 @@ public class addLoan extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(buttonCancel)
+                                .addGap(18, 18, 18)
+                                .addComponent(buttonClear)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(buttonCompute)
                                 .addGap(18, 18, 18)
@@ -317,7 +328,8 @@ public class addLoan extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonConfirm)
                     .addComponent(buttonCancel)
-                    .addComponent(buttonCompute))
+                    .addComponent(buttonCompute)
+                    .addComponent(buttonClear))
                 .addContainerGap())
         );
 
@@ -508,8 +520,10 @@ public class addLoan extends javax.swing.JFrame {
         {
            
             totalPayment = loanCalculate.getCashloan();
-            
+            principal = Float.parseFloat(textPrincipal.getText());
+            interestrt = Float.parseFloat(textInterest.getText());
             labelAmortization.setText("0");
+            
             labelTotalInterest.setText(Float.toString(loanCalculate.getInterest()));
             labelTotalPayment.setText(Float.toString(totalPayment));
             labelTotalPrincipal.setText(textPrincipal.getText());
@@ -594,16 +608,24 @@ public class addLoan extends javax.swing.JFrame {
             textStartDate.setEnabled(false);
             textStartDate.setEditable(false);
             textTerms.setEditable(false);
+            textEndDate.setEditable(true);
         }
         else
         {
             textEndDate.setEnabled(false);
+            textEndDate.setEditable(false);
             textStartDate.setEnabled(true);
             textTerms.setEditable(true);
             textStartDate.setEditable(true);
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_comboTypeOfLoanItemStateChanged
+
+    private void buttonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearActionPerformed
+
+        this.allReset();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonClearActionPerformed
 
     public void firstBreakCommit()
     {
@@ -640,6 +662,7 @@ public class addLoan extends javax.swing.JFrame {
        }
        else
        {
+            float interest = loanCalculate.getInterest();
             queryBank bank = new queryBank();
             String query = bank.loanCashloan(memberID, currentdtString, enddtString, principal, interestrt, interest, totalPayment,checkNo);
        
@@ -715,7 +738,7 @@ public class addLoan extends javax.swing.JFrame {
                 repEndString = df.format(repEnd);
                 //System.out.println(repEndString);
                 calendar.setTime(repEnd);
-                insertString = "insert into loan_dtl (loanid,amordate,mon_amort,mon_interest,mon_premium,mon_penalty) values ('"+loanID+"',to_date('"+repEndString+"', 'yyyy-MM-dd'),'"+monthlyAmortization+"','"+arrayInterest[i]+"','"+arrayPremium[i]+"','"+penalty+"')";
+                insertString = "insert into loan_dtl (loanid,amordate,mon_amort,mon_interest,mon_premium,mon_penalty,mon_premium_bal,mon_interest_bal,mon_penalty_bal) values ('"+loanID+"',to_date('"+repEndString+"', 'yyyy-MM-dd'),'"+monthlyAmortization+"','"+arrayInterest[i]+"','"+arrayPremium[i]+"','"+penalty+"','"+arrayPremium[i]+"','"+arrayInterest[i]+"','"+penalty+"')";
                 System.out.println(insertString);
                 stmt.addBatch(insertString);
                 calendar.add(Calendar.MONTH, 1);
@@ -791,10 +814,10 @@ public class addLoan extends javax.swing.JFrame {
         comboTypeOfLoan.setSelectedIndex(0);
         comboTypeOfLoan.setEnabled(true);
         buttonCompute.setEnabled(true);
-        buttonConfirm.setEnabled(true);
+        buttonConfirm.setEnabled(false);
         labelMember.setText("");
-        
-        
+         
+        loanCalculate.reset();
     }
     /**
      * @param args the command line arguments
@@ -832,6 +855,7 @@ public class addLoan extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonCancel;
+    private javax.swing.JButton buttonClear;
     private javax.swing.JButton buttonCompute;
     private javax.swing.JButton buttonConfirm;
     private javax.swing.JComboBox comboTypeOfLoan;
