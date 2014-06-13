@@ -67,10 +67,7 @@ public class viewReceipt extends javax.swing.JPanel {
         //jList1= new JList(arrayOR.toArray());
         //this.getListDetails(String.valueOf(orid));
         //this.getList();
-        this.getList();  
-
-
-
+        //this.getList();  
         this.arrayLoans = new ArrayList<>();
         cl=false; reg=false;ed=false;cal=false;em=false;
 
@@ -79,7 +76,8 @@ public class viewReceipt extends javax.swing.JPanel {
         
         
     }
-     public void getList()
+    
+    public void getList()
     {//System.out.println("in getlist");
         arrayDTLID= new ArrayList();
         String tempQuery = "SELECT orno, orid from or_hdr order by orno";
