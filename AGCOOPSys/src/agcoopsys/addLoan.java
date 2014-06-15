@@ -49,6 +49,7 @@ public class addLoan extends javax.swing.JFrame {
     Date tempCal;
     String checkNo = "";
     loanDetailCalculate loanCalculate = new loanDetailCalculate();
+    int choice = 0;
     
     public addLoan() {
         initComponents();
@@ -111,7 +112,7 @@ public class addLoan extends javax.swing.JFrame {
 
         jLabel3.setText("Type");
 
-        comboTypeOfLoan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Regular", "Calamity", "Educational", "Emergency", "Cashloan" }));
+        comboTypeOfLoan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Regular", "Calamity", "Educational", "Emergency" }));
         comboTypeOfLoan.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 comboTypeOfLoanItemStateChanged(evt);
@@ -380,15 +381,52 @@ public class addLoan extends javax.swing.JFrame {
        }
     }
     
+    public void initStart(String startd) throws ParseException
+    {
+           Date start = df.parse(startd);
+           String sStart = df.format(start);
+           textStartDate.setText(sStart);
+    }
+    
+    public void initEnd(String startd) throws ParseException
+    {
+           Date start = df.parse(startd);
+           String sStart = df.format(start);
+           textStartDate.setText(sStart);
+    }
+    
+    public void initCombo(String type)
+    {
+        switch(type) 
+        {
+            case "E":
+                comboTypeOfLoan.setSelectedIndex(3);
+                break;
+            case "M":
+                comboTypeOfLoan.setSelectedIndex(4);
+                break;
+            case "R":
+                comboTypeOfLoan.setSelectedIndex(1);
+                break;
+            case "C":
+                comboTypeOfLoan.setSelectedIndex(2);
+                break;
+        }
+    }
         
-    public void addLoan(String id)
+    public void addLoan(String wholeName,String id)
+    {
+        memberID = id;
+        labelMember.setText(wholeName);
+    }
+    
+    public void editLoan(String wholeName,  String id)
     {
         ResultSet rs;
-        String wholeName = "";
         this.connect();
         Statement stmt = null;
-        String query = "select * from member where memberid="+id;
-        memberID = id;
+        String query = "select * from loan_hdr where loanid="+id;
+        loanID = Integer.parseInt(id);
         try
         {
             stmt = conn.createStatement();
@@ -398,21 +436,38 @@ public class addLoan extends javax.swing.JFrame {
         {
             e.printStackTrace();
         }
-
+        String tempStart = "";
+        String tempEnd = "";
+        String type = "";
         try
         {
             rs = stmt.executeQuery(query);
             if(rs.next())
             {
-                wholeName = rs.getString("lastname") + ", " + rs.getString("firstname") + " " + rs.getString("midinit"); 
+                textInterest.setText(rs.getString("interestrt"));
+                textPrincipal. setText(rs.getString("loanamt"));
+                textTerms.setText(rs.getString("montopay"));
+                textCheckNo.setText(rs.getString("checkno"));
+                type = rs.getString("loantype");
+                memberID = rs.getString("memberid");
+                tempStart = rs.getString("startdt");
+                labelMember.setText(wholeName);
             }
-        }
-       
-        catch (SQLException e)
-        {
+            this.disconnect();      
 	}
         
-        labelMember.setText(wholeName);
+        catch (SQLException e)
+        {
+	}   
+        choice = 1;
+        try
+        {
+            this.initStart(tempStart);
+        }
+        catch(Exception e)
+        {
+            
+        }
     }
     
     private void buttonComputeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonComputeActionPerformed
@@ -459,15 +514,12 @@ public class addLoan extends javax.swing.JFrame {
                 case "Emergency":
                     loanType = "M";
                     break;
-                case "Cashloan":
-                    loanType = "A";
-                    break;
            }
         Date grantdt = new Date();
         currentDate = grantdt;
         checkNo = textCheckNo.getText();
         
-        if(error && !loanType.equals("A"))
+        if(error)
         {
            loanCalculate.getAmortization();
            principal = Float.parseFloat(textPrincipal.getText());
@@ -513,62 +565,15 @@ public class addLoan extends javax.swing.JFrame {
            comboTypeOfLoan.setEnabled(false);
            buttonConfirm.setEnabled(true);
            buttonCompute.setEnabled(false);
-           
         }
-        
-        else
-        {
-           
-            totalPayment = loanCalculate.getCashloan();
-            principal = Float.parseFloat(textPrincipal.getText());
-            interestrt = Float.parseFloat(textInterest.getText());
-            labelAmortization.setText("0");
-            
-            labelTotalInterest.setText(Float.toString(loanCalculate.getInterest()));
-            labelTotalPayment.setText(Float.toString(totalPayment));
-            labelTotalPrincipal.setText(textPrincipal.getText());
-            
-            
-            if(textEndDate.getText().length() != 0)
-            {
-                 try
-                 {  
-                    //startdt = (Date) df.parse(textStartDate.getText());
-                    enddt = (Date) df.parse(textEndDate.getText());
-                    enddtString = df.format(enddt);
-                    currentdtString = df.format(currentDate);
-                    textEndDate.setText(enddtString);
-                    
-                    //System.out.println(loanType);
-                    //System.out.println("current:" + startdtString + " ||| " + "end: " + enddtString);
-                } 
-                catch (ParseException | NumberFormatException q)
-                { 
-                    q.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Date Format: YYYY-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
-                } 
-           }
-           
-           comboTypeOfLoan.setEnabled(false);
-           buttonConfirm.setEnabled(true);
-           buttonCompute.setEnabled(false);
-        }
-        
-        // TODO add your handling code here:
     }//GEN-LAST:event_buttonComputeActionPerformed
 
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
 
         if(paramDB.checkDuplicateLoan(memberID,loanType))
         {
-            if(!"A".equals(loanType))
-            {
-                this.firstBreakCommit();
-                this.secondBreakCommit();
-            }
-            else
-                this.firstBreakCommit();
-                        
+            this.firstBreakCommit();
+            this.secondBreakCommit();            
         }
         else
             JOptionPane.showMessageDialog(null, "Error: Current type of loan exists", "Error", JOptionPane.ERROR_MESSAGE); 
@@ -602,22 +607,6 @@ public class addLoan extends javax.swing.JFrame {
 
     private void comboTypeOfLoanItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTypeOfLoanItemStateChanged
 
-        if(comboTypeOfLoan.getSelectedItem().toString().equals("Cashloan"))
-        {
-            textEndDate.setEnabled(true);
-            textStartDate.setEnabled(false);
-            textStartDate.setEditable(false);
-            textTerms.setEditable(false);
-            textEndDate.setEditable(true);
-        }
-        else
-        {
-            textEndDate.setEnabled(false);
-            textEndDate.setEditable(false);
-            textStartDate.setEnabled(true);
-            textTerms.setEditable(true);
-            textStartDate.setEditable(true);
-        }
         // TODO add your handling code here:
     }//GEN-LAST:event_comboTypeOfLoanItemStateChanged
 
@@ -629,11 +618,15 @@ public class addLoan extends javax.swing.JFrame {
 
     public void firstBreakCommit()
     {
-       if(!loanType.equals("A"))
-       {
             queryBank bank = new queryBank();
-            String query = bank.loanFirstCommit(memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
-       
+            String query = "";
+            if(choice == 0)
+            query = bank.loanFirstCommit(memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
+            
+            if(choice == 1)
+            query = bank.updateLoanFirstCommit(loanID, memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
+                
+            System.out.println(query);
             this.connect();
             Statement stmt = null;
         
@@ -659,56 +652,44 @@ public class addLoan extends javax.swing.JFrame {
             finally{
                 this.disconnect();
             }
-       }
-       else
-       {
-            float interest = loanCalculate.getInterest();
-            queryBank bank = new queryBank();
-            String query = bank.loanCashloan(memberID, currentdtString, enddtString, principal, interestrt, interest, totalPayment,checkNo);
-       
-            this.connect();
-            Statement stmt = null;
-        
-            try
-            {
-                stmt = conn.createStatement();
-            }
-            catch(Exception e)
-            {
-            
-            }
-        
-            try
-            {
-                stmt.addBatch(query);
-                stmt.executeBatch();
-                JOptionPane.showMessageDialog(null, "Database Update: Success", "Updating database", JOptionPane.INFORMATION_MESSAGE);
-            }
-            catch (SQLException ex)
-            {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        
-            finally{
-                this.disconnect();
-            }    
-       }
     }
     
     public void secondBreakCommit()
     {
-        this.getID();
-        Date repEnd;
-        repEnd = startdt;
+        if(choice == 0)
+        {
+            this.getID();
         
-        float arrayInterest[] = new float[terms];
-        float arrayPremium[] = new float[terms];
+            Date repEnd;
+            repEnd = startdt;
         
-        arrayInterest = loanCalculate.getInterestRecur(terms, principal);
-        arrayPremium = loanCalculate.getPremiumRecur(terms, principal);
+            float arrayInterest[] = new float[terms];
+            float arrayPremium[] = new float[terms];
         
-        this.getInsertAmortDates(repEnd, terms, arrayInterest,arrayPremium, loanID, monthlyAmortization);
+            arrayInterest = loanCalculate.getInterestRecur(terms, principal);
+            arrayPremium = loanCalculate.getPremiumRecur(terms, principal);
+        
+            this.getInsertAmortDates(repEnd, terms, arrayInterest,arrayPremium, loanID, monthlyAmortization);
+        }
+        else if(choice == 1)
+        {
+            Date repEnd;
+            repEnd = startdt;
+        
+            float arrayInterest[] = new float[terms];
+            float arrayPremium[] = new float[terms];
+        
+            arrayInterest = loanCalculate.getInterestRecur(terms, principal);
+            arrayPremium = loanCalculate.getPremiumRecur(terms, principal);
+            this.deleteAmortDates();
+            this.getInsertAmortDates(repEnd, terms, arrayInterest,arrayPremium, loanID, monthlyAmortization);
+        }
+    }
+    
+    public void deleteAmortDates()
+    {
+        String query = "delete from loan_dtl where loanid="+loanID;
+        paramDB.accessLoopDatabase(query);
     }
     
     public void getInsertAmortDates(Date repEnd, int terms, float[] arrayInterest,float[] arrayPremium, int loanID, float monthlyAmortization)
@@ -757,6 +738,7 @@ public class addLoan extends javax.swing.JFrame {
         {
             this.disconnect();
         }
+        choice = 0;
         
     }
     

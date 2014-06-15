@@ -22,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class viewLoan extends javax.swing.JPanel {
 
+    addLoan aL = new addLoan();
     ConnectToDatabaseSys paramDB = new ConnectToDatabaseSys();
     public String dbUrl;
     public String dbDriver;
@@ -38,6 +39,8 @@ public class viewLoan extends javax.swing.JPanel {
     ArrayList<String> arrayLastName = new ArrayList<>();
     ArrayList<String> arrayFirstName = new ArrayList<>();
     ArrayList<String> arrayMidName = new ArrayList<>();
+    ArrayList<String> arrayMemberid = new ArrayList<>();
+    
     DbUtils tableUtils = new DbUtils();
     
     public viewLoan() {
@@ -49,9 +52,14 @@ public class viewLoan extends javax.swing.JPanel {
 
     public void getList()
     {
-        final String tempQuery = "SELECT distinct member.memberid,member.firstname,member.lastname,member.midinit from MEMBER INNER JOIN loan_hdr on member.memberid = loan_hdr.memberid";
+        final String tempQuery = "SELECT memberid,lastname,firstname,midinit from member order by lastname";
         
         listModel.clear();
+        arrayLastName.clear();
+        arrayFirstName.clear();
+        arrayMidName.clear();
+        arrayMemberid.clear();
+        
         Statement stmt = null;       
         this.connect();
         conn = this.getConnection();
@@ -84,6 +92,8 @@ public class viewLoan extends javax.swing.JPanel {
                 arrayFirstName.add(firstname);
                 arrayLastName.add(lastname);
                 arrayMidName.add(midinit);
+                
+                arrayMemberid.add("memberid");
                 listModel.addElement(nameTemp);
                 nameTemp = "";
                 //System.out.println(nameTemp);
@@ -128,6 +138,24 @@ public class viewLoan extends javax.swing.JPanel {
        catch (Exception ex)
        {
        }
+    }
+    
+    public void reset()
+    {
+        this.getList();
+    }
+    
+    public void addLoan()
+    {
+        int index = listMember.getSelectedIndex();
+        String i = arrayMemberid.get(index);
+        String wholeName = (String) listMember.getSelectedValue();
+        aL.allReset();
+        aL.setVisible(true);
+        aL.setLocationRelativeTo(null);
+        aL.setResizable(false);
+        aL.setTitle("New Loan - Information");
+        aL.addLoan(wholeName, i);
     }
     
     public void deleteLoan()
@@ -184,6 +212,28 @@ public class viewLoan extends javax.swing.JPanel {
             
         }
     }
+    
+    public void editLoan()
+    {
+        try
+        {
+            int index = listLoan.getSelectedRow();
+            String loanid = listLoan.getValueAt(index, 0).toString();
+            String wholeName = (String) listMember.getSelectedValue();
+            System.out.println(loanid);
+            aL.allReset();
+            aL.setVisible(true);
+            aL.setLocationRelativeTo(null);
+            aL.setResizable(false);
+            aL.setTitle("Edit Loan - Information");
+            aL.editLoan(wholeName, loanid);
+        }
+        catch(Exception e)
+        {
+            
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -202,6 +252,8 @@ public class viewLoan extends javax.swing.JPanel {
         textPayment = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         textPayment1 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -236,11 +288,11 @@ public class viewLoan extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 719, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Loan Details"));
@@ -272,7 +324,7 @@ public class viewLoan extends javax.swing.JPanel {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -319,6 +371,10 @@ public class viewLoan extends javax.swing.JPanel {
         textPayment1.setText("0");
         textPayment1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        jButton1.setText("Add Cashloan");
+
+        jButton2.setText("Add Loan");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -333,13 +389,17 @@ public class viewLoan extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(textPayment1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel1)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textPayment)))
+                        .addComponent(textPayment1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel1)
+                        .addGap(10, 10, 10)
+                        .addComponent(textPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -353,20 +413,21 @@ public class viewLoan extends javax.swing.JPanel {
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(textPayment1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1)
                             .addComponent(textPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)
-                            .addComponent(textPayment1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(13, 13, 13)))
+                            .addComponent(jButton2)
+                            .addComponent(jButton1))
+                        .addGap(12, 12, 12)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void listMemberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listMemberMouseClicked
 
-        
         try
         {
             try
@@ -519,6 +580,8 @@ public class viewLoan extends javax.swing.JPanel {
     }
      
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

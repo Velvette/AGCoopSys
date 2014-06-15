@@ -67,8 +67,13 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         listNonMember.setModel(listModelNonMember);
         listPurchase.setModel(listPurchasing);
         
-        this.getListMember();
-        this.getListNonMember();
+        this.initAll();
+    }
+    
+    public void initAll()
+    {
+        this.getListMember(0);
+        this.getListNonMember(0);
     }
     
     public void reset()
@@ -83,12 +88,79 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         textRemarks.setText("");
         listPurchasing.clear();
         arrayPersonToAdd.clear();
+        searchBox.setText("");
     }
     
-    public void getListMember()
+    public void editList(String id)
     {
-        final String tempQuery = "SELECT * from member";
+        String tempQuery = "select * from goods_sold_dtl where invid='"+id+"'";
+        ResultSet rs = null;
+        this.connect();
+        conn = this.getConnection();
+        Statement stmt = null;
+        
+        addPurchasePerson person = new addPurchasePerson();
+        
+        try
+        {
+            stmt = conn.createStatement();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        
+        try
+        {
+            String priceName = "";
+            rs = stmt.executeQuery(tempQuery);
+            while(rs.next())
+            {                
+                person.setInvid(rs.getInt("invid"));
+                person.setMemberid(rs.getInt("memberid"));
+                person.setStatus(rs.getString("ismember"));
+                person.setName(rs.getString("membername"));
+                person.setBalance(rs.getFloat("balance"));
+                person.setDesc((rs.getString("description")));
+                priceName = rs.getString("membername") + " : " + rs.getFloat("balance");
+                listPurchasing.addElement(priceName);
+                totalAmount+= rs.getFloat("balance");
+                arrayPersonToAdd.add(person);
+            }
+            this.disconnect();      
+            labelAmount.setText(String.valueOf(totalAmount));
+        }
+        catch (SQLException e)
+        {
+        
+        }
+    }
+    
+    public void initNames()
+    {
+        
+    }
+    
+    public void getListMember(int choice)
+    {
+        String tempQuery = "";
+        
+        if(choice == 0)
+        {
+            tempQuery = "SELECT * from member";
+        }
+        
+        else if(choice == 1)
+        {
+            String searchText = searchBox.getText().toUpperCase();
+            tempQuery = "select * from member where lastname like '"+searchText+"'";
+        }
+        
         listModelMember.clear();
+        arrayMemberName.clear();
+        arrayMemberid.clear();
+
+        
         Statement stmt = null;       
         this.connect();
         conn = this.getConnection();
@@ -129,10 +201,25 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         listMember.setSelectedIndex(0);
     }
        
-    public void getListNonMember()
+    public void getListNonMember(int choice)
     {
-        final String tempQuery = "SELECT * from nonmember";
+        String tempQuery = "";
+        
+        if(choice == 0)
+        {
+            tempQuery = "SELECT * from nonmember";
+        }
+        
+        else if(choice == 1)
+        {
+            String searchText = searchBox.getText().toUpperCase();
+            tempQuery = "select * from nonmember where lastname like '"+searchText+"'";
+        }
+        
         listModelNonMember.clear();
+        arrayNonMemberid.clear();
+        arrayNonMemberName.clear();
+        
         Statement stmt = null;       
         this.connect();
         conn = this.getConnection();
@@ -214,6 +301,10 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
         textRemarks = new javax.swing.JTextArea();
+        labelSearch = new javax.swing.JLabel();
+        searchBox = new javax.swing.JTextField();
+        buttonSearch = new javax.swing.JButton();
+        buttonRefresh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -375,19 +466,43 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         textRemarks.setEnabled(false);
         jScrollPane5.setViewportView(textRemarks);
 
+        labelSearch.setText("Search");
+
+        buttonSearch.setText("Search");
+        buttonSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSearchActionPerformed(evt);
+            }
+        });
+
+        buttonRefresh.setText("Refresh all");
+        buttonRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRefreshActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(buttonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(tabPane)
-                    .addComponent(panelDetail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(tabPane, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelDetail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(labelSearch)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(searchBox))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonRefresh)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(buttonSearch)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -424,48 +539,59 @@ public class addPurchaseGoods extends javax.swing.JFrame {
             .addComponent(jSeparator1)
             .addComponent(jSeparator2)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(panelDetail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelSearch)
+                            .addComponent(searchBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(panelDetail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(buttonCancel)
-                                    .addComponent(buttonAdd)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(buttonSearch)
+                                    .addComponent(buttonRefresh))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(buttonConfirm)
-                                    .addComponent(buttonRemove)))))
+                                    .addComponent(buttonCancel)
+                                    .addComponent(buttonAdd))
+                                .addContainerGap())))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(buttonRemove)
+                            .addComponent(buttonConfirm))
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(66, 66, 66)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(labelName, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(textAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(buttonNext)
-                            .addComponent(buttonBack))))
-                .addContainerGap())
+                            .addComponent(buttonBack)
+                            .addComponent(buttonNext))
+                        .addContainerGap())))
         );
 
         pack();
@@ -520,11 +646,14 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     {
         buttonAdd.setEnabled(false);
         tabPane.setEnabled(false);
-        textBillDate.setEnabled(false);
         panelDetail.setEnabled(false);
         labelBill.setEnabled(false);
         listMember.setEnabled(false);
         listNonMember.setEnabled(false);
+        buttonSearch.setEnabled(false);
+        labelSearch.setEnabled(false);
+        buttonRefresh.setEnabled(false);
+        searchBox.setEnabled(false);
         
         textAmount.setEnabled(true);
         textDesc.setEnabled(true);
@@ -544,6 +673,10 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         labelBill.setEnabled(true);
         listMember.setEnabled(true);
         listNonMember.setEnabled(true);
+        buttonSearch.setEnabled(true);
+        labelSearch.setEnabled(true);
+        buttonRefresh.setEnabled(true);
+        searchBox.setEnabled(true);
         
         textAmount.setEnabled(false);
         textDesc.setEnabled(false);
@@ -588,14 +721,12 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         float amount = 0;
         addPurchasePerson person = new addPurchasePerson();
         
-        
+        String name = "";
         jLabel1.setEnabled(true);
         textRemarks.setEnabled(true);
         buttonBack.setEnabled(false);
         buttonNext.setEnabled(false);
-        
-        
-        
+
         try
         {
             amount = Float.parseFloat(textAmount.getText());
@@ -612,6 +743,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         {
             memberid = arrayMemberid.get(listMember.getSelectedIndex());
             String memberAdd = arrayMemberName.get(listMember.getSelectedIndex()) + "   :  " + amount;
+            name = arrayMemberName.get(listMember.getSelectedIndex());
             listPurchasing.addElement(memberAdd);
             status = "Y";
         }
@@ -619,6 +751,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         {
             memberid = arrayNonMemberid.get(listNonMember.getSelectedIndex());
             String memberAdd = arrayNonMemberName.get(listNonMember.getSelectedIndex()) + "  :  " + amount;
+            name = arrayNonMemberName.get(listMember.getSelectedIndex());
             listPurchasing.addElement(arrayNonMemberName.get(listNonMember.getSelectedIndex()));
             status = "N";
         }
@@ -626,6 +759,8 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         person.setBalance(amount);
         person.setMemberid(memberid);
         person.setStatus(status);
+        person.setName(name);
+        
         
         arrayPersonToAdd.add(person);
         
@@ -636,7 +771,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         
         listPurchase.setSelectedIndex(0);
         this.enabledTrue();
-        
+        name = "";
     }//GEN-LAST:event_buttonNextActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
@@ -686,6 +821,25 @@ public class addPurchaseGoods extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_textAmountFocusGained
 
+    private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
+
+        if(tabPane.getSelectedIndex() == 0)
+        {
+            this.getListMember(1);
+        }
+        else if(tabPane.getSelectedIndex() == 1)
+        {
+            this.getListNonMember(1);
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonSearchActionPerformed
+
+    private void buttonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRefreshActionPerformed
+
+        this.initAll();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonRefreshActionPerformed
+
 
     
     public void goodsHeader()
@@ -726,6 +880,7 @@ public class addPurchaseGoods extends javax.swing.JFrame {
             addPurchasePerson person = new addPurchasePerson();
             int loopIndex = arrayPersonToAdd.size();
         
+            //IF ADD
             String headerQuery = "insert into goods_sold_hdr (invdt,billingdt,invamt,remarks) values"+
                 "('"+current+"','"+dateBill+"','"+totalAmount+"','"+remarks+"')";
         
@@ -764,12 +919,13 @@ public class addPurchaseGoods extends javax.swing.JFrame {
             
             
             //OPTIMIZE WITH BATCH QUERY - NOT YET FINAL
+            //IF ADD
             String query = "insert all\n";
             for(int i = 0; i<loopIndex; i++)
             {
                 person = (addPurchasePerson) arrayPersonToAdd.get(i);
-                query += "into goods_sold_dtl (invid,memberid,amount,balance,description,ismember) values"+
-                    "('"+invid+"','"+person.getMemberid()+"','"+person.getBalance()+"','"+person.getBalance()+"','"+person.getDesc()+"','"+person.getStatus()+"')\n";
+                query += "into goods_sold_dtl (invid,memberid,amount,balance,description,ismember,membername) values"+
+                    "('"+invid+"','"+person.getMemberid()+"','"+person.getBalance()+"','"+person.getBalance()+"','"+person.getDesc()+"','"+person.getStatus()+"','"+person.getName()+"')\n";
             
             }
             query += "select * from dual";
@@ -836,7 +992,9 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private javax.swing.JButton buttonCancel;
     private javax.swing.JButton buttonConfirm;
     private javax.swing.JButton buttonNext;
+    private javax.swing.JButton buttonRefresh;
     private javax.swing.JButton buttonRemove;
+    private javax.swing.JButton buttonSearch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -853,10 +1011,12 @@ public class addPurchaseGoods extends javax.swing.JFrame {
     private javax.swing.JLabel labelAmount;
     private javax.swing.JLabel labelBill;
     private javax.swing.JLabel labelName;
+    private javax.swing.JLabel labelSearch;
     private javax.swing.JList listMember;
     private javax.swing.JList listNonMember;
     private javax.swing.JList listPurchase;
     private javax.swing.JPanel panelDetail;
+    private javax.swing.JTextField searchBox;
     private javax.swing.JTabbedPane tabPane;
     private javax.swing.JTextField textAmount;
     private javax.swing.JTextField textBillDate;

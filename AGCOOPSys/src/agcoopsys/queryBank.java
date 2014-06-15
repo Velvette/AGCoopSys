@@ -18,6 +18,12 @@ public class queryBank {
         return query;
     }
     
+    public String updateLoanFirstCommit(int loanid, String memberID, String loanType, String currentdtString, String startdtString, String enddtString, float principal, int terms, float interestrt, float interest, float totalPayment, float monthlyAmortization, String checkNo)
+    {
+        String query = "update loan_hdr set memberid='"+memberID+"',loantype='"+loanType+"',grantdt='"+currentdtString+"',startdt='"+startdtString+"',enddt='"+enddtString+"',loanamt='"+principal+"',montopay='"+terms+"',interestrt='"+interestrt+"',interestamt='"+interest+"',payableamt='"+totalPayment+"',balance='"+totalPayment+"',amortization='"+monthlyAmortization+"',checkno='"+checkNo+"'where loanid="+loanid;
+        return query;
+    }
+    
     public String loanCashloan(String memberID, String currentdtString, String enddtString,float principal, float interestrt, float interest, float totalPayment,String checkNo)
     {
         String query = "insert into cashloan (memberid,grantdt,billingdt,loanamt,interestrt,interestamt,balance,releasedamt,checkno) values ('"+memberID+"','"+currentdtString+"','"+enddtString+"','"+principal+"','"+interestrt+"','"+interest+"','"+totalPayment+"','"+principal+"','"+checkNo+"')";

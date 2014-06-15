@@ -217,6 +217,8 @@ public class addMember extends javax.swing.JFrame {
         jLabel14.setText("Max share");
 
         textTotal.setEditable(false);
+        textTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        textTotal.setText("0");
 
         jLabel15.setText("Status");
 
@@ -575,6 +577,7 @@ public class addMember extends javax.swing.JFrame {
         textMemEmail.setText("");
         textContribution.setText("0");
         textShare.setText("0");
+        textTotal.setText("0");
         textDateHired.setText(df.format(current));
         textDateResigned.setText("");
         textRemark.setText("");

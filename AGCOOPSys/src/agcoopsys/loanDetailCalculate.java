@@ -14,12 +14,12 @@ public class loanDetailCalculate {
     float principalBalance;
     float monthlyInterest;
     int totalNumberOfPayment;
-    float totPrincipal = 0;
-    float totAmortization = 0;
-    float totInterest = 0;
-    float interest = 0;
-    float interestRecur = 0;
-    float cashPayment = 0;
+    float totPrincipal = (float) 0.00;
+    float totAmortization = (float) 0.00;
+    float totInterest = (float) 0.00;
+    float interest = (float) 0.00;
+    float interestRecur = (float) 0.00;
+    float cashPayment = (float) 0.00;
     
 
     public void setMonthlyInterest(float monthlyInterest) {
@@ -64,7 +64,7 @@ public class loanDetailCalculate {
         
     public void getAmortization()
     {
-        float principal = 0;
+        float principal = (float) 0.00;
         float balance = principalBalance;
 
         float numerator = monthlyInterest * principalBalance * this.getInterestRateComp(monthlyInterest, totalNumberOfPayment);

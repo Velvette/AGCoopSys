@@ -17,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class viewMember extends javax.swing.JPanel {
     
-    addLoan aL = new addLoan();
+    
     public viewMember()
     {
         initComponents();
@@ -152,17 +152,6 @@ public class viewMember extends javax.swing.JPanel {
             aM.checkInputEditMember(i);
     }
     
-    public void addLoan()
-    {
-        int index = listMember.getSelectedRow();
-        String i = listMember.getValueAt(index, 0).toString();
-        aL.allReset();
-        aL.setVisible(true);
-        aL.setLocationRelativeTo(null);
-        aL.setResizable(false);
-        aL.setTitle("New Loan - Information");
-        aL.addLoan(i);
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
