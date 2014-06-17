@@ -34,8 +34,8 @@ public class addLoan extends javax.swing.JFrame {
     String loanType;
     Date startdt;
     Date enddt;
-    Date currentDate;
-    DateFormat df;
+    Date currentDate; 
+   DateFormat df;
     DateFormat df2;
     String startdtString = "";
     String enddtString = "";
@@ -481,7 +481,7 @@ public class addLoan extends javax.swing.JFrame {
         }
         catch(Exception e)
         {
-            System.out.println("error");
+            //System.out.println("error");
             error = false;
         }
         try{
@@ -626,7 +626,7 @@ public class addLoan extends javax.swing.JFrame {
             if(choice == 1)
             query = bank.updateLoanFirstCommit(loanID, memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
                 
-            System.out.println(query);
+            //System.out.println(query);
             this.connect();
             Statement stmt = null;
         
@@ -720,7 +720,7 @@ public class addLoan extends javax.swing.JFrame {
                 //System.out.println(repEndString);
                 calendar.setTime(repEnd);
                 insertString = "insert into loan_dtl (loanid,amordate,mon_amort,mon_interest,mon_premium,mon_penalty,mon_premium_bal,mon_interest_bal,mon_penalty_bal) values ('"+loanID+"',to_date('"+repEndString+"', 'yyyy-MM-dd'),'"+monthlyAmortization+"','"+arrayInterest[i]+"','"+arrayPremium[i]+"','"+penalty+"','"+arrayPremium[i]+"','"+arrayInterest[i]+"','"+penalty+"')";
-                System.out.println(insertString);
+                //System.out.println(insertString);
                 stmt.addBatch(insertString);
                 calendar.add(Calendar.MONTH, 1);
                 repEnd = calendar.getTime();

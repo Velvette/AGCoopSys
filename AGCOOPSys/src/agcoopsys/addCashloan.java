@@ -6,9 +6,16 @@ package agcoopsys;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,6 +25,7 @@ public class addCashloan extends javax.swing.JFrame {
 
     Date enddt;
     Date currentDate;
+    DateFormat df;
     
     public String dbUrl;
     public String dbDriver;
@@ -26,11 +34,16 @@ public class addCashloan extends javax.swing.JFrame {
     public Connection conn;
     ConnectToDatabaseSys paramDB = new ConnectToDatabaseSys();
     
+        
     float principal = 0;
     float interest = 0;
     float interestrt = 0;
     float totalPayment = 0;
-    
+    float totInterest = 0;
+    String finalEndString = "";
+    String checkNo = "";
+    String currentdtString = "";
+    int loanID;
     loanDetailCalculate loanCalculate = new loanDetailCalculate();
     
     String memberID;
@@ -39,7 +52,17 @@ public class addCashloan extends javax.swing.JFrame {
     
     public addCashloan() {
         initComponents();
+        this.df = new SimpleDateFormat("yyyy-MM-dd");
+        df.setLenient(false);
     }
+    
+    public void addLoan(String wholeName,String id)
+    {
+        memberID = id;
+        System.out.println("NAME:" + id);
+        labelMember.setText(wholeName);
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -71,8 +94,10 @@ public class addCashloan extends javax.swing.JFrame {
         buttonCompute = new javax.swing.JButton();
         buttonClear = new javax.swing.JButton();
         buttonCancel = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        textCheckNo = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         labelMember.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -131,6 +156,14 @@ public class addCashloan extends javax.swing.JFrame {
             }
         });
 
+        jLabel12.setText("Check No");
+
+        textCheckNo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textCheckNoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -142,42 +175,43 @@ public class addCashloan extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(labelMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
                             .addComponent(jLabel4)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jLabel7)))
-                        .addGap(18, 18, Short.MAX_VALUE)
+                            .addComponent(jLabel7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(textPrincipal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
                             .addComponent(textEndDate, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(textInterest)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                        .addComponent(labelTotalPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel11))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelTotalInterest, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelTotalPrincipal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(buttonCancel)
-                        .addGap(18, 18, 18)
+                        .addGap(31, 31, 31)
                         .addComponent(buttonClear)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(buttonCompute)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(buttonConfirm)))
+                        .addComponent(buttonConfirm))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(labelTotalPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(labelTotalInterest, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                        .addComponent(labelTotalPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(22, 22, 22)
+                        .addComponent(labelMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(textCheckNo, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -187,43 +221,48 @@ public class addCashloan extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelMember, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textCheckNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(textInterest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(textPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(textInterest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(textEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(textPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9)
-                    .addComponent(labelTotalPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10)
-                    .addComponent(labelTotalInterest, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelTotalPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelTotalInterest, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11)
-                    .addComponent(labelTotalPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(labelTotalPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonConfirm)
-                    .addComponent(buttonCompute)
-                    .addComponent(buttonClear)
-                    .addComponent(buttonCancel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(buttonCompute)
+                        .addComponent(buttonCancel)
+                        .addComponent(buttonClear))
+                    .addComponent(buttonConfirm))
+                .addContainerGap())
         );
 
         pack();
@@ -237,6 +276,12 @@ public class addCashloan extends javax.swing.JFrame {
 
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
 
+        if(paramDB.checkDuplicateLoan(memberID,"A"))
+        {
+           this.firstBreakCommit();
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Error: Current loan exists", "Error", JOptionPane.ERROR_MESSAGE);
         buttonConfirm.setEnabled(false);
         buttonCompute.setEnabled(true);
         loanCalculate.reset();
@@ -263,6 +308,8 @@ public class addCashloan extends javax.swing.JFrame {
         {
             error = false;
         }
+        
+        loanCalculate.setTotalNumberOfPayment(1);
 
 
         Date grantdt = new Date();
@@ -270,19 +317,29 @@ public class addCashloan extends javax.swing.JFrame {
 
         if(error)
         {
-            loanCalculate.getAmortization();
             principal = Float.parseFloat(textPrincipal.getText());
             interest = loanCalculate.getInterest();
             interestrt = Float.parseFloat(textInterest.getText());
-            totalPayment = loanCalculate.getTotAmortization();
-
+            totalPayment = loanCalculate.getCashloan();
+            totInterest = totalPayment - principal;
             labelTotalPayment.setText(Float.toString(totalPayment));
-            labelTotalInterest.setText(Float.toString(loanCalculate.getTotInterest()));
+            labelTotalInterest.setText(Float.toString(totInterest));
             labelTotalPrincipal.setText(Float.toString(principal));
+            checkNo = textCheckNo.getText();
+            currentdtString = df.format(currentDate);
 
             if(textEndDate.getText().length() != 0)
             {
-
+                String dateToFormatEnd = textEndDate.getText();
+                try
+                {
+                    enddt = df.parse(dateToFormatEnd);
+                    finalEndString = df.format(enddt);
+                }
+                catch (ParseException ex)
+                {
+                    Logger.getLogger(addCashloan.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
             buttonConfirm.setEnabled(true);
@@ -290,12 +347,79 @@ public class addCashloan extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_buttonComputeActionPerformed
 
-        public void firstBreakCommit()
+    public void initEnd(String startd) throws ParseException
+    {
+           Date start = df.parse(startd);
+           String sStart = df.format(start);
+           textEndDate.setText(sStart);
+    }
+    
+    public void editLoan(String wholeName,  String id)
+    {
+        ResultSet rs;
+        this.connect();
+        Statement stmt = null;
+        String query = "select * from cashloan where loanid="+id;
+        System.out.println(wholeName);
+        loanID = Integer.parseInt(id);
+        try
+        {
+            stmt = conn.createStatement();
+        }
+                
+	catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        String tempStart = "";
+        String tempEnd = "";
+        String type = "";
+        labelMember.setText(wholeName);
+        try
+        {
+            rs = stmt.executeQuery(query);
+            if(rs.next())
+            {
+                textInterest.setText(rs.getString("interestrt"));
+                textPrincipal. setText(rs.getString("loanamt"));
+                textCheckNo.setText(rs.getString("checkno"));
+                type = rs.getString("loantype");
+                memberID = rs.getString("memberid");
+                tempStart = rs.getString("billingdt");
+            }
+            
+	}
+        
+        catch (SQLException e)
+        {
+	}   
+        finally{
+            this.disconnect();
+        }
+        choice = 1;
+        try
+        {
+            this.initEnd(tempStart);
+        }
+        catch(Exception e)
+        {
+            
+        }
+    }
+        
+    public void firstBreakCommit()
     {
             queryBank bank = new queryBank();
             String query = "";
             
             //QUERY FOR CASHLOAN
+            if(choice == 0) {
+                query = bank.loanCashloan(memberID, currentdtString, finalEndString, principal, interestrt, totInterest, totalPayment, checkNo);
+            }
+            else if(choice == 1) {
+                query = bank.editLoanCashloan(memberID, currentdtString, currentdtString, principal, interestrt, totInterest, totalPayment, checkNo, loanID);
+            }
+                
                 
             System.out.println(query);
             this.connect();
@@ -312,12 +436,13 @@ public class addCashloan extends javax.swing.JFrame {
         
             try
             {
-                stmt.addBatch(query);
-                stmt.executeBatch();
+                stmt.executeQuery(query);
+                JOptionPane.showMessageDialog(null, "Database Update: Success", "Updating database", JOptionPane.INFORMATION_MESSAGE);
             }
             catch (SQLException ex)
             {
-            
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE); 
             }
         
             finally{
@@ -390,6 +515,10 @@ public class addCashloan extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonCancelActionPerformed
 
+    private void textCheckNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textCheckNoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textCheckNoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -432,6 +561,7 @@ public class addCashloan extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -443,6 +573,7 @@ public class addCashloan extends javax.swing.JFrame {
     private javax.swing.JLabel labelTotalInterest;
     private javax.swing.JLabel labelTotalPayment;
     private javax.swing.JLabel labelTotalPrincipal;
+    private javax.swing.JTextField textCheckNo;
     private javax.swing.JTextField textEndDate;
     private javax.swing.JTextField textInterest;
     private javax.swing.JTextField textPrincipal;

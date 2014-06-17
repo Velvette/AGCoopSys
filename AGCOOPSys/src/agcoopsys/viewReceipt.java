@@ -566,7 +566,7 @@ public class viewReceipt extends javax.swing.JPanel {
         */
         try {
             id=arrayID.get(listReceipt.getSelectedIndex());
-            System.out.println("in list receipt mouse clicked");
+            //System.out.println("in list receipt mouse clicked");
             String index = listReceipt.getSelectedValue().toString();//.getSelectedRow();
 //            String i = listDetails.getValueAt(index, 0).toString();
 //            this.getListDetails(i);
@@ -583,7 +583,7 @@ public class viewReceipt extends javax.swing.JPanel {
             
             rs2 = stmt.executeQuery(tempQuery);
             rs2.next();
-            System.out.println(rs2.getString("orid"));
+           // System.out.println(rs2.getString("orid"));
             jLabel7.setText(rs2.getString("compname"));
             jLabel8.setText(rs2.getString("orno"));
             jLabel9.setText(rs2.getString("ordt"));
@@ -591,7 +591,7 @@ public class viewReceipt extends javax.swing.JPanel {
             jLabel11.setText(rs2.getString("ordetail"));
             jLabel12.setText(rs2.getString("billid"));
             billid=rs2.getString("billid");
-            System.out.println("billid"+billid);
+            //System.out.println("billid"+billid);
             id= rs2.getString("orid");
             getListDetails(id);
             this.disconnect();
@@ -611,7 +611,7 @@ public class viewReceipt extends javax.swing.JPanel {
         
         if (listDetails.getSelectedRow()>=0){
             try {
-                System.out.println("in edit");
+               // System.out.println("in edit");
                 //editBillDtl edit= new editBillDtl(Integer.parseInt(arrayDTLID.get(listDetails.getSelectedRow())));
                 
                 /*edit.setVisible(true);
@@ -620,7 +620,7 @@ public class viewReceipt extends javax.swing.JPanel {
                 */this.disconnect();
                 jFrame1.setVisible(true);
                 jFrame1.setLocationRelativeTo(null);
-                jFrame1.setTitle("Edit OR Details"); System.out.println(id);
+                jFrame1.setTitle("Edit OR Details"); //System.out.println(id);
                 
                 
                     String query = "select * from bill_hdr where billid="+billid;
@@ -634,7 +634,7 @@ public class viewReceipt extends javax.swing.JPanel {
                 rs2.next();
                 startDate=rs2.getString("startdt");
                 endDate=rs2.getString("enddt");
-                System.out.println(query+startDate+endDate);
+                //System.out.println(query+startDate+endDate);
         this.disconnect();
         //this.getORDTLID();            
             } catch (SQLException ex) {
@@ -651,7 +651,7 @@ public class viewReceipt extends javax.swing.JPanel {
 public void part2(){
     try{
                 String tempQuery="Select * from or_dtl where ordtlid="+arrayDTLID.get(listDetails.getSelectedRow());
-                System.out.println(tempQuery);
+               // System.out.println(tempQuery);
                 Statement stmt = null;
                 this.connect();
                 conn = this.getConnection();
@@ -689,7 +689,7 @@ public void part2(){
 }
     private void textRegloanregLoanChanged(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textRegloanregLoanChanged
         // TODO add your handling code here:
-        System.out.println("pindot");
+        //System.out.println("pindot");
         reg=true;
     }//GEN-LAST:event_textRegloanregLoanChanged
 
@@ -767,7 +767,7 @@ public void part2(){
                     rs = stmt.executeQuery(query);
                     rs.next();
                     arrayLoans.add(subledger1("reg", rs.getString("reg_loanid"), Float.parseFloat(rs.getString("reg_amount"))));
-                    System.out.println("reg");
+                    //System.out.println("reg");
                     this.disconnect();
                 } catch (SQLException ex) {
                     Logger.getLogger(viewReceipt.class.getName()).log(Level.SEVERE, null, ex);
@@ -788,7 +788,7 @@ public void part2(){
                     this.disconnect();
                 } catch (SQLException ex) {
                     Logger.getLogger(viewReceipt.class.getName()).log(Level.SEVERE, null, ex);
-                }System.out.println("ed");
+                }//System.out.println("ed");
             }
             if(cal  ){
                try {
@@ -805,7 +805,7 @@ public void part2(){
                     this.disconnect();
                 } catch (SQLException ex) {
                     Logger.getLogger(viewReceipt.class.getName()).log(Level.SEVERE, null, ex);
-                }System.out.println("cal");
+                }//System.out.println("cal");
             }
             if(em ){
                 try {
@@ -822,7 +822,7 @@ public void part2(){
                     this.disconnect();
                 } catch (SQLException ex) {
                     Logger.getLogger(viewReceipt.class.getName()).log(Level.SEVERE, null, ex);
-                }System.out.println("em");
+                }//System.out.println("em");
             }
   
             this.subledger2(arrayLoans);
@@ -846,14 +846,14 @@ public void part2(){
                     paramDB.accessLoopDatabase(query3);
                 }
                 else if(arrayTemp.get(0).matches("cal")){
-            System.out.println("2size"+arrayTemp.size());
+            //System.out.println("2size"+arrayTemp.size());
                     /*query3 = "insert into subledger_cal (ordtlid, loanid, loandtlid, mon_premium_prev, mon_interest_prev, premium_pay, interest_pay) "
                             + "values('"+ordtlid+"', '"+arrayTemp.get(1)+"', '"+arrayTemp.get(2)+"', '"+arrayTemp.get(3)+"', '"+arrayTemp.get(4)+"', '"+arrayTemp.get(5)+"', '"+arrayTemp.get(6)+"')";
                     paramDB.accessLoopDatabase(query3);   */
                     query3= "update subledger_cal set mon_premium_prev="+arrayTemp.get(3)+", mon_interest_prev="+arrayTemp.get(4)+", mon_premium_pay="+arrayTemp.get(5)+", mon_interest_pay="+arrayTemp.get(6)+
                             " where loandtlid="+arrayTemp.get(2);
                     paramDB.accessLoopDatabase(query3);
-                    System.out.println("in calinsert"+ordtlid+" "+arrayTemp.get(1)+" "+arrayTemp.get(2)+" "+arrayTemp.get(3)+" "+arrayTemp.get(4)+" "+arrayTemp.get(5)+" "+arrayTemp.get(6));
+                   // System.out.println("in calinsert"+ordtlid+" "+arrayTemp.get(1)+" "+arrayTemp.get(2)+" "+arrayTemp.get(3)+" "+arrayTemp.get(4)+" "+arrayTemp.get(5)+" "+arrayTemp.get(6));
                 }
                 else if(arrayTemp.get(0).matches("em")){
                     /*query3 = "insert into subledger_emer(ordtlid, loanid, loandtlid, mon_premium_prev, mon_interest_prev, premium_pay, interest_pay) "
@@ -887,7 +887,7 @@ public void part2(){
             stmt = conn.createStatement();
             rs = stmt.executeQuery(query);
             rs.next();
-            System.out.println("in sub1 while"+loanid+" "+rs.getString("mon_interest"));
+            //System.out.println("in sub1 while"+loanid+" "+rs.getString("mon_interest"));
                 interest_prev=rs.getString("mon_interest");
                 premium_prev=rs.getString("mon_premium");
                 interest=rs.getFloat("mon_interest");
@@ -944,7 +944,7 @@ public void part2(){
     
     private void subledger2(ArrayList<ArrayList> arrayL) {
         String query3;
-        System.out.println("sub2size"+arrayL.size());
+        //System.out.println("sub2size"+arrayL.size());
         for(int i=0; i<arrayL.size(); i++){
             arrayTemp=arrayL.get(i);
             
@@ -965,14 +965,14 @@ public void part2(){
                 paramDB.accessLoopDatabase(query3);
             }
             else if(arrayTemp.get(0).matches("cal")){
-        System.out.println("2size"+arrayTemp.size());
+       // System.out.println("2size"+arrayTemp.size());
                 /*query3 = "insert into subledger_cal (ordtlid, loanid, loandtlid, mon_premium_prev, mon_interest_prev, premium_pay, interest_pay) "
                         + "values('"+ordtlid+"', '"+arrayTemp.get(1)+"', '"+arrayTemp.get(2)+"', '"+arrayTemp.get(3)+"', '"+arrayTemp.get(4)+"', '"+arrayTemp.get(5)+"', '"+arrayTemp.get(6)+"')";
                 paramDB.accessLoopDatabase(query3);   */
                 query3= "update loan_dtl set mon_premium_bal=mon_premium_bal-"+arrayTemp.get(5)+", mon_interest_bal=mon_interest_bal-"+arrayTemp.get(6)+
                         " where loandtlid="+arrayTemp.get(2);
                 paramDB.accessLoopDatabase(query3);
-                System.out.println("in calinsert"+ordtlid+" "+arrayTemp.get(1)+" "+arrayTemp.get(2)+" "+arrayTemp.get(3)+" "+arrayTemp.get(4)+" "+arrayTemp.get(5)+" "+arrayTemp.get(6));
+              //  System.out.println("in calinsert"+ordtlid+" "+arrayTemp.get(1)+" "+arrayTemp.get(2)+" "+arrayTemp.get(3)+" "+arrayTemp.get(4)+" "+arrayTemp.get(5)+" "+arrayTemp.get(6));
             }
             else if(arrayTemp.get(0).matches("em")){
                 /*query3 = "insert into subledger_emer(ordtlid, loanid, loandtlid, mon_premium_prev, mon_interest_prev, premium_pay, interest_pay) "
@@ -1032,7 +1032,8 @@ public void part2(){
         try
         {
 
-            System.out.println("in list details"+id);
+           //
+            //System.out.println("in list details"+id);
             String tempQuery = "select member.lastname ||', '|| MEMBER.firstname ||' '|| member.midinit as membername, or_dtl.contribution, or_dtl.cash_amount as CASH_LOAN, or_dtl.reg_amount AS REGULAR_LOAN, or_dtl.educ_amount AS EDUCATIONAL_LOAN, or_dtl.calamity_amount AS CALAMITY_LOAN, or_dtl.emer_amount AS EMERGENCY_LOAN, or_dtl.goods_amount AS GOODS, or_dtl.memtotal AS TOTAL  \n" +
                                 "from or_dtl cross join member\n" +
                                 "where OR_DTL.MEMBERID=MEMBER.MEMBERID and orid="+id+" ORDER BY MEMBERNAME";
@@ -1127,7 +1128,7 @@ try
         try
         {
             id = arrayID.get(listReceipt.getSelectedIndex());//.getSelectedValue().toString();
-            System.out.println("delete"+id);
+         //   System.out.println("delete"+id);
             String query = "delete from or_hdr where orid ="+id;
             String query2 = "delete from or_dtl where orid ="+id;
             ConnectToDatabaseSys connectDB = new ConnectToDatabaseSys();

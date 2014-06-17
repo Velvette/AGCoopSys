@@ -31,20 +31,22 @@ public class viewMember extends javax.swing.JPanel {
     public String password;
     public Connection conn;
     DbUtils tableUtils = new DbUtils();
-    int rep = 0;
     String query = "Select memberid,lastname,firstname,midinit,member.contactno1,member.contactno2,member.email,compname,remarks from member inner join company on member.compid = company.compid order by lastname";
 
-    public void getList()
+    public void getList(int rep,String searchText)
     {
         String tempQuery = "";
-        if(rep==0)
-        {
+        if(rep==0) {
             tempQuery = query;
+        }
+        else if(rep==1) {
+            tempQuery = "Select memberid,lastname,firstname,midinit,member.contactno1,member.contactno2,member.email,compname,remarks from member inner join company on member.compid = company.compid order by lastname where lastname like '"+searchText+"'";
         }
         //else
           //  tempQuery = "Select * from mydb.bookinformation where Title like '%"+bookTitle+"%';";
         
         //System.out.println(tempQuery);
+        
 	Statement stmt = null;       
 	this.connect();
 	conn = this.getConnection();

@@ -30,10 +30,16 @@ public class queryBank {
         return query;
     }
     
+    public String editLoanCashloan(String memberID, String currentdtString, String enddtString,float principal, float interestrt, float interest, float totalPayment,String checkNo,int loanid)
+    {
+        String query = "update cashloan set memberid='"+memberID+"',grantdt='"+currentdtString+"',billingdt='"+enddtString+"',loanamt='"+principal+"',interestrt='"+interestrt+"',interestamt='"+interest+"',releasedamt='"+principal+"',balance='"+totalPayment+"',checkno='"+checkNo+"'where loanid="+loanid;
+        return query;
+    }
+    
     public String joinDistinct(int compid)
     {
         String query = "insert into joincompany_member (select distinct compname,company.compid,memberid,lastname,firstname,midinit from company  inner join member on member.compid=company.compid where member.compid="+compid+")";
-        System.out.println(query);
+        //System.out.println(query);
         return query;
     }
     
@@ -57,9 +63,9 @@ public class queryBank {
         return query;
     }
     
-    public String bill_hdr(String fromStart, String fromUntil, String currentDate, int compid)
+    public String bill_hdr(String fromStart, String fromUntil, String currentDate, int compid,String billingdt)
     {
-        String query = "insert into bill_hdr (compid, startdt, enddt, processdt) values ('"+compid+"','"+fromStart+"','"+fromUntil+"','"+currentDate+"')";
+        String query = "insert into bill_hdr (compid,billdt, startdt, enddt, processdt) values ('"+compid+"','"+billingdt+"','"+fromStart+"','"+fromUntil+"','"+currentDate+"')";
         return query;
     }
     

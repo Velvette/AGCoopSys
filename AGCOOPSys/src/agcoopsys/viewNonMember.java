@@ -35,15 +35,17 @@ public class viewNonMember extends javax.swing.JPanel {
     public String password;
     public Connection conn;
     DbUtils tableUtils = new DbUtils();
-    int rep = 0;
     String query = "Select memberid,lastname,firstname,midinit,nonmember.contactno1,nonmember.contactno2,nonmember.email,compname from nonmember inner join company on nonmember.compid = company.compid order by lastname";
 
-    public void getList()
+    public void getList(int rep, String searchText)
     {
         String tempQuery = "";
         if(rep==0)
         {
             tempQuery = query;
+        }
+        else if(rep == 1) {
+            tempQuery = "select * from (Select memberid,lastname,firstname,midinit,nonmember.contactno1,nonmember.contactno2,nonmember.email,compname from nonmember inner join company on nonmember.compid = company.compid order by lastname) where lastname like '"+searchText+"'";
         }
         //else
           //  tempQuery = "Select * from mydb.bookinformation where Title like '%"+bookTitle+"%';";

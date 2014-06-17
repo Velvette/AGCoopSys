@@ -175,6 +175,7 @@ private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 private void buttonLogInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLogInActionPerformed
 // TODO add your handling code here:
     int nFound, nUserType;
+    int count = 0;
     
     user = fieldUser.getText();
     pass = fieldPass.getText();
@@ -190,6 +191,11 @@ private void buttonLogInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         jDialog1.setSize(300, 150);
         jDialog1.setLocationRelativeTo(null);
         this.setVisible(false);
+        count++;
+        if(count==3)
+        {
+            this.dispose();
+        }
         //this.setEnabled(false);
     }
     /*else{
@@ -205,8 +211,7 @@ private void buttonLogInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             mI.setVisible(true);
             mI.setResizable(false);
             mI.setTitle("AG-Coop Loan Management System");
-            this.dispose();
-            
+            this.dispose();   
     }
     
 }//GEN-LAST:event_buttonLogInActionPerformed

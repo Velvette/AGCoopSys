@@ -15,7 +15,7 @@ public class validateAllInputs {
 
     public String formatStringSpaces(String formatString)
     {
-        System.out.println(formatString);
+        //System.out.println(formatString);
         formatString = formatString.trim().replaceAll("\\s+", " ");
         formatString = formatString.toUpperCase();
         return formatString;

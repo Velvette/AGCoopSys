@@ -21,12 +21,14 @@ public class mainInterface extends javax.swing.JFrame {
     viewReceipt vR = new viewReceipt();
     viewGoods vG = new viewGoods();
     viewBill vB = new viewBill();
+    viewCashloan vCL = new viewCashloan();
     
     addMember aM = new addMember();
     addSupplier aS = new addSupplier();
     addCompany aC = new addCompany();
     addPurchaseGoods aP = new addPurchaseGoods();
     addNonMember aNM = new addNonMember();
+    addCashloan aCL = new addCashloan();
     
     processBillStatement pB = new processBillStatement();
     
@@ -62,6 +64,7 @@ public class mainInterface extends javax.swing.JFrame {
         menuSupplier = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         menuLoans = new javax.swing.JMenuItem();
+        menuCashloan = new javax.swing.JMenuItem();
         menuGoods = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -197,6 +200,14 @@ public class mainInterface extends javax.swing.JFrame {
         });
         menuBillings.add(menuLoans);
 
+        menuCashloan.setText("Cashloan");
+        menuCashloan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCashloanActionPerformed(evt);
+            }
+        });
+        menuBillings.add(menuCashloan);
+
         menuGoods.setText("Goods");
         menuGoods.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -326,7 +337,7 @@ public class mainInterface extends javax.swing.JFrame {
     private void menuCompanyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCompanyActionPerformed
 
         viewTab.addTab("Company", vC);
-        vC.getList();
+        vC.getList(0,"");
         // TODO add your handling code here:
     }//GEN-LAST:event_menuCompanyActionPerformed
 
@@ -365,6 +376,7 @@ public class mainInterface extends javax.swing.JFrame {
         String agcoopLoan = "agcoopsys.viewLoan";
         String agcoopReceipt = "agcoopsys.viewReceipt";
         String agcoopGoods = "agcoopsys.viewGoods";
+        String agcoopCashloan = "agcoopsys.viewCashloan";
         
         try{
             if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCompany))
@@ -421,7 +433,11 @@ public class mainInterface extends javax.swing.JFrame {
                 aP.setVisible(true);
                 aP.setLocationRelativeTo(null);
                 aP.setResizable(false);
-                aP.setTitle("Purchase Goods");
+                aP.setTitle("Purchase Goods - Information");
+            }
+            else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCashloan))
+            {
+                vCL.addLoan();
             }
         }
         catch(Exception e)
@@ -433,14 +449,14 @@ public class mainInterface extends javax.swing.JFrame {
 
     private void menuMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMemberActionPerformed
         viewTab.addTab("Member", vM);
-        vM.getList();
+        vM.getList(0,"");
         // TODO add your handling code here:
     }//GEN-LAST:event_menuMemberActionPerformed
 
     private void menuSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSupplierActionPerformed
 
         viewTab.addTab("Supplier", vS);
-        vS.getList();
+        vS.getList(0,"");
         // TODO add your handling code here:
     }//GEN-LAST:event_menuSupplierActionPerformed
 
@@ -455,13 +471,15 @@ public class mainInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_viewTabComponentAdded
 
     private void buttonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRefreshActionPerformed
-        vM.getList();
-        vC.getList();
-        vS.getList();
-        vL.getList();
-        vNM.getList();
+        vM.getList(0,"");
+        vC.getList(0,"");
+        vS.getList(0,"");
+        vL.getList(0);
+        vNM.getList(0,"");
         vR.getList();   
         vG.getList();
+        vCL.getList(0);
+        vB.getList();
     }//GEN-LAST:event_buttonRefreshActionPerformed
 
     private void buttonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteActionPerformed
@@ -472,6 +490,8 @@ public class mainInterface extends javax.swing.JFrame {
         String agcoopLoan = "agcoopsys.viewLoan";
         String agcoopNonMember = "agcoopsys.viewNonMember";
         String agcoopReceipt = "agcoopsys.viewReceipt";
+        String agcoopGoods = "agcoopsys.viewGoods";
+        String agcoopCashloan = "agcoopsys.viewCashloan";
         
             int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete?", "Delete - Information", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION)
@@ -481,37 +501,48 @@ public class mainInterface extends javax.swing.JFrame {
                     if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCompany))
                     {
                         vC.deleteCompany();
-                        vC.getList();
+                        vC.getList(0,"");
                     }
         
                     else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopMember))
                     {
                         vM.deleteMember();
-                        vM.getList();
+                        vM.getList(0,"");
                     }
         
                     else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopSupplier))
                     {
                         vS.deleteSupplier();
-                        vS.getList();
+                        vS.getList(0,"");
                     }
                     
                     else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopLoan))
                     {
                         vL.deleteLoan();
-                        vL.getList();
+                        vL.getList(0);
                     }
                     else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopNonMember))
                     {
                         //DELETE NON MEMBER
                         vNM.deleteNonMember();
-                        vNM.getList();
+                        vNM.getList(0,"");
                     }
                     else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopReceipt))
                     {
                         vR.deleteReceipt();
                         vR.getList();
                     }
+                    else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopGoods))
+                    {
+                        vG.deleteGoods();
+                        vG.getList();
+                    }
+                    else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCashloan))
+                    {
+                        vCL.deleteLoan();
+                        vCL.getList(0);
+                    }
+                    
                     
                 }
             
@@ -530,6 +561,8 @@ public class mainInterface extends javax.swing.JFrame {
         String agcoopNonMember = "agcoopsys.viewNonMember";
         String agcoopLoan = "agcoopsys.viewLoan";
         String agcoopGoods = "agcoopsys.viewGoods";
+        String agcoopCashloan = "agcoopsys.viewCashloan";
+        
         
         try{
             if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCompany))
@@ -548,7 +581,7 @@ public class mainInterface extends javax.swing.JFrame {
             }
             else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopNonMember))
             {
-                //EDIT NON MEMBER
+                vNM.editMember();
             }
             else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopLoan))
             {
@@ -557,6 +590,10 @@ public class mainInterface extends javax.swing.JFrame {
             else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopGoods))
             {
                 vG.editGoods();
+            }
+            else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCashloan))
+            {
+                vCL.editLoan();
             }
             
             
@@ -571,13 +608,46 @@ public class mainInterface extends javax.swing.JFrame {
     private void menuLoansActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuLoansActionPerformed
 
         viewTab.add("Loans", vL);
-        vL.getList();
+        vL.getList(0);
         // TODO add your handling code here:
     }//GEN-LAST:event_menuLoansActionPerformed
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
 
-        String searchQuery = textSearch.getText();
+        String searchQuery = textSearch.getText().toUpperCase();
+        
+        String agcoopCompany = "agcoopsys.viewCompany";
+        String agcoopMember = "agcoopsys.viewMember";
+        String agcoopSupplier = "agcoopsys.viewSupplier";
+        String agcoopNonMember = "agcoopsys.viewNonMember";
+        String agcoopLoan = "agcoopsys.viewLoan";
+        String agcoopGoods = "agcoopsys.viewGoods";
+        String agcoopCashloan = "agcoopsys.viewCashloan";
+        
+        try{
+            if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCompany))
+            {
+                vC.getList(1, searchQuery);
+            }
+        
+            else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopMember))
+            {
+                vM.getList(1, searchQuery);
+            }
+        
+            else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopSupplier))
+            {
+                vS.getList(1, searchQuery);
+            }
+            else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopNonMember))
+            {
+                vNM.getList(1, searchQuery);
+            }                  
+        }
+        catch(Exception e)
+        {
+            //JOptionPane.showMessageDialog(null, "Error: Select row to edit", "Error - Edit information", JOptionPane.ERROR_MESSAGE); 
+        }
         
         
         // TODO add your handling code here:
@@ -617,7 +687,7 @@ public class mainInterface extends javax.swing.JFrame {
 
     private void menuNonMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNonMemberActionPerformed
         viewTab.add("Non-Member",vNM);
-        vNM.getList();
+        vNM.getList(0,"");
         // TODO add your handling code here:
     }//GEN-LAST:event_menuNonMemberActionPerformed
 
@@ -661,6 +731,14 @@ public class mainInterface extends javax.swing.JFrame {
         vB.getList();
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void menuCashloanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCashloanActionPerformed
+
+        viewTab.add("Cashloan",vCL);
+        vCL.getList(0);
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuCashloanActionPerformed
 
     /**
      * @param args the command line arguments
@@ -717,6 +795,7 @@ public class mainInterface extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JLabel labelSearch;
     private javax.swing.JMenu menuBillings;
+    private javax.swing.JMenuItem menuCashloan;
     private javax.swing.JMenuItem menuCloseTab;
     private javax.swing.JMenuItem menuCompany;
     private javax.swing.JMenuItem menuExit;

@@ -332,12 +332,12 @@ public class addNonMember extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonCancelActionPerformed
 
-        public void checkInputEditMember(String id)
+    public void checkInputEditMember(String id)
     {
         ResultSet rs;
         this.connect();
         Statement stmt = null;
-        String query = "select * from member where memberid="+id;
+        String query = "select * from nonmember where memberid="+id;
         
         try
         {
@@ -381,7 +381,7 @@ public class addNonMember extends javax.swing.JFrame {
     {
         for(int i = 0; i<arrayList.size(); i++)
         {
-            System.out.println(memid +" : "+ arrayList.get(i));;
+            //System.out.println(memid +" : "+ arrayList.get(i));;
             if(memid == arrayList.get(i))
             {
                 comboCompany.setSelectedItem(arrayListCompany.get(i));
@@ -469,8 +469,8 @@ public class addNonMember extends javax.swing.JFrame {
             //System.out.println(query);
             ConnectToDatabaseSys connectDB = new ConnectToDatabaseSys();
             connectDB.accessInputDatabase(query);
-            viewMember vM = new viewMember();
-            vM.getList();
+            viewNonMember vM = new viewNonMember();
+            vM.getList(0,"");
         }
         else if(errorCount>0)
         {
@@ -481,13 +481,15 @@ public class addNonMember extends javax.swing.JFrame {
         
     }
     
-        public int getCompanyIdCombo(int comboID)
+    public int getCompanyIdCombo(int comboID)
     {
         int companyID = 0;
         companyID = arrayList.get(comboID);
         return companyID;
     }
         
+    
+    
     public void connect()
     {
         dbDriver = paramDB.getDbClass();
@@ -549,7 +551,7 @@ public class addNonMember extends javax.swing.JFrame {
             while(rs.next())
             {
                 comboCompany.addItem(rs.getString("compname"));
-                System.out.println(rs.getInt("compid") + " : " + rs.getString("compname"));
+                //System.out.println(rs.getInt("compid") + " : " + rs.getString("compname"));
                 arrayList.add(rs.getInt("compid"));
                 arrayListCompany.add(rs.getString("compname"));
             }

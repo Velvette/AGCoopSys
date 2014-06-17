@@ -35,16 +35,18 @@ public class viewSupplier extends javax.swing.JPanel {
     public String password;
     public Connection conn;
     DbUtils tableUtils = new DbUtils();
-    int rep = 0;
     String query = "Select suppid,suppname,contactno1,contactno2,email from supplier order by suppname";
 
-    public void getList()
+    public void getList(int rep,String searchText)
     {
         String tempQuery = "";
         if(rep==0)
         {
             tempQuery = query;
         }    
+        else if(rep == 1) {
+            tempQuery = "select * from (Select suppid,suppname,contactno1,contactno2,email from supplier order by suppname) where suppname like '"+searchText+"'";
+        }
         //else
           //  tempQuery = "Select * from mydb.bookinformation where Title like '%"+bookTitle+"%';";
         
@@ -134,7 +136,7 @@ public class viewSupplier extends javax.swing.JPanel {
         {
             int index = listSupplier.getSelectedRow();
             String i = listSupplier.getValueAt(index, 0).toString();
-            System.out.println(i);
+           // System.out.println(i);
             String query = "delete from supplier where suppid ="+i;
             ConnectToDatabaseSys connectDB = new ConnectToDatabaseSys();
             connectDB.accessLoopDatabase(query);

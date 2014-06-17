@@ -126,7 +126,7 @@ public class loanDetailCalculate {
             balance -= principal;
             balance = (float) (Math.round(balance * 100.00) / 100.00);
             arrayInterest[i] = interestRecur;
-            System.out.println(arrayInterest[i]);
+          //  System.out.println(arrayInterest[i]);
         }
         return arrayInterest;
     }
@@ -146,7 +146,7 @@ public class loanDetailCalculate {
             balance -= principal;
             balance = (float) (Math.round(balance * 100.00) / 100.00);
             arrayPremium[i] = principal;
-            System.out.println(arrayPremium[i]);
+           // System.out.println(arrayPremium[i]);
         }
         return arrayPremium;
     }

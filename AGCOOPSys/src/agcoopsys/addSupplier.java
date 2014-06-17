@@ -179,11 +179,12 @@ public class addSupplier extends javax.swing.JFrame {
             }
             connectDB.executeQuery(query);
             connectDB.disconnect();
+            
         }
         
         else if(errorCount > 0)
         {
-            System.out.println(errorMessages);
+            //System.out.println(errorMessages);
             JOptionPane.showMessageDialog(null, errorMessages, "Error: Company Information", JOptionPane.ERROR_MESSAGE);
         }
     }

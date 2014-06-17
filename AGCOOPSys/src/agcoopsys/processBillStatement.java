@@ -3,6 +3,8 @@
  * and open the template in the editor.
  */
 package agcoopsys;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.sql.Connection;
 
 import java.sql.DriverManager;
@@ -30,6 +32,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 /**
  *
  * @author admin
@@ -47,12 +50,15 @@ public class processBillStatement extends javax.swing.JPanel {
     
     private String fromText;
     private String untilText;
+    private String billText;
     
     private Date fromDate;
     private Date untilDate;
+    private Date billDate;
     
     private String finalFrom;
     private String finalUntil;
+    private String finalBill;
     
     DateFormat df; 
     DateFormat bill;
@@ -62,6 +68,8 @@ public class processBillStatement extends javax.swing.JPanel {
     ArrayList<String> loanType = new ArrayList<>();
     ArrayList<Float> monAmort = new ArrayList<>();
         
+    private PrintStream standardOut;
+    
     String progressText = "";
     
     public processBillStatement() {
@@ -70,15 +78,42 @@ public class processBillStatement extends javax.swing.JPanel {
         this.df = new SimpleDateFormat("yyyy-MM-dd");
         this.bill = new SimpleDateFormat("MMMM dd, yyyy");
         df.setLenient(false);
+        PrintStream printStream = new PrintStream(new CustomOutputStream(textProgress));
+        standardOut = System.out;
+        System.setOut(printStream);
+        //System.out.println("hello");
     }
+    
+    
     
     public void resetTexts()
     {
         textFrom.setText("");
         textUntil.setText("");
-        //textBill.setText("");
+        textBilling.setText("");
     }
 
+    public void clearConsole()
+{
+    try
+    {
+        final String os = System.getProperty("os.name");
+
+        if (os.contains("Windows"))
+        {
+            Runtime.getRuntime().exec("cls");
+        }
+        else
+        {
+            Runtime.getRuntime().exec("clear");
+        }
+    }
+    catch (final Exception e)
+    {
+        //  Handle any exceptions.
+    }
+}
+    
     public void setTextFromDate()
     {
         fromText = textFrom.getText();
@@ -88,6 +123,13 @@ public class processBillStatement extends javax.swing.JPanel {
     {
         untilText = textUntil.getText();
     }
+    
+    public void setTextBillDate()
+    {
+        billText = textBilling.getText();
+    }
+    
+    
     
     public void returnParams()
     {        
@@ -114,7 +156,7 @@ public class processBillStatement extends javax.swing.JPanel {
             while(rs.next())
             {
                 comboCompany.addItem(rs.getString("compname"));
-                System.out.println(rs.getInt("compid") + " : " + rs.getString("compname"));
+                //System.out.println(rs.getInt("compid") + " : " + rs.getString("compname"));
                 arrayList.add(rs.getInt("compid"));
                 arrayListCompany.add(rs.getString("compname"));
             }
@@ -195,7 +237,7 @@ public class processBillStatement extends javax.swing.JPanel {
                 billid = rs.getInt("billid");
             
             rs = null;
-            System.out.println(billid);
+            //System.out.println(billid);
             tempQuery = bank.joinDistinct(compid);
             rs = stmt.executeQuery(tempQuery);
             if(rs.next())
@@ -266,7 +308,7 @@ public class processBillStatement extends javax.swing.JPanel {
     {
         for(int i = 0; i<firstname.size(); i++)
         {
-            System.out.println(lastname.get(i) +", "+ firstname.get(i) + " " + midinit.get(i) + ". --- " + monAmort.get(i) + "--" + loanType.get(i));
+            //System.out.println(lastname.get(i) +", "+ firstname.get(i) + " " + midinit.get(i) + ". --- " + monAmort.get(i) + "--" + loanType.get(i));
         }
         
     }
@@ -282,6 +324,8 @@ public class processBillStatement extends javax.swing.JPanel {
             finalFrom = df.format(fromDate);
             untilDate = df.parse(untilText);
             finalUntil = df.format(untilDate);
+            billDate = df.parse(billText);
+            finalBill = df.format(billDate);
         } 
         catch (Exception p)
         { 
@@ -292,7 +336,7 @@ public class processBillStatement extends javax.swing.JPanel {
                 
         if(error>=1)
         {
-            System.out.println(errorMessages);
+            //System.out.println(errorMessages);
         }
         else
         {
@@ -318,19 +362,21 @@ public class processBillStatement extends javax.swing.JPanel {
     
     public void processBillNew()
     {
+        this.clearConsole();
         queryBank bank = new queryBank();
         Date date = new Date();
         String currentDate = df.format(date);
         int compid = this.getCompanyIdCombo(comboCompany.getSelectedIndex());
         Statement stmt = null;
         int billid = 0;
-        String tempQuery = bank.bill_hdr(fromText, finalUntil, currentDate, compid);
+        String tempQuery = bank.bill_hdr(fromText, finalUntil, currentDate, compid,finalBill);
         
         this.connect();
         
         try
         {
             stmt = conn.createStatement();
+            System.out.println("CONNECTING TO DATABASE..");
             //progressText = "Connecting to Database..\n";
             //textProgress.append(progressText);
             stmt.executeQuery(tempQuery);
@@ -389,6 +435,7 @@ public class processBillStatement extends javax.swing.JPanel {
             tempQuery = bank.joinDistinct(compid);
             progressText = ("Joining Members - Company..\n");
             stmt.executeQuery(tempQuery);
+            System.out.println("JOINING DATABASE TABLES..");
           //  progressText = ("Joining (Success)..\n Joining Non-Members - Company..\n");
           //  textProgress.append(progressText);
             tempQuery = bank.joinDistinctNon(compid);
@@ -411,7 +458,7 @@ public class processBillStatement extends javax.swing.JPanel {
             int prevId = 0;
             int reset = 0;
             int overTotal = 0;
-            System.out.println("here1");
+            //System.out.println("here1");
             tempQuery = "insert all\n";
             while(rs.next())
             {                   
@@ -424,11 +471,13 @@ public class processBillStatement extends javax.swing.JPanel {
                     //System.out.println("commit: " + membername);
                    // progressText = ("Current Member #:" + memberCount + " : " + membername);
                    // textProgress.append(progressText);
+                    System.out.println("PROCESSING MEMBER #:" + memberCount + " : " + membername);
                     goodsamt = this.getBalance(prevId);
                     cashamt = this.getCashamt(prevId);
                     total = regamt+emeramt+educamt+cashamt+goodsamt+calamityamt+contribution;
                     overTotal += total;
                     tempQuery += bank.commitToBill_DTL(billid, prevId, membername, contribution, cashid, cashamt, regid, regamt, educid, educamt, calamityid, calamityamt, emerid, emeramt, goodsamt, total, compid, "Y"); 
+                    memberCount++;
                 }
                 loanType = rs.getString("loantype");
                 switch(loanType)
@@ -453,14 +502,15 @@ public class processBillStatement extends javax.swing.JPanel {
                 midinit = rs.getString("midinit");
                 membername = lastname + ", " + firstname + " " + midinit;
                 
-                System.out.println("outside:" + membername);
+                //System.out.println("outside:" + membername);
 
                 reset++;
                 prevId = memberid;
-                memberCount++;
+                
             }
             if(memberid != 0)
             {
+                memberCount++;
             //System.out.println("commit: " + membername);
                 //progressText = ("Current Member #:" + memberCount + " : " + membername);
                 //textProgress.append(progressText);
@@ -470,8 +520,9 @@ public class processBillStatement extends javax.swing.JPanel {
                 overTotal += total;
                 tempQuery += bank.commitToBill_DTL(billid, prevId, membername, contribution, cashid, cashamt, regid, regamt, educid, educamt, calamityid, calamityamt, emerid, emeramt, goodsamt, total, compid, "Y");
                 tempQuery += "SELECT * FROM dual";
-                System.out.println(tempQuery);
+                //System.out.println(tempQuery);
                 stmt.executeUpdate(tempQuery);
+                System.out.println("PROCESSING MEMBER #:" + memberCount + " : " + membername);
             }
             //this.processGoods(stmt, billid, fromText, finalUntil, compid);
             
@@ -504,11 +555,11 @@ public class processBillStatement extends javax.swing.JPanel {
                     memberid = rs.getInt("memberid");
                     tempQuery = bank.commitMemberNoLoans(billid, memberid, membername, balance,compid);
                     //PUSH TO TEMP
-                    System.out.println(tempQuery);
+                    //System.out.println(tempQuery);
                     stmt.addBatch(tempQuery);
                     tempQuery = bank.commitMemberNoLoansTemp(billid, memberid, membername, balance, compid);
                     stmt.addBatch(tempQuery);
-                    
+                    System.out.println("ADDING MEMBERS WITH PURCHASE GOODS - NO LOANS");
                 }
                 stmt.executeBatch();
             }
@@ -517,7 +568,6 @@ public class processBillStatement extends javax.swing.JPanel {
             {
                 e.printStackTrace();
             }
-            
             
             //NON MEMBER
             tempQuery = bank.nonmemberGoods(fromText, finalUntil, compid);
@@ -542,13 +592,14 @@ public class processBillStatement extends javax.swing.JPanel {
                     memberid = rs.getInt("memberid");
                     tempQuery = bank.commitNonMemberGoods(billid, memberid, membername, balance,compid);
                     //PUSH TO TEMP
-                    System.out.println(tempQuery);
+                    //System.out.println(tempQuery);
                     stmt.addBatch(tempQuery);
                     tempQuery = bank.commitNonMemberGoodsTemp(billid, memberid, membername, balance, compid);
                     stmt.addBatch(tempQuery);
                             
                 }
                 stmt.executeBatch();
+                System.out.println("ADDING NON-MEMBER - PURCHASE GOODS");
             }
             
             catch(Exception e)
@@ -560,8 +611,7 @@ public class processBillStatement extends javax.swing.JPanel {
             
             tempQuery = bank.updateBillAmount(billid, overTotal);
             stmt.executeQuery(tempQuery);
-            
-                   
+            System.out.println("PREPARING REPORT");
             this.billReport(); //this report
         }
         catch (SQLException e)
@@ -642,11 +692,12 @@ public class processBillStatement extends javax.swing.JPanel {
         textFrom = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         textUntil = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        textBilling = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         jButton2 = new javax.swing.JButton();
         buttonProcess = new javax.swing.JButton();
         buttonClear = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textProgress = new javax.swing.JTextArea();
 
@@ -657,6 +708,8 @@ public class processBillStatement extends javax.swing.JPanel {
         jLabel2.setText("Date from");
 
         jLabel3.setText("Date until");
+
+        jLabel4.setText("Billing Date");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -671,11 +724,14 @@ public class processBillStatement extends javax.swing.JPanel {
                         .addComponent(comboCompany, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jLabel4))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(textUntil, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                            .addComponent(textBilling, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                            .addComponent(textUntil)
                             .addComponent(textFrom))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -686,7 +742,11 @@ public class processBillStatement extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(comboCompany, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(textBilling, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
@@ -713,19 +773,6 @@ public class processBillStatement extends javax.swing.JPanel {
             }
         });
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("File Detail"));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
         textProgress.setEditable(false);
         textProgress.setColumns(20);
         textProgress.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
@@ -736,43 +783,35 @@ public class processBillStatement extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(31, 31, 31)
-                                .addComponent(buttonClear, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 202, Short.MAX_VALUE)
-                                .addComponent(buttonProcess, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(buttonClear, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 796, Short.MAX_VALUE)
+                        .addComponent(buttonProcess, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator1)
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
-                    .addComponent(buttonProcess)
-                    .addComponent(buttonClear))
+                    .addComponent(buttonClear)
+                    .addComponent(buttonProcess))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -780,6 +819,7 @@ public class processBillStatement extends javax.swing.JPanel {
 
         this.setTextFromDate();
         this.setTextUntilDate();
+        this.setTextBillDate();
         this.processBillStatementDate();
         
         
@@ -800,11 +840,12 @@ public class processBillStatement extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JTextField textBilling;
     private javax.swing.JTextField textFrom;
     private javax.swing.JTextArea textProgress;
     private javax.swing.JTextField textUntil;

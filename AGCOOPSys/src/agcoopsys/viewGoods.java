@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -141,6 +142,57 @@ public class viewGoods extends javax.swing.JPanel {
             model.removeRow(model.getRowCount()-1);
         }
                 
+    }
+    
+    public void deleteGoods()
+    {
+                Statement stmt = null;
+        try
+        {
+            int index = listGoodsHeader.getSelectedRow();
+            String i = listGoodsHeader.getValueAt(index, 0).toString();
+            String tempQuery = "delete from goods_sold_dtl where invid="+i;
+            this.connect();
+            try
+            {
+                stmt = conn.createStatement();
+            }
+            
+            catch(Exception p)
+            {
+                
+            }
+            
+            try
+            {
+                stmt.addBatch(tempQuery);
+                tempQuery = "delete from goods_sold_hdr where invid="+i;
+                stmt.addBatch(tempQuery);
+                int[] executeBatch = stmt.executeBatch();
+            }
+            
+            catch(Exception o)
+            {
+                
+            }
+            finally{
+                this.disconnect();
+            }
+        }
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null, "Error: Select row to delete", "Error", JOptionPane.ERROR_MESSAGE); 
+        }
+        
+        try
+        {
+            DefaultTableModel removeModel = (DefaultTableModel) listGoodsHeader.getModel();
+            removeModel.setRowCount(0);
+        }
+        catch(Exception e)
+        {
+            
+        }
     }
     
     

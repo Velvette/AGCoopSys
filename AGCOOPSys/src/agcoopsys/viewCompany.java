@@ -27,7 +27,6 @@ public class viewCompany extends javax.swing.JPanel {
     public String username;
     public String password;
     public Connection conn;
-    int rep = 0;
     DbUtils tableUtils = new DbUtils();
     String query = "Select compid,compname,contactperson,contactno1,contactno2,email from company order by compname";
     addCompany aC = new addCompany();
@@ -38,12 +37,15 @@ public class viewCompany extends javax.swing.JPanel {
         listCompany.getTableHeader().setReorderingAllowed(false);
     }
 
-    public void getList()
+    public void getList(int rep,String searchText)
     {
         String tempQuery = "";
-        if(rep==0)
-        {
+        if(rep==0) {
             tempQuery = query;
+        }
+        else if(rep==1) {
+            tempQuery = "select * from (Select compid,compname,contactperson,contactno1,contactno2,email from company order by compname) where compname like '"+searchText+"'";
+            System.out.println(tempQuery);
         }
         
 	Statement stmt = null;       

@@ -667,13 +667,13 @@ public class addMember extends javax.swing.JFrame {
         {  
             memberHired = df.parse(memberHiredText);
             finalHired = df.format(memberHired);
-            System.out.println(finalHired);
+            //System.out.println(finalHired);
         } 
         catch (Exception p)
         { 
             errorMessages += "Date Hired: Format YYYY-MM-DD\n";
             errorCount++;
-            System.out.println(finalHired);
+            //System.out.println(finalHired);
         } 
         
         try
@@ -724,7 +724,7 @@ public class addMember extends javax.swing.JFrame {
             ConnectToDatabaseSys connectDB = new ConnectToDatabaseSys();
             connectDB.accessInputDatabase(query);
             viewMember vM = new viewMember();
-            vM.getList();
+            vM.getList(0,"");
         }
         else if(errorCount>0)
         {
@@ -744,7 +744,7 @@ public class addMember extends javax.swing.JFrame {
     {
         for(int i = 0; i<arrayList.size(); i++)
         {
-            System.out.println(memid +" : "+ arrayList.get(i));;
+            //System.out.println(memid +" : "+ arrayList.get(i));;
             if(memid == arrayList.get(i))
             {
                 comboCompany.setSelectedItem(arrayListCompany.get(i));
@@ -803,7 +803,7 @@ public class addMember extends javax.swing.JFrame {
             while(rs.next())
             {
                 comboCompany.addItem(rs.getString("compname"));
-                System.out.println(rs.getInt("compid") + " : " + rs.getString("compname"));
+                //System.out.println(rs.getInt("compid") + " : " + rs.getString("compname"));
                 arrayList.add(rs.getInt("compid"));
                 arrayListCompany.add(rs.getString("compname"));
             }

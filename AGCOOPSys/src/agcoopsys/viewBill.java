@@ -303,7 +303,7 @@ public class viewBill extends javax.swing.JPanel {
                 listCompany.setSelectedIndex(select);
                 String compid = compID.get(select);
                 String tempQuery = "select billid,processdt,startdt,enddt,billdt,billamt from bill_hdr where compid='"+compid+"'";
-                System.out.println(tempQuery);
+               // System.out.println(tempQuery);
                 Statement stmt = null;       
                 this.connect();
                 conn = this.getConnection();

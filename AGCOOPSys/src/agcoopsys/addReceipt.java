@@ -389,7 +389,7 @@ public class addReceipt extends javax.swing.JFrame {
         
         else if(errorCount>0)
         {
-            System.out.println(errorMessages);
+           // System.out.println(errorMessages);
             JOptionPane.showMessageDialog(null, errorMessages, "Error: Receipt Information", JOptionPane.ERROR_MESSAGE);
         }
         buttonConfirm.setEnabled(true);
@@ -456,7 +456,7 @@ public class addReceipt extends javax.swing.JFrame {
         
             startDate=searchTable.getValueAt(searchTable.getSelectedRow(), 4).toString();
             endDate=searchTable.getValueAt(searchTable.getSelectedRow(), 5).toString();
-            System.out.println(startDate+endDate);
+           // System.out.println(startDate+endDate);
         return searchTable.getValueAt(searchTable.getSelectedRow(), 0).toString();
     }
     
@@ -567,7 +567,7 @@ public class addReceipt extends javax.swing.JFrame {
                 String query = "";
                 if(choice == 0)
                 {
-                    System.out.println(compid+" "+orno+" "+finaldt+ordetail+" "+oramt+" "+billid);
+                    //System.out.println(compid+" "+orno+" "+finaldt+ordetail+" "+oramt+" "+billid);
                     query = "insert into or_hdr (compid, orno, ordt, ordetail, oramt, billid)"
                             + " values ('"+ compid +"','"+ orno + "','" + finaldt + "','" + ordetail + "','"
                             + oramt + "','" + billid + "')";
@@ -585,7 +585,7 @@ public class addReceipt extends javax.swing.JFrame {
         
         else if(errorCount>0)
         {
-            System.out.println(errorMessages);
+            //System.out.println(errorMessages);
             JOptionPane.showMessageDialog(null, errorMessages, "Error: Receipt Information", JOptionPane.ERROR_MESSAGE);
         }
         
