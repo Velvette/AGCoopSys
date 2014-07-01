@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bfbbfe92-d920-495a-937c-6da1c11a1515">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="orid" class="java.lang.String"/>
+	<parameter name="orno" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select member.lastname ||', '|| MEMBER.firstname ||' '|| member.midinit as membername, or_dtl.*
+from or_dtl cross join member
+where OR_DTL.MEMBERID=MEMBER.MEMBERID and orid=$P!{orid} ORDER BY MEMBERNAME]]>
+	</queryString>
+	<field name="MEMBERNAME" class="java.lang.String"/>
+	<field name="ORDTLID" class="java.math.BigDecimal"/>
+	<field name="ORID" class="java.math.BigDecimal"/>
+	<field name="MEMBERID" class="java.math.BigDecimal"/>
+	<field name="CONTRIBUTION" class="java.math.BigDecimal"/>
+	<field name="CASH_LOANID" class="java.math.BigDecimal"/>
+	<field name="CASH_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="REG_LOANID" class="java.math.BigDecimal"/>
+	<field name="REG_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="EDUC_LOANID" class="java.math.BigDecimal"/>
+	<field name="EDUC_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="CALAMITY_LOANID" class="java.math.BigDecimal"/>
+	<field name="CALAMITY_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="EMER_LOANID" class="java.math.BigDecimal"/>
+	<field name="EMER_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="GOODS_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="MEMTOTAL" class="java.math.BigDecimal"/>
+	<field name="INSBY" class="java.lang.String"/>
+	<field name="INSDT" class="java.sql.Timestamp"/>
+	<field name="UPDBY" class="java.lang.String"/>
+	<field name="UPDDT" class="java.sql.Timestamp"/>
+	<variable name="TOTAL_SUM" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{MEMTOTAL}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="80" splitType="Stretch">
+			<staticText>
+				<reportElement x="323" y="40" width="126" height="20" uuid="1c30890e-cc88-43cf-b375-685d85291d09"/>
+				<textElement>
+					<font fontName="Serif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OFFICIAL RECEIPT]]></text>
+			</staticText>
+			<textField pattern="EEE, MMM d, &apos;&apos;yy">
+				<reportElement x="652" y="0" width="100" height="12" uuid="7d74824d-3f10-43d4-af75-2569225efb0a"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="215" height="12" uuid="d0bfb8e4-3886-4f8a-9c48-cd21422a953b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[AG MULTI-PURPOSE COOPERATIVE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="12" width="256" height="12" uuid="7d1afd1b-d52b-4686-ad9e-3c1d9753b44c"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Alsons Bldg., 2286 Pasong Tamo Ext., Makati City]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="74" width="752" height="1" uuid="9db48074-2264-4cf3-acc3-81083844246f"/>
+			</line>
+			<staticText>
+				<reportElement x="692" y="12" width="20" height="20" forecolor="#990000" uuid="3ca5ce87-fca1-4382-94a7-274ebfc2fd0f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="712" y="12" width="40" height="20" forecolor="#990000" uuid="342e0b2d-61dc-40ae-9682-3e08dd8dcfbc"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{orno}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="100f9900-0507-40f6-acf9-22fbdd9ecd64"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[MEMBER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="282" y="0" width="65" height="20" uuid="e3f6cba8-2102-4cac-a50c-a7107ced6a1b"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[REGULAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="359" y="0" width="65" height="20" uuid="56e122d3-ffcd-4275-b6b5-14e5eb7fe1be"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[EDUCATIONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="435" y="0" width="65" height="20" uuid="4f454789-c633-40ee-bd58-5f531bfe2287"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[CALAMITY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="510" y="0" width="67" height="20" uuid="94a23e30-cf95-4ec4-8664-b3b041bbb351"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[EMERGENCY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="0" width="78" height="20" uuid="81cb2718-f06f-4b06-8bdb-bf8d5802f31c"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[CONTRIBUTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="209" y="0" width="65" height="20" uuid="9148f754-2194-453c-93a5-0e14e25ab488"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[CASH LOAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="587" y="0" width="65" height="20" uuid="a4251814-dcf3-4330-b853-83007a39c0f7"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[GOODS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="652" y="0" width="89" height="20" uuid="4be0ecfd-e770-4ca8-82d7-cf85e7cde4f5"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="20" width="752" height="1" uuid="5e1d9bd1-ecf2-414d-920a-dffbce8f7395"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="ac178517-35cf-44a8-b215-2dec18676fcb"/>
+				<textFieldExpression><![CDATA[$F{MEMBERNAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="282" y="0" width="65" height="20" uuid="49175215-9a9b-405e-8771-c18afb821765"/>
+				<textFieldExpression><![CDATA[$F{REG_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="359" y="0" width="65" height="20" uuid="2f324608-6cc7-4463-a467-1d221bb72500"/>
+				<textFieldExpression><![CDATA[$F{EDUC_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="435" y="0" width="65" height="20" uuid="1c14e826-426b-47bd-8ac5-dbe134a4dc23"/>
+				<textFieldExpression><![CDATA[$F{CALAMITY_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="512" y="0" width="65" height="20" uuid="c78c75f7-b06b-4baf-a686-d1c12a42a1f9"/>
+				<textFieldExpression><![CDATA[$F{EMER_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="0" width="65" height="20" uuid="8ec941c0-a26f-4af8-8af9-edfa0a14158b"/>
+				<textFieldExpression><![CDATA[$F{CONTRIBUTION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="209" y="0" width="65" height="20" uuid="6b418cdb-d8fa-40c8-831c-881fba140c4f"/>
+				<textFieldExpression><![CDATA[$F{CASH_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="587" y="0" width="65" height="20" uuid="f421cb0a-0b1f-46b1-a045-79973f10d395"/>
+				<textFieldExpression><![CDATA[$F{GOODS_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="652" y="0" width="89" height="20" uuid="865554c6-495d-44e6-a781-52d8d51ef4fc"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{MEMTOTAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="541" y="5" width="100" height="20" uuid="e5faaae7-db65-484f-8b27-c0f48d66e161"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL PAYMENT: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="641" y="5" width="100" height="20" uuid="23ba4e9f-4871-49a3-a988-85211c352ab2"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_SUM}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="752" height="1" uuid="351520f5-0f91-45a3-a813-22907bae5e54"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="29" splitType="Stretch">
+			<textField>
+				<reportElement x="632" y="9" width="80" height="20" uuid="a3571463-fc35-4c5e-9e7a-acce078bcdb7"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="712" y="9" width="40" height="20" uuid="6934d43c-5d59-4d2b-8bb6-be8031de2b67"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
