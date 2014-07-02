@@ -12,21 +12,11 @@ import mainaddinterface.AddPurchaseGoods;
 import mainaddinterface.AddReceipt;
 import mainaddinterface.AddSupplier;
 import mainprocesses.ProcessBillStatement;
-import maininterface.ViewCompany;
-import maininterface.ViewBill;
-import maininterface.ViewNonMember;
-import maininterface.ViewGoods;
-import maininterface.ViewCashloan;
-import maininterface.ViewLoan;
-import maininterface.ViewMember;
-import maininterface.ViewSupplier;
-import maininterface.ViewReceipt;
-import java.awt.Dialog;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
+import mainaddinterface.AddGoods;
 
 public class MainInterface extends javax.swing.JFrame {
 
@@ -36,14 +26,14 @@ public class MainInterface extends javax.swing.JFrame {
     ViewLoan vL = new ViewLoan();
     ViewNonMember vNM = new ViewNonMember();
     ViewReceipt vR = new ViewReceipt();
-    ViewGoods vG = new ViewGoods();
+    ViewPurchaseGoods vG = new ViewPurchaseGoods();
     ViewBill vB = new ViewBill();
     ViewCashloan vCL = new ViewCashloan();
     
     AddMember aM = new AddMember();
     AddSupplier aS = new AddSupplier();
     AddCompany aC = new AddCompany();
-    AddPurchaseGoods aP = new AddPurchaseGoods();
+    AddGoods aP = new AddGoods();
     AddNonMember aNM = new AddNonMember();
     AddCashloan aCL = new AddCashloan();
     
@@ -394,14 +384,14 @@ public class MainInterface extends javax.swing.JFrame {
 
     private void buttonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveActionPerformed
 
-        String agcoopCompany = "agcoopsys.viewCompany";
-        String agcoopMember = "agcoopsys.viewMember";
-        String agcoopSupplier = "agcoopsys.viewSupplier";
-        String agcoopNonMember = "agcoopsys.viewNonMember";
-        String agcoopLoan = "agcoopsys.viewLoan";
-        String agcoopReceipt = "agcoopsys.viewReceipt";
-        String agcoopGoods = "agcoopsys.viewGoods";
-        String agcoopCashloan = "agcoopsys.viewCashloan";
+        String agcoopCompany = "maininterface.ViewCompany";
+        String agcoopMember = "maininterface.ViewMember";
+        String agcoopSupplier = "maininterface.ViewSupplier";
+        String agcoopNonMember = "maininterface.ViewNonMember";
+        String agcoopLoan = "maininterface.ViewLoan";
+        String agcoopReceipt = "maininterface.ViewReceipt";
+        String agcoopGoods = "maininterface.ViewPurchaseGoods";
+        String agcoopCashloan = "maininterface.ViewCashloan";
         
         try{
             if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCompany))
@@ -458,6 +448,7 @@ public class MainInterface extends javax.swing.JFrame {
             }
             else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopGoods))
             {
+                System.out.println("he");
                 aP.reset();
                 aP.setVisible(true);
                 aP.setLocationRelativeTo(null);
@@ -468,6 +459,8 @@ public class MainInterface extends javax.swing.JFrame {
             {
                 vCL.addLoan();
             }
+            else
+                System.out.println(viewTab.getSelectedComponent().getClass().getName());
         }
         catch(Exception e)
         {
@@ -506,7 +499,7 @@ public class MainInterface extends javax.swing.JFrame {
         vL.getList(0);
         vNM.getList(0,"");
         vR.getList();   
-        vG.getList();
+        //vG.getList();
         vCL.getList(0);
         vB.getList();
         aM.clearCombo();
@@ -515,14 +508,14 @@ public class MainInterface extends javax.swing.JFrame {
 
     private void buttonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteActionPerformed
 
-        String agcoopCompany = "agcoopsys.viewCompany";
-        String agcoopMember = "agcoopsys.viewMember";
-        String agcoopSupplier = "agcoopsys.viewSupplier";
-        String agcoopLoan = "agcoopsys.viewLoan";
-        String agcoopNonMember = "agcoopsys.viewNonMember";
-        String agcoopReceipt = "agcoopsys.viewReceipt";
-        String agcoopGoods = "agcoopsys.viewGoods";
-        String agcoopCashloan = "agcoopsys.viewCashloan";
+        String agcoopCompany = "maininterface.viewCompany";
+        String agcoopMember = "maininterface.viewMember";
+        String agcoopSupplier = "maininterface.viewSupplier";
+        String agcoopLoan = "maininterface.viewLoan";
+        String agcoopNonMember = "maininterface.viewNonMember";
+        String agcoopReceipt = "maininterface.viewReceipt";
+        String agcoopGoods = "maininterface.viewGoods";
+        String agcoopCashloan = "maininterface.viewCashloan";
         
             int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete?", "Delete - Information", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION)
@@ -568,8 +561,8 @@ public class MainInterface extends javax.swing.JFrame {
                     }
                     else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopGoods))
                     {
-                        vG.deleteGoods();
-                        vG.getList();
+                        //vG.deleteGoods();
+                        //vG.getList();
                     }
                     else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCashloan))
                     {
@@ -589,13 +582,13 @@ public class MainInterface extends javax.swing.JFrame {
 
     private void buttonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditActionPerformed
 
-        String agcoopCompany = "agcoopsys.viewCompany";
-        String agcoopMember = "agcoopsys.viewMember";
-        String agcoopSupplier = "agcoopsys.viewSupplier";
-        String agcoopNonMember = "agcoopsys.viewNonMember";
-        String agcoopLoan = "agcoopsys.viewLoan";
-        String agcoopGoods = "agcoopsys.viewGoods";
-        String agcoopCashloan = "agcoopsys.viewCashloan";
+        String agcoopCompany = "maininterface.ViewCompany";
+        String agcoopMember = "maininterface.ViewMember";
+        String agcoopSupplier = "maininterface.ViewSupplier";
+        String agcoopNonMember = "maininterface.ViewNonMember";
+        String agcoopLoan = "maininterface.ViewLoan";
+        String agcoopGoods = "maininterface.ViewPurchaseGoods";
+        String agcoopCashloan = "maininterface.ViewCashloan";
         
         
         try{
@@ -623,7 +616,7 @@ public class MainInterface extends javax.swing.JFrame {
             }
             else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopGoods))
             {
-                vG.editGoods();
+                //vG.editGoods();
             }
             else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCashloan))
             {
@@ -650,13 +643,13 @@ public class MainInterface extends javax.swing.JFrame {
 
         String searchQuery = textSearch.getText().toUpperCase();
         
-        String agcoopCompany = "agcoopsys.viewCompany";
-        String agcoopMember = "agcoopsys.viewMember";
-        String agcoopSupplier = "agcoopsys.viewSupplier";
-        String agcoopNonMember = "agcoopsys.viewNonMember";
-        String agcoopLoan = "agcoopsys.viewLoan";
-        String agcoopGoods = "agcoopsys.viewGoods";
-        String agcoopCashloan = "agcoopsys.viewCashloan";
+        String agcoopCompany = "maininterface.ViewCompany";
+        String agcoopMember = "maininterface.ViewMember";
+        String agcoopSupplier = "maininterface.ViewSupplier";
+        String agcoopNonMember = "maininterface.ViewNonMember";
+        String agcoopLoan = "maininterface.ViewLoan";
+        String agcoopGoods = "maininterface.ViewPurchaseGoods";
+        String agcoopCashloan = "maininterface.ViewCashloan";
         
         try{
             if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCompany))
@@ -750,11 +743,11 @@ public class MainInterface extends javax.swing.JFrame {
     
     private void viewTabStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_viewTabStateChanged
 
-       String agcoopLoan = "agcoopsys.viewLoan";
-       String agcoopMember = "agcoopsys.viewMember";
-       String agcoopCompany = "agcoopsys.viewCompany";
-       String agcoopSupplier = "agcoopsys.viewSupplier";
-       String agcoopNonMember = "agcoopsys.viewNonMember";
+       String agcoopLoan = "maininterface.ViewLoan";
+       String agcoopMember = "maininterface.ViewMember";
+       String agcoopCompany = "maininterface.ViewCompany";
+       String agcoopSupplier = "maininterface.ViewSupplier";
+       String agcoopNonMember = "maininterface.ViewNonMember";
        try
        {
             if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopLoan))
@@ -800,7 +793,7 @@ public class MainInterface extends javax.swing.JFrame {
     private void menuGoodsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGoodsActionPerformed
 
         viewTab.add("Goods",vG);
-        vG.getList();
+        //vG.getList();
         
         // TODO add your handling code here:
     }//GEN-LAST:event_menuGoodsActionPerformed
