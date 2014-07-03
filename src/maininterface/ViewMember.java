@@ -45,10 +45,6 @@ public class ViewMember extends javax.swing.JPanel {
         else if(rep==1) {
             tempQuery = "Select memberid,lastname,firstname,midinit,member.contactno1,member.contactno2,member.email,compname from member inner join company on member.compid = company.compid order by lastname where lastname like '"+searchText+"'";
         }
-        //else
-          //  tempQuery = "Select * from mydb.bookinformation where Title like '%"+bookTitle+"%';";
-        
-        //System.out.println(tempQuery);
         
 	Statement stmt = null;       
 	this.connect();

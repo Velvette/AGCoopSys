@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-import net.proteanit.sql.DummySimplestPlusMetaData;
 
 /**
  *

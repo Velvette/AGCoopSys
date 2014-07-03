@@ -4,19 +4,21 @@
  */
 package maininterface;
 
-import mainaddinterface.AddCashloan;
-import mainaddinterface.AddCompany;
-import mainaddinterface.AddMember;
-import mainaddinterface.AddNonMember;
-import mainaddinterface.AddPurchaseGoods;
-import mainaddinterface.AddReceipt;
-import mainaddinterface.AddSupplier;
-import mainprocesses.ProcessBillStatement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
+
+import mainaddinterface.AddBillingStatement;
+import mainaddinterface.AddCashloan;
+import mainaddinterface.AddCompany;
 import mainaddinterface.AddGoods;
+import mainaddinterface.AddMember;
+import mainaddinterface.AddNonMember;
+import mainaddinterface.AddReceipt;
+import mainaddinterface.AddSupplier;
+import mainprocesses.ProcessBillStatement;
+
 
 public class MainInterface extends javax.swing.JFrame {
 
@@ -26,7 +28,7 @@ public class MainInterface extends javax.swing.JFrame {
     ViewLoan vL = new ViewLoan();
     ViewNonMember vNM = new ViewNonMember();
     ViewReceipt vR = new ViewReceipt();
-    ViewPurchaseGoods vG = new ViewPurchaseGoods();
+    ViewPurchGoods vG = new ViewPurchGoods();
     ViewBill vB = new ViewBill();
     ViewCashloan vCL = new ViewCashloan();
     
@@ -36,6 +38,7 @@ public class MainInterface extends javax.swing.JFrame {
     AddGoods aP = new AddGoods();
     AddNonMember aNM = new AddNonMember();
     AddCashloan aCL = new AddCashloan();
+    AddBillingStatement aBS = new AddBillingStatement();
     
     ProcessBillStatement pB = new ProcessBillStatement();
     
@@ -390,7 +393,7 @@ public class MainInterface extends javax.swing.JFrame {
         String agcoopNonMember = "maininterface.ViewNonMember";
         String agcoopLoan = "maininterface.ViewLoan";
         String agcoopReceipt = "maininterface.ViewReceipt";
-        String agcoopGoods = "maininterface.ViewPurchaseGoods";
+        String agcoopGoods = "maininterface.ViewPurchGoods";
         String agcoopCashloan = "maininterface.ViewCashloan";
         
         try{
@@ -499,11 +502,12 @@ public class MainInterface extends javax.swing.JFrame {
         vL.getList(0);
         vNM.getList(0,"");
         vR.getList();   
-        //vG.getList();
+        vG.getList(0);
         vCL.getList(0);
         vB.getList();
         aM.clearCombo();
         aNM.clearCombo();
+        aBS.clearCombo();
     }//GEN-LAST:event_buttonRefreshActionPerformed
 
     private void buttonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteActionPerformed
@@ -514,7 +518,7 @@ public class MainInterface extends javax.swing.JFrame {
         String agcoopLoan = "maininterface.viewLoan";
         String agcoopNonMember = "maininterface.viewNonMember";
         String agcoopReceipt = "maininterface.viewReceipt";
-        String agcoopGoods = "maininterface.viewGoods";
+        String agcoopGoods = "maininterface.ViewPurchGoods";
         String agcoopCashloan = "maininterface.viewCashloan";
         
             int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete?", "Delete - Information", JOptionPane.YES_NO_OPTION);
@@ -561,16 +565,14 @@ public class MainInterface extends javax.swing.JFrame {
                     }
                     else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopGoods))
                     {
-                        //vG.deleteGoods();
-                        //vG.getList();
+                        vG.deleteGoods();
+                        vG.getList(0);
                     }
                     else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCashloan))
                     {
                         vCL.deleteLoan();
                         vCL.getList(0);
                     }
-                    
-                    
                 }
             
                 catch (Exception ex)
@@ -587,7 +589,7 @@ public class MainInterface extends javax.swing.JFrame {
         String agcoopSupplier = "maininterface.ViewSupplier";
         String agcoopNonMember = "maininterface.ViewNonMember";
         String agcoopLoan = "maininterface.ViewLoan";
-        String agcoopGoods = "maininterface.ViewPurchaseGoods";
+        String agcoopGoods = "maininterface.ViewPurchGoods";
         String agcoopCashloan = "maininterface.ViewCashloan";
         
         
@@ -616,7 +618,7 @@ public class MainInterface extends javax.swing.JFrame {
             }
             else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopGoods))
             {
-                //vG.editGoods();
+                vG.editGoods();
             }
             else if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCashloan))
             {
@@ -682,7 +684,10 @@ public class MainInterface extends javax.swing.JFrame {
 
     private void menuStatementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuStatementActionPerformed
         
-        viewTab.add("Billing Statement", pB);
+        aBS.setVisible(true);
+        aBS.setTitle("Billing Statement");
+        aBS.setLocationRelativeTo(null);
+        aBS.returnParams();
         
         // TODO add your handling code here:
     }//GEN-LAST:event_menuStatementActionPerformed
@@ -793,7 +798,7 @@ public class MainInterface extends javax.swing.JFrame {
     private void menuGoodsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGoodsActionPerformed
 
         viewTab.add("Goods",vG);
-        //vG.getList();
+        vG.getList(0);
         
         // TODO add your handling code here:
     }//GEN-LAST:event_menuGoodsActionPerformed

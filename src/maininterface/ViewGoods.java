@@ -143,8 +143,7 @@ public class ViewGoods extends javax.swing.JPanel {
         {
             DefaultTableModel model = (DefaultTableModel) listGoodsHeader.getModel();
             model.removeRow(model.getRowCount()-1);
-        }
-                
+        }     
     }
     
     public void deleteGoods()

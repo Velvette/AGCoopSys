@@ -276,6 +276,11 @@ public class AddGoods extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Details"));
 
@@ -291,6 +296,7 @@ public class AddGoods extends javax.swing.JFrame {
 
         jLabel6.setText("Invoice Amount");
 
+        labelAmount.setEditable(false);
         labelAmount.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         labelAmount.setText("0.00");
         labelAmount.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -308,26 +314,28 @@ public class AddGoods extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel5)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(textBillDate))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel4)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(invdate, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel6))
-                            .addComponent(jLabel7))
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(invdate, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(28, 28, 28)
+                                .addComponent(textBillDate, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel6)
                         .addGap(18, 18, 18)
-                        .addComponent(labelAmount))
+                        .addComponent(labelAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane5)))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -338,12 +346,11 @@ public class AddGoods extends javax.swing.JFrame {
                     .addComponent(jLabel6)
                     .addComponent(labelAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel7))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
                     .addComponent(textBillDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -426,7 +433,7 @@ public class AddGoods extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(buttonNext, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(textAmount)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
                 .addGap(10, 10, 10))
         );
         jPanel2Layout.setVerticalGroup(
@@ -578,17 +585,18 @@ public class AddGoods extends javax.swing.JFrame {
             status = "N";
         }
         
-        person.setBalance(amount);
+        person.setBalance(Float.parseFloat(String.format("%.2f", amount)));
         person.setMemberid(memberid);
         person.setStatus(status);
         person.setName(name);
+        person.setDesc(desc);
         
         DefaultTableModel model = (DefaultTableModel) purchaseTable.getModel();
         model.addRow(new Object[]{person.getName(),person.getBalance(),person.getDesc()});
         
         arrayPersonToAdd.add(person);
         
-        totalAmount += amount;
+        totalAmount += Float.parseFloat(String.format("%.2f", amount));
         labelAmount.setText(String.valueOf(totalAmount));
         name = "";
     
@@ -812,6 +820,7 @@ public class AddGoods extends javax.swing.JFrame {
         model.setRowCount(0);
         arrayPersonToAdd.clear();
         searchBox.setText("");
+        
     }
     
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
@@ -820,6 +829,118 @@ public class AddGoods extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonConfirmActionPerformed
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.reset();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosing
+
+    
+    public void initBill(String hiredt) throws ParseException
+    {
+        Date Hired = df.parse(hiredt);
+        String sHired = df.format(Hired);
+        textBillDate.setText(sHired);
+    }
+    
+    public void initInv(String hiredt) throws ParseException {
+        Date Hired = df.parse(hiredt);
+        String sHired = df.format(Hired);
+        invdate.setText(sHired);
+    }
+        
+    public void editHDR(String id)
+    {
+        String tempQuery = "select * from goods_sold_hdr where invid='"+id+"'";
+        
+        ResultSet rs;
+        this.connect();
+        conn = this.getConnection();
+        Statement stmt = null;
+        String tempDate = "";
+        String invDate = "";
+        invid = id;
+        try
+        {
+            stmt = conn.createStatement();
+            
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        
+        try
+        {
+            rs = stmt.executeQuery(tempQuery);
+            if(rs.next()) {
+                tempDate = rs.getString("billingdt");
+                invDate = rs.getString("invdt");
+            }
+            try {
+                this.initBill(tempDate);
+                this.initInv(invDate);
+            }
+            catch(Exception e) { }   
+        }
+        catch (SQLException e)
+        {
+        
+        }
+        finally {
+            this.disconnect();    
+        }
+    }
+    
+    public void editList(String id) {
+        
+        
+        String tempQuery = "select * from goods_sold_dtl where invid='"+id+"'";
+        ResultSet rs = null;
+        this.connect();
+        conn = this.getConnection();
+        Statement stmt = null;
+        String tempdate = "";
+        AddPurchasePerson person = new AddPurchasePerson();
+        
+        try
+        {
+            stmt = conn.createStatement();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        
+        try
+        {
+            DefaultTableModel model = (DefaultTableModel) purchaseTable.getModel();
+            rs = stmt.executeQuery(tempQuery);
+            while(rs.next())
+            {                
+                person.setInvid(rs.getInt("invid"));
+                person.setMemberid(rs.getInt("memberid"));
+                person.setStatus(rs.getString("ismember"));
+                person.setName(rs.getString("membername"));
+                person.setBalance(rs.getFloat("balance"));
+                person.setDesc((rs.getString("description")));
+                totalAmount+= rs.getFloat("balance");
+                arrayPersonToAdd.add(person);
+                model.addRow(new Object[]{person.getName(),person.getBalance(),person.getDesc()});
+            }
+            totalAmount = Float.parseFloat(String.format("%.2f", totalAmount));
+            labelAmount.setText(String.valueOf(totalAmount));
+        }
+        catch (SQLException e)
+        {
+        
+        }
+        finally {
+            this.disconnect();
+        }
+        this.editHDR(id);
+        choice = 1;
+    }
+    
     /**
      * @param args the command line arguments
      */
