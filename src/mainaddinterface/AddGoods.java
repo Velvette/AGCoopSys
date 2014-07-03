@@ -251,6 +251,8 @@ public class AddGoods extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
         textRemarks = new javax.swing.JTextArea();
+        jLabel8 = new javax.swing.JLabel();
+        textReference = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         tabPane = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -307,14 +309,18 @@ public class AddGoods extends javax.swing.JFrame {
         textRemarks.setRows(5);
         jScrollPane5.setViewportView(textRemarks);
 
+        jLabel8.setText("Reference No.");
+
+        textReference.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel4)
@@ -325,17 +331,18 @@ public class AddGoods extends javax.swing.JFrame {
                                 .addGap(28, 28, 28)
                                 .addComponent(textBillDate, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(30, 30, 30)
-                        .addComponent(jLabel6)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel8))
                         .addGap(18, 18, 18)
-                        .addComponent(labelAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+                            .addComponent(textReference)))
+                    .addComponent(jScrollPane5)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane5)))
+                        .addComponent(jLabel7)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel7)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -348,7 +355,9 @@ public class AddGoods extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(textBillDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(textBillDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(textReference, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -384,6 +393,7 @@ public class AddGoods extends javax.swing.JFrame {
 
         textDesc.setColumns(20);
         textDesc.setRows(5);
+        textDesc.setText(" ");
         jScrollPane3.setViewportView(textDesc);
 
         buttonNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
@@ -700,6 +710,7 @@ public class AddGoods extends javax.swing.JFrame {
         if(error == 0)
         {
             String remarks = textRemarks.getText();
+            String reference = textReference.getText();
         
             try
             {
@@ -718,12 +729,12 @@ public class AddGoods extends javax.swing.JFrame {
             String headerQuery = "";
             if(choice == 0)
             {
-                headerQuery = "insert into goods_sold_hdr (invdt,billingdt,invamt,remarks) values"+
-                "('"+dateInv+"','"+dateBill+"','"+totalAmount+"','"+remarks+"')";
+                headerQuery = "insert into goods_sold_hdr (invdt,billingdt,invamt,remarks,reference) values"+
+                "('"+dateInv+"','"+dateBill+"','"+totalAmount+"','"+remarks+"','"+reference+"')";
             }
             else if(choice == 1)
             {
-                headerQuery = "update goods_sold_hdr set invdt='"+dateInv+"',billingdt='"+dateBill+"',invamt='"+totalAmount+"',remarks='"+remarks+"' where invid="+this.invid;
+                headerQuery = "update goods_sold_hdr set invdt='"+dateInv+"',billingdt='"+dateBill+"',invamt='"+totalAmount+"',remarks='"+remarks+"',reference='"+reference+"' where invid="+this.invid;
             }
             try
             {
@@ -875,6 +886,7 @@ public class AddGoods extends javax.swing.JFrame {
             if(rs.next()) {
                 tempDate = rs.getString("billingdt");
                 invDate = rs.getString("invdt");
+                textReference.setText(rs.getString("reference"));
             }
             try {
                 this.initBill(tempDate);
@@ -991,6 +1003,7 @@ public class AddGoods extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -1008,6 +1021,7 @@ public class AddGoods extends javax.swing.JFrame {
     private javax.swing.JTextField textAmount;
     private javax.swing.JTextField textBillDate;
     private javax.swing.JTextArea textDesc;
+    private javax.swing.JTextField textReference;
     private javax.swing.JTextArea textRemarks;
     // End of variables declaration//GEN-END:variables
 }
