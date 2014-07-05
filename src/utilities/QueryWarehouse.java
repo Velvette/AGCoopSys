@@ -142,7 +142,7 @@ public class QueryWarehouse {
     
     public String commitCashNoLoansTemp(int billid, int compid,float cashamt,int cashid,String membername,int memberid,float contribution,float total,float goods_amount)
     {
-        String query = "insert into billdtl_temp (billid,memberid,membername,cash_loanid,cash_amount,mem_total,COMPID,contribution) VALUES ('"+billid+"','"+memberid+"','"+membername+"','"+cashid+"','"+cashamt+"','"+total+"','"+compid+"','"+contribution+"','"+goods_amount+"')";
+        String query = "insert into billdtl_temp (billid,memberid,membername,cash_loanid,cash_amount,mem_total,COMPID,contribution) VALUES ('"+billid+"','"+memberid+"','"+membername+"','"+cashid+"','"+cashamt+"','"+total+"','"+compid+"','"+contribution+"')";
         System.out.println(query);
         return query;
     }

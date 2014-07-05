@@ -115,7 +115,7 @@ public class AddCashloan extends javax.swing.JFrame {
             }
         });
 
-        jLabel7.setText("End Date");
+        jLabel7.setText("Bill Date");
 
         jLabel9.setText("Total Payment");
 

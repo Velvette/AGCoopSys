@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,9 +49,9 @@ public class AddBillingStatement extends javax.swing.JFrame {
     private String untilText;
     private String billText;
     
-    private Date fromDate;
-    private Date untilDate;
-    private Date billDate;
+    public Date fromDate;
+    public Date untilDate;
+    public Date billDate;
     
     private String finalFrom;
     private String finalUntil;
@@ -67,6 +68,10 @@ public class AddBillingStatement extends javax.swing.JFrame {
     
     public AddBillingStatement() {
         initComponents();
+        this.returnParams();
+        this.df = new SimpleDateFormat("yyyy-MM-dd");
+        this.bill = new SimpleDateFormat("MMMM dd, yyyy");
+        df.setLenient(false);
     }
 
     public void clearCombo()
@@ -193,6 +198,56 @@ public class AddBillingStatement extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+        public void setTextFromDate()
+    {
+        fromText = textFrom.getText();
+        System.out.println(fromText);
+    }
+    
+    public void setTextUntilDate()
+    {
+        untilText = textUntil.getText();
+        System.out.println(untilText);
+    }
+    
+    public void setTextBillDate()
+    {
+        billText = textBilling.getText();
+        System.out.println(billText);
+    }
+    
+        public void processBillStatementDate()
+    {        
+        String errorMessages = "";
+        int error = 0;
+        
+        try
+        {  
+            fromDate = df.parse(fromText);
+            finalFrom = df.format(fromDate);
+            untilDate = df.parse(untilText);
+            finalUntil = df.format(untilDate);
+            billDate = df.parse(billText);
+            finalBill = df.format(billDate);
+        } 
+        catch (Exception p)
+        { 
+            errorMessages += "Date From: Format YYYY-MM-DD\n";
+            error++;
+        }
+        
+                
+        if(error>=1)
+        {
+            System.out.println(errorMessages);
+        }
+        else
+        {
+            this.processBillNew();
+            this.printResults();
+        }
+    }
+    
     private void buttonProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProcessActionPerformed
 
         this.setTextFromDate();
@@ -210,7 +265,7 @@ public class AddBillingStatement extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonClearActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        this.resetTexts();
+        
         // TODO add your handling code here:
     }//GEN-LAST:event_formWindowClosing
 
@@ -226,21 +281,7 @@ public class AddBillingStatement extends javax.swing.JFrame {
         textBilling.setText("");
     }
 
-    
-    public void setTextFromDate()
-    {
-        fromText = textFrom.getText();
-    }
-    
-    public void setTextUntilDate()
-    {
-        untilText = textUntil.getText();
-    }
-    
-    public void setTextBillDate()
-    {
-        billText = textBilling.getText();
-    }
+
     
     public void returnParams()
     {        
@@ -326,37 +367,7 @@ public class AddBillingStatement extends javax.swing.JFrame {
         
     }
     
-    public void processBillStatementDate()
-    {        
-        String errorMessages = "";
-        int error = 0;
-        
-        try
-        {  
-            fromDate = df.parse(fromText);
-            finalFrom = df.format(fromDate);
-            untilDate = df.parse(untilText);
-            finalUntil = df.format(untilDate);
-            billDate = df.parse(billText);
-            finalBill = df.format(billDate);
-        } 
-        catch (Exception p)
-        { 
-            errorMessages += "Date From: Format YYYY-MM-DD\n";
-            error++;
-        }
-        
-                
-        if(error>=1)
-        {
-            //System.out.println(errorMessages);
-        }
-        else
-        {
-            this.processBillNew();
-            this.printResults();
-        }
-    }
+
     
     public void billReport() throws JRException
     {
@@ -366,7 +377,7 @@ public class AddBillingStatement extends javax.swing.JFrame {
         JasperReport jasperReport = null;
         JasperPrint jasperPrint = null;
         HashMap jasperParameter = new HashMap();
-        jasperReport = JasperCompileManager.compileReport("src//BillingStatement.jrxml");       
+        jasperReport = JasperCompileManager.compileReport("src//resources//JAR//BillingStatement.jrxml");       
         jasperPrint = JasperFillManager.fillReport(jasperReport,jasperParameter, conn);
                 JasperViewer.viewReport(jasperPrint, false);        
         
@@ -374,6 +385,7 @@ public class AddBillingStatement extends javax.swing.JFrame {
     
     public void processBillNew()
     {
+        System.out.println("billnew");
         QueryWarehouse bank = new QueryWarehouse();
         Date date = new Date();
         String currentDate = df.format(date);
@@ -585,18 +597,20 @@ public class AddBillingStatement extends javax.swing.JFrame {
                     tempQuery = bank.commitCashNoLoans(billid, compid, tempHold, cashidtemp, membername, memberid, contribution, total,goodsamttemp);
                     //PUSH TO TEMP
                     //System.out.println(tempQuery);
-                    System.out.println("MAIN:" + membername + " : " + total);
+                    System.out.println("line600  " + tempQuery);
                     stmt.addBatch(tempQuery);
                     tempQuery = bank.commitCashNoLoansTemp(billid, compid, tempHold, cashidtemp, membername, memberid, contribution, total,goodsamttemp);
                     System.out.println("TEMP:" + membername + " : " + total);
                     stmt.addBatch(tempQuery);
                     System.out.println("ADDING MEMBERS WITH NO GOODS - WITH CASHLOANS");
+                    
                 }
                 stmt.executeBatch();
+               
             }
             catch(Exception e)
             {
-                
+                e.printStackTrace();
             }
             
             //GET POEPLE WITH GOODS NO LOANS
@@ -695,7 +709,8 @@ public class AddBillingStatement extends javax.swing.JFrame {
         }
         catch(JRException e)
         {
-            JOptionPane.showMessageDialog(null, "Error: File currently exists\n Delete existing file and try again..", "Error", JOptionPane.ERROR_MESSAGE); 
+            e.printStackTrace();
+            //JOptionPane.showMessageDialog(null, "Error: File currently exists\n Delete existing file and try again..", "Error", JOptionPane.ERROR_MESSAGE); 
         }
         finally{
             this.disconnect();
