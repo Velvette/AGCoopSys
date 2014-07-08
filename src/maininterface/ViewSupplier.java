@@ -43,59 +43,47 @@ public class ViewSupplier extends javax.swing.JPanel {
     public void getList(int rep,String searchText)
     {
         String tempQuery = "";
-        if(rep==0)
-        {
+        if(rep == 0) {
             tempQuery = query;
         }    
         else if(rep == 1) {
-            tempQuery = "select * from (Select suppid,suppname,contactno1,contactno2,email from supplier order by suppname) where suppname like '"+searchText+"'";
+            searchText = searchText.toUpperCase();
+            tempQuery = "select * from (Select suppid,suppname,contactno1,contactno2,email,suppvname from supplier order by suppname) where suppname like '"+searchText+"'";
         }
-        //else
-          //  tempQuery = "Select * from mydb.bookinformation where Title like '%"+bookTitle+"%';";
-        
-        //System.out.println(tempQuery);
+
 	Statement stmt = null;       
 	this.connect();
 	conn = this.getConnection();
                 
-	try
-        {
+	try {
             stmt = conn.createStatement();
         }
                 
-	catch (SQLException e)
-        {
+	catch (SQLException e) {
             e.printStackTrace();
         }
 		
 	ResultSet rs;
-	try
-        {
+	try {
             rs = stmt.executeQuery(tempQuery);
             try {
                 tableUtils.updateTableModelData((DefaultTableModel) listSupplier.getModel(), rs,5);
-            } catch (Exception ex) {
+            } 
+            catch (Exception ex) {
                 Logger.getLogger(ViewMember.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
         }
         
-        catch (SQLException e)
-        {
+        catch (SQLException e) {
             e.printStackTrace();
 	}
-        finally
-        {
+        finally {
             this.disconnect();
         }
-        try
-        {
+        try {
             listSupplier.setRowSelectionInterval(0, 0);
         }
-        catch(Exception e)
-        {
-            
-        }
+        catch(Exception e) { }
     }
         
     public void connect()
@@ -105,13 +93,11 @@ public class ViewSupplier extends javax.swing.JPanel {
         password = paramDB.getPassword(); // CHANGE PASSWORD
         username = paramDB.getName();
                 
-        try
-        {
+        try {
             Class.forName(dbDriver).newInstance();
             conn = DriverManager.getConnection(dbUrl,username,password);
         }
-        catch(ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e)
-        {
+        catch(ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
             e.printStackTrace();
         }
     }
@@ -123,29 +109,24 @@ public class ViewSupplier extends javax.swing.JPanel {
 	
     public void disconnect()
     {
-       try
-       {
+       try {
             conn.close();
        } 
-       catch (Exception ex)
-       {
+       catch (Exception ex) {
             ex.printStackTrace();
        }
     }
     
     public void deleteSupplier()
     {
-        try
-        {
+        try {
             int index = listSupplier.getSelectedRow();
             String i = listSupplier.getValueAt(index, 0).toString();
-           // System.out.println(i);
             String query = "delete from supplier where suppid ="+i;
             ConnectToDatabaseSys connectDB = new ConnectToDatabaseSys();
             connectDB.accessLoopDatabase(query);
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             JOptionPane.showMessageDialog(null, "Error: Select row to delete", "Error", JOptionPane.ERROR_MESSAGE); 
         }
     }

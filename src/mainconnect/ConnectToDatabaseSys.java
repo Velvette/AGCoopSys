@@ -19,48 +19,48 @@ import javax.swing.JOptionPane;
  */
 public class ConnectToDatabaseSys {
  
-    String dbClass = "oracle.jdbc.driver.OracleDriver";
-    String dbUrl = "jdbc:oracle:thin:@localhost:1521:xe";
-    String password = "p@ssword"; // CHANGE PASSWORD
-    String name = "test";
+    private static String DATABASE_CLASS = "oracle.jdbc.driver.OracleDriver";
+    private static String DATABASE_URL = "jdbc:oracle:thin:@localhost:1521:xe";
+    private static String DATABASE_PASSWORD = "p@ssword"; // CHANGE PASSWORD
+    private static String DATABASE_NAME = "test";
     Connection con;
     
+    
+    
     public String getDbClass() {
-        return dbClass;
+        return DATABASE_CLASS;
     }
 
     public String getDbUrl() {
-        return dbUrl;
+        return DATABASE_URL;
     }
 
     public String getName() {
-        return name;
+        return DATABASE_NAME;
     }
 
     public String getPassword() {
-        return password;
+        return DATABASE_PASSWORD;
     }
        
     public void accessInputDatabase(String query)
     {
-        try
-        {
-            Class.forName(dbClass);
-            con = DriverManager.getConnection (dbUrl, name, password);
+        try {
+            
+            Class.forName(DATABASE_CLASS);
+            con = DriverManager.getConnection (DATABASE_URL, DATABASE_NAME, DATABASE_PASSWORD);
             PreparedStatement stmt = con.prepareStatement(query);
             stmt.executeUpdate(query);
-            JOptionPane.showMessageDialog(null, "Database Update: Success\n Please refresh list.", "Updating database", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Database Update: Success\n Please refresh list.", "Updating database", JOptionPane.INFORMATION_MESSAGE); 
             
         }
         
-        catch(ClassNotFoundException e)
-        {
+        catch(ClassNotFoundException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE); 
         }
 
-        catch(SQLException e)
-        {
+        catch(SQLException e) {
             JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE); 
             e.printStackTrace();
         }
@@ -76,72 +76,59 @@ public class ConnectToDatabaseSys {
     
     public void accessLoopDatabase(String query)
     {
-        try
-        {
-            Class.forName(dbClass);
-            con = DriverManager.getConnection (dbUrl, name, password);
+        try {
+            Class.forName(DATABASE_CLASS);
+            con = DriverManager.getConnection (DATABASE_URL, DATABASE_NAME, DATABASE_PASSWORD);
             PreparedStatement stmt = con.prepareStatement(query);
             stmt.executeUpdate(query);
             con.close();
         }
         
-        catch(ClassNotFoundException e)
-        {
+        catch(ClassNotFoundException e) {
             JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE); 
             e.printStackTrace();
         }
 
-        catch(SQLException e)
-        {
+        catch(SQLException e) {
             JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE); 
-             e.printStackTrace();
+            e.printStackTrace();
         }
     }
     
-    public void disconnect()
-    {
-       try
-       {
+    public void disconnect() {
+       try {
             con.close();
        } 
-       catch (Exception ex)
-       {
-       }
+       catch (Exception ex) { }
     }
     
     public void connect()
-    {
-                
-        try
-        {
-            Class.forName(dbClass).newInstance();
-            con = DriverManager.getConnection(dbUrl,name,password);
+    {        
+        try {
+            Class.forName(DATABASE_CLASS).newInstance();
+            con = DriverManager.getConnection(DATABASE_URL,DATABASE_NAME,DATABASE_PASSWORD);
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             e.printStackTrace();
         }
     }
     
     public void executeQuery(String query)
     {
-        try
-        {
-            Class.forName(dbClass);
-            con = DriverManager.getConnection (dbUrl, name, password);
+        try {
+            Class.forName(DATABASE_CLASS);
+            con = DriverManager.getConnection (DATABASE_URL, DATABASE_NAME, DATABASE_PASSWORD);
             PreparedStatement stmt = con.prepareStatement(query);
             stmt.executeUpdate(query);
             JOptionPane.showMessageDialog(null, "Database Update: Success", "Updating database", JOptionPane.INFORMATION_MESSAGE);
         }
         
-        catch(ClassNotFoundException e)
-        {
+        catch(ClassNotFoundException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE); 
         }
 
-        catch(SQLException e)
-        {
+        catch(SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error: Database not updated", "Error", JOptionPane.ERROR_MESSAGE); 
         }
@@ -162,19 +149,15 @@ public class ConnectToDatabaseSys {
         Connection con = null;
         ResultSet rs;
 
-        try
-        {
-        Class.forName(dbClass);
-        con = DriverManager.getConnection (dbUrl, name, password);
-        stmt = con.prepareStatement(query);
+        try {
+            Class.forName(DATABASE_CLASS);
+            con = DriverManager.getConnection (DATABASE_URL, DATABASE_NAME, DATABASE_PASSWORD);
+            stmt = con.prepareStatement(query);
         }
                 
-	catch (SQLException e)
-        {
-        }
+	catch (SQLException e) { }
         
-        try
-        {
+        try {
             rs = stmt.executeQuery(query);
             if(!rs.next())
             {
@@ -193,34 +176,29 @@ public class ConnectToDatabaseSys {
     public boolean checkDuplicateLoan(String memberID, String loantype)
     {
         String query = "";
-        if(!loantype.equals("A"))
-        {
-            query = "select * from loan_hdr where memberid="+memberID+" and status='A' and loantype='"+loantype+"'";
+        if(!loantype.equals("A")) {
+            query = "select * from loan_hdr where memberid="+memberID+" and status='ACTIVE' and loantype='"+loantype+"'";
         }
         else
-            query = "select * from cashloan where memberid="+memberID+" and status='A'";
+            query = "select * from cashloan where memberid="+memberID+" and status='ACTIVE'";
         
         PreparedStatement stmt = null;
         Connection con = null;
         ResultSet rs;
 
-        try
-        {
+        try {
             try {
-                Class.forName(dbClass);
+                Class.forName(DATABASE_CLASS);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ConnectToDatabaseSys.class.getName()).log(Level.SEVERE, null, ex);
             }
-        con = DriverManager.getConnection (dbUrl, name, password);
+        con = DriverManager.getConnection (DATABASE_URL, DATABASE_NAME, DATABASE_PASSWORD);
         stmt = con.prepareStatement(query);
         }
                 
-	catch (SQLException e)
-        {
-        }
+	catch (SQLException e) { }
         
-        try
-        {
+        try {
             rs = stmt.executeQuery(query);
             if(!rs.next())
             {
@@ -228,14 +206,14 @@ public class ConnectToDatabaseSys {
                 return true;
             }            
 	}
-        catch (SQLException e)
-        {
+        catch (SQLException e) {
             e.printStackTrace();
 	} 
         finally{
             try {
                 con.close();
-            } catch (SQLException ex) {
+            } 
+            catch (SQLException ex) {
                 Logger.getLogger(ConnectToDatabaseSys.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

@@ -1,0 +1,143 @@
+
+
+create or replace trigger NLS_TRIG
+after logon on database
+begin
+  execute immediate 'alter session set nls_date_format = ''YYYY MM DD'' ';
+end ;
+
+create or replace trigger COMPANY_TRIG 
+before insert or update on COMPANY 
+for each row
+begin
+  if inserting then
+     select COMPANY_SEQ.nextval
+     into   :NEW.Compid
+     from   dual;
+  end if;
+
+--  :NEW.Compvname:= replace(upper(:NEW.Compname),' ');
+end;
+
+create or replace trigger SUPPLIER_TRIG
+before insert or update on SUPPLIER 
+for each row
+begin
+  if inserting then
+     select SUPPLIER_SEQ.nextval
+     into   :NEW.Suppid
+     from   dual;
+  end if;
+
+--  :NEW.Suppvname:= replace(upper(:NEW.Suppname),' ');
+end;
+
+create or replace trigger MEMBER_TRIG
+before insert on MEMBER 
+for each row
+begin
+  select MEMBER_SEQ.nextval
+  into   :NEW.Memberid
+  from   dual;
+end;
+
+create or replace trigger NONMEMBER_TRIG
+before insert on NONMEMBER 
+for each row
+begin
+  select NONMEMBER_SEQ.nextval
+  into   :NEW.Memberid
+  from   dual;
+end;
+
+create or replace trigger LOAN_HDR_TRIG
+before insert on LOAN_HDR 
+for each row
+begin
+  select LOAN_HDR_SEQ.nextval
+  into   :NEW.Loanid
+  from   dual;
+end;
+
+create or replace trigger LOAN_DTL_TRIG
+before insert on LOAN_DTL 
+for each row
+begin
+  select LOAN_DTL_SEQ.nextval
+  into   :NEW.Loandtlid
+  from   dual;
+end;
+
+create or replace trigger CASHLOAN_TRIG
+before insert on CASHLOAN 
+for each row
+begin
+  select CASHLOAN_SEQ.nextval
+  into   :NEW.Loanid
+  from   dual;
+end;
+
+create or replace trigger GOODS_SOLD_HDR_TRIG
+before insert on GOODS_SOLD_HDR 
+for each row
+begin
+  select GOODS_SOLD_HDR_SEQ.nextval
+  into   :NEW.Invid
+  from   dual;
+end;
+
+create or replace trigger GOODS_SOLD_DTL_TRIG
+before insert on GOODS_SOLD_DTL 
+for each row
+begin
+  select GOODS_SOLD_DTL_SEQ.nextval
+  into   :NEW.Invdtlid
+  from   dual;
+end;
+
+create or replace trigger BILL_HDR_TRIG
+before insert on BILL_HDR 
+for each row
+begin
+  select BILL_HDR_SEQ.nextval
+  into   :NEW.Billid
+  from   dual;
+end;
+
+create or replace trigger BILL_DTL_TRIG
+before insert on BILL_DTL 
+for each row
+begin
+  select BILL_DTL_SEQ.nextval
+  into   :NEW.Billdtlid
+  from   dual;
+end;
+
+create or replace trigger OR_HDR_TRIG
+before insert on OR_HDR 
+for each row
+begin
+  select OR_HDR_SEQ.nextval
+  into   :NEW.Orid
+  from   dual;
+end;
+
+create or replace trigger OR_DTL_TRIG
+before insert on OR_DTL 
+for each row
+begin
+  select OR_DTL_SEQ.nextval
+  into   :NEW.Ordtlid
+  from   dual;
+end;
+
+create or replace trigger PURCHASE_HDR_TRIG
+before insert on PURCHASE_HDR 
+for each row
+begin
+  select PURCHASE_HDR_SEQ.nextval
+  into   :NEW.Purchid
+  from   dual;
+end;
+
+

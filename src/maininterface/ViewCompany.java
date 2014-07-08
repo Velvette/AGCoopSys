@@ -16,7 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 
 /**
  *
@@ -31,8 +30,10 @@ public class ViewCompany extends javax.swing.JPanel {
     public String password;
     public Connection conn;
     DbUtils tableUtils = new DbUtils();
-    String query = "Select compid,compname,contactperson,contactno1,contactno2,email from company order by compname";
+    
     AddCompany aC = new AddCompany();
+    
+    private static String DEFAULT_QUERY = "Select compid,compname,contactperson,contactno1,contactno2,email from company order by compname";
     
     public ViewCompany() {
         
@@ -43,11 +44,12 @@ public class ViewCompany extends javax.swing.JPanel {
     public void getList(int rep,String searchText)
     {
         String tempQuery = "";
-        if(rep==0) {
-            tempQuery = query;
+        if(rep == 0) {
+            tempQuery = DEFAULT_QUERY;
         }
-        else if(rep==1) {
-            tempQuery = "select * from (Select compid,compname,contactperson,contactno1,contactno2,email from company order by compname) where compname like '"+searchText+"'";
+        else if(rep == 1) {
+            searchText = searchText.toUpperCase();
+            tempQuery = "select * from (Select compid,compname,contactperson,contactno1,contactno2,email,compvname from company order by compname) where compvname like '"+searchText+"'";
             System.out.println(tempQuery);
         }
         
@@ -55,13 +57,11 @@ public class ViewCompany extends javax.swing.JPanel {
 	this.connect();
 	conn = this.getConnection();
                 
-	try
-        {
+	try {
             stmt = conn.createStatement();
         }
                 
-	catch (SQLException e)
-        {
+	catch (SQLException e) {
             e.printStackTrace();
         }
 		
@@ -70,31 +70,25 @@ public class ViewCompany extends javax.swing.JPanel {
         {
             rs = stmt.executeQuery(tempQuery);
             
-            try
-            {
+            try {
                 tableUtils.updateTableModelData((DefaultTableModel) listCompany.getModel(), rs, 6);
             }
             
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 Logger.getLogger(ViewMember.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
-        catch (SQLException e)
-        {
+        catch (SQLException e) {
             e.printStackTrace();
 	}
-        finally{
+        finally {
             this.disconnect();
         }
-        try{
+        try {
             listCompany.setRowSelectionInterval(0, 0);
         }
-        catch(Exception e)
-        {
-            
-        }
+        catch(Exception e) { }
     }
         
     public void connect()
@@ -104,13 +98,11 @@ public class ViewCompany extends javax.swing.JPanel {
         password = paramDB.getPassword(); // CHANGE PASSWORD
         username = paramDB.getName();
                 
-        try
-        {
+        try {
             Class.forName(dbDriver).newInstance();
             conn = DriverManager.getConnection(dbUrl,username,password);
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             e.printStackTrace();
         }
     }
@@ -122,12 +114,10 @@ public class ViewCompany extends javax.swing.JPanel {
 	
     public void disconnect()
     {
-       try
-       {
+       try {
             conn.close();
        } 
-       catch (Exception ex)
-       {
+       catch (Exception ex) {
             ex.printStackTrace();
        }
     }

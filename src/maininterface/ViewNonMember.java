@@ -23,9 +23,6 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ViewNonMember extends javax.swing.JPanel {
 
-    /**
-     * Creates new form viewNonMember
-     */
     public ViewNonMember() {
         initComponents();
         listMember.getTableHeader().setReorderingAllowed(false);
@@ -38,14 +35,13 @@ public class ViewNonMember extends javax.swing.JPanel {
     public String password;
     public Connection conn;
     DbUtils tableUtils = new DbUtils();
-    String query = "Select memberid,lastname,firstname,midinit,nonmember.contactno1,nonmember.contactno2,nonmember.email,compname from nonmember inner join company on nonmember.compid = company.compid order by lastname";
+    private static String DEFUALT_QUERY = "Select memberid,lastname,firstname,midinit,nonmember.contactno1,nonmember.contactno2,nonmember.email,compname from nonmember inner join company on nonmember.compid = company.compid order by lastname";
 
     public void getList(int rep, String searchText)
     {
         String tempQuery = "";
-        if(rep==0)
-        {
-            tempQuery = query;
+        if(rep == 0) {
+            tempQuery = DEFUALT_QUERY;
         }
         else if(rep == 1) {
             tempQuery = "select * from (Select memberid,lastname,firstname,midinit,nonmember.contactno1,nonmember.contactno2,nonmember.email,compname from nonmember inner join company on nonmember.compid = company.compid order by lastname) where lastname like '"+searchText+"'";
@@ -58,13 +54,11 @@ public class ViewNonMember extends javax.swing.JPanel {
 	this.connect();
 	conn = this.getConnection();
                 
-	try
-        {
+	try {
             stmt = conn.createStatement();
         }
                 
-	catch (SQLException e)
-        {
+	catch (SQLException e) {
             e.printStackTrace();
         }
 		
@@ -74,33 +68,29 @@ public class ViewNonMember extends javax.swing.JPanel {
             rs = stmt.executeQuery(tempQuery);
             try {
                 tableUtils.updateTableModelData((DefaultTableModel) listMember.getModel(), rs, 8);
-            } catch (Exception ex) {
+            } 
+            catch (Exception ex) {
                 Logger.getLogger(ViewMember.class.getName()).log(Level.SEVERE, null, ex);
             }
             
         }
         
-        catch (SQLException e)
-        {
+        catch (SQLException e) {
             e.printStackTrace();
 	}
-        finally{
+        finally {
             this.disconnect();
         }
-        try{
+        try {
             listMember.setRowSelectionInterval(0, 0);
         }
-        catch(Exception e)
-        {
-            
-        }
+        catch(Exception e) { }
         
     }
     
-        public void deleteNonMember()
+    public void deleteNonMember()
     {
-        try
-        {
+        try {
             int index = listMember.getSelectedRow();
             String i = listMember.getValueAt(index, 0).toString();
         
@@ -108,13 +98,12 @@ public class ViewNonMember extends javax.swing.JPanel {
             ConnectToDatabaseSys connectDB = new ConnectToDatabaseSys();
             connectDB.accessLoopDatabase(query);
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             JOptionPane.showMessageDialog(null, "Error: Select row to delete", "Error", JOptionPane.ERROR_MESSAGE); 
         }
     }
         
-        public void editMember() 
+    public void editMember() 
     {
             int index = listMember.getSelectedRow();
             String i = listMember.getValueAt(index, 0).toString();
@@ -133,13 +122,11 @@ public class ViewNonMember extends javax.swing.JPanel {
         password = paramDB.getPassword(); // CHANGE PASSWORD
         username = paramDB.getName();
                 
-        try
-        {
+        try {
             Class.forName(dbDriver).newInstance();
             conn = DriverManager.getConnection(dbUrl,username,password);
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             e.printStackTrace();
         }
     }
@@ -151,12 +138,10 @@ public class ViewNonMember extends javax.swing.JPanel {
 	
     public void disconnect()
     {
-       try
-       {
+       try {
             conn.close();
        } 
-       catch (Exception ex)
-       {
+       catch (Exception ex) {
             ex.printStackTrace();
        }
     }
@@ -175,10 +160,7 @@ public class ViewNonMember extends javax.swing.JPanel {
 
         listMember.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "ID", "LASTNAME", "FIRSTNAME", "INITIAL", "CONTACT (1)", "CONTACT (2)", "E-MAIL", "COMPANY"
@@ -193,7 +175,9 @@ public class ViewNonMember extends javax.swing.JPanel {
             }
         });
         jScrollPane1.setViewportView(listMember);
-        listMember.getColumnModel().getColumn(0).setPreferredWidth(30);
+        if (listMember.getColumnModel().getColumnCount() > 0) {
+            listMember.getColumnModel().getColumn(0).setPreferredWidth(30);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

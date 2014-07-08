@@ -34,7 +34,7 @@ public class ViewPurchGoods extends javax.swing.JPanel {
     private String password;
     private Connection conn;
     private DbUtils tableUtils = new DbUtils();
-    private String query = "select invid,invdt,billingdt from goods_sold_hdr order by invdt desc";
+    private static String DEFAULT_QUERY = "select invid,invdt,billingdt from goods_sold_hdr order by invdt desc";
     private DateFormat df;
     private String searchText;
     
@@ -67,10 +67,10 @@ public class ViewPurchGoods extends javax.swing.JPanel {
     
     public void getList(int rep) {
         String tempQuery = "";
-        if(rep==0) {
-            tempQuery = query;
+        if(rep == 0) {
+            tempQuery = DEFAULT_QUERY;
         }
-        else if(rep==1) {
+        else if(rep == 1) {
             tempQuery = "";
         }
         
@@ -78,13 +78,11 @@ public class ViewPurchGoods extends javax.swing.JPanel {
 	this.connect();
 	conn = this.getConnection();
                 
-	try
-        {
+	try {
             stmt = conn.createStatement();
         }
                 
-	catch (SQLException e)
-        {
+	catch (SQLException e) {
             e.printStackTrace();
         }
 		
@@ -94,34 +92,29 @@ public class ViewPurchGoods extends javax.swing.JPanel {
             rs = stmt.executeQuery(tempQuery);
             try {
                 tableUtils.updateTableModelData((DefaultTableModel) listGoods.getModel(), rs, 3);
-            } catch (Exception ex) {
+            } 
+            catch (Exception ex) {
                 Logger.getLogger(ViewMember.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
         }
         
-        catch (SQLException e)
-        {
+        catch (SQLException e) {
             e.printStackTrace();
 	}
         
-        finally{
+        finally {
             this.disconnect();
         }
         
         try {
             listGoods.setRowSelectionInterval(0, 0);
         }
-        catch(Exception e)
-        {
-            
-        }
+        catch(Exception e) { }
         
     }
     
     public void editGoods() {
-        try
-        {
+        try {
             int index = listGoods.getSelectedRow();
             String i = listGoods.getValueAt(index, 0).toString();
             aG.reset();
@@ -131,8 +124,7 @@ public class ViewPurchGoods extends javax.swing.JPanel {
             aG.setTitle("Edit Goods - Information");
             aG.editList(i);
         }
-        catch(Exception o)
-        {
+        catch(Exception o) {
             DefaultTableModel model = (DefaultTableModel) listGoods.getModel();
             model.removeRow(model.getRowCount()-1);
         } 
@@ -140,49 +132,39 @@ public class ViewPurchGoods extends javax.swing.JPanel {
     
     public void deleteGoods() {
         Statement stmt = null;
-        try
-        {
+        try {
             int index = listGoods.getSelectedRow();
             String i = listGoods.getValueAt(index, 0).toString();
             String tempQuery = "delete from goods_sold_dtl where invid="+i;
             this.connect();
-            try
-            {
+            try {
                 stmt = conn.createStatement();
             }
             
             catch(Exception p) { }
             
-            try
-            {
+            try {
                 stmt.addBatch(tempQuery);
                 tempQuery = "delete from goods_sold_hdr where invid="+i;
                 stmt.addBatch(tempQuery);
                 int[] executeBatch = stmt.executeBatch();
             }
             
-            catch(Exception o)
-            {
-                
-            }
-            finally{
+            catch(Exception o) { }
+            
+            finally {
                 this.disconnect();
             }
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             JOptionPane.showMessageDialog(null, "Error: Select row to delete", "Error", JOptionPane.ERROR_MESSAGE); 
         }
         
-        try
-        {
+        try {
             DefaultTableModel removeModel = (DefaultTableModel) listGoods.getModel();
             removeModel.setRowCount(0);
         }
-        catch(Exception e)
-        {
-            
-        }
+        catch(Exception e) { }
         this.resetView();
     }
     
@@ -193,13 +175,11 @@ public class ViewPurchGoods extends javax.swing.JPanel {
         password = paramDB.getPassword(); // CHANGE PASSWORD
         username = paramDB.getName();
                 
-        try
-        {
+        try {
             Class.forName(dbDriver).newInstance();
             conn = DriverManager.getConnection(dbUrl,username,password);
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             e.printStackTrace();
         }
     }
@@ -211,12 +191,10 @@ public class ViewPurchGoods extends javax.swing.JPanel {
 	
     public void disconnect()
     {
-       try
-       {
+       try {
             conn.close();
        } 
-       catch (Exception ex)
-       {
+       catch (Exception ex) {
             ex.printStackTrace();
        }
     }
@@ -455,22 +433,18 @@ public class ViewPurchGoods extends javax.swing.JPanel {
         Statement stmt = null;       
         this.connect();
         conn = this.getConnection();
-        try
-        {
+        try {
             stmt = conn.createStatement();
         }
                 
-        catch (SQLException e)
-        {
+        catch (SQLException e)  {
             e.printStackTrace();
         }
 		
         ResultSet rs;
-        try
-        {
+        try {
             rs = stmt.executeQuery(query);
-            if(rs.next())
-            {
+            if(rs.next()) {
                 textRemarks.setText(rs.getString("remarks"));
                 textInvDate.setText(df.format(df.parse(rs.getString("invdt"))));
                 textBilDate.setText(df.format(df.parse(rs.getString("billingdt"))));
@@ -479,28 +453,21 @@ public class ViewPurchGoods extends javax.swing.JPanel {
             }
             rs = null;
         }
-        catch(Exception e)
-        {
-            
-        }
+        catch(Exception e) { }
         //PURCHASE DETAILS
         query = "select membername, balance, description from goods_sold_dtl where invid="+i;
         
         try {
             rs = stmt.executeQuery(query);
-                try
-                {                    
+                try {                    
                     tableUtils.updateTableModelData((DefaultTableModel) listDetails.getModel(), rs, 3);
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     Logger.getLogger(ViewMember.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
-        catch(Exception e) {
-            
-        }
-        finally{
+        catch(Exception e) { }
+        finally {
             this.disconnect();
         }
     }

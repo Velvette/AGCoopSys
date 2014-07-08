@@ -13,13 +13,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Lenovo/Documents/GitHub/AGCoopSys/src/maininterface/MainInterface.java</file>
-            <file>file:/C:/Users/Lenovo/Documents/GitHub/AGCoopSys/src/mainaddinterface/AddLoan.java</file>
             <file>file:/C:/Users/Lenovo/Documents/GitHub/AGCoopSys/src/mainaddinterface/AddBillingStatement.java</file>
-            <file>file:/C:/Users/Lenovo/Documents/GitHub/AGCoopSys/src/mainconnect/ConnectToDatabaseSys.java</file>
-            <file>file:/C:/Users/Lenovo/Documents/GitHub/AGCoopSys/src/utilities/QueryWarehouse.java</file>
+            <file>file:/C:/Users/Lenovo/Documents/GitHub/AGCoopSys/src/mainaddinterface/AddReceipt.java</file>
             <file>file:/C:/Users/Lenovo/Documents/GitHub/AGCoopSys/src/maininterface/ViewLoan.java</file>
             <file>file:/C:/Users/Lenovo/Documents/GitHub/AGCoopSys/src/mainprocesses/ProcessBillStatement.java</file>
-            <file>file:/C:/Users/Lenovo/Documents/GitHub/AGCoopSys/src/mainaddinterface/AddCashloan.java</file>
+            <file>file:/C:/Users/Lenovo/Documents/GitHub/AGCoopSys/src/maininterface/ViewReceipt.java</file>
         </group>
     </open-files>
 </project-private>

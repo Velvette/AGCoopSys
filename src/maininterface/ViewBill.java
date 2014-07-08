@@ -187,7 +187,9 @@ public class ViewBill extends javax.swing.JPanel {
             }
         });
         jScrollPane2.setViewportView(listHeader);
-        listHeader.getColumnModel().getColumn(0).setPreferredWidth(10);
+        if (listHeader.getColumnModel().getColumnCount() > 0) {
+            listHeader.getColumnModel().getColumn(0).setPreferredWidth(10);
+        }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -204,10 +206,7 @@ public class ViewBill extends javax.swing.JPanel {
 
         listDetails.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "NAME", "CONTRIBUTION", "CASH", "REG", "CALAMITY", "EDUC", "EMER", "GOODS", "TOTAL"

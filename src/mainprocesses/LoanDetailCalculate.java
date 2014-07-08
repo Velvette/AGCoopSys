@@ -31,8 +31,8 @@ public class LoanDetailCalculate {
         this.monthlyPayment = monthlyPayment;
     }
 
-    public void setPrincipalBalance(float principalBalance) {
-        this.principalBalance = principalBalance;
+    public void setPrincipalBalance(float principalBalance,float prevBal) {
+        this.principalBalance = principalBalance + prevBal;
     }
 
     public void setTotalNumberOfPayment(int totalNumberOfPayment) {

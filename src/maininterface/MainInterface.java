@@ -321,7 +321,7 @@ public class MainInterface extends javax.swing.JFrame {
                         .addComponent(buttonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 692, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 739, Short.MAX_VALUE)
                         .addComponent(buttonRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -505,6 +505,7 @@ public class MainInterface extends javax.swing.JFrame {
         vG.getList(0);
         vCL.getList(0);
         vB.getList();
+        
         aM.clearCombo();
         aNM.clearCombo();
         aBS.clearCombo();
@@ -649,9 +650,6 @@ public class MainInterface extends javax.swing.JFrame {
         String agcoopMember = "maininterface.ViewMember";
         String agcoopSupplier = "maininterface.ViewSupplier";
         String agcoopNonMember = "maininterface.ViewNonMember";
-        String agcoopLoan = "maininterface.ViewLoan";
-        String agcoopGoods = "maininterface.ViewPurchaseGoods";
-        String agcoopCashloan = "maininterface.ViewCashloan";
         
         try{
             if(viewTab.getSelectedComponent().getClass().getName().equals(agcoopCompany))
@@ -673,10 +671,7 @@ public class MainInterface extends javax.swing.JFrame {
                 vNM.getList(1, searchQuery);
             }                  
         }
-        catch(Exception e)
-        {
-            //JOptionPane.showMessageDialog(null, "Error: Select row to edit", "Error - Edit information", JOptionPane.ERROR_MESSAGE); 
-        }
+        catch(Exception e) { }
         
         
         // TODO add your handling code here:
@@ -687,7 +682,8 @@ public class MainInterface extends javax.swing.JFrame {
         aBS.setVisible(true);
         aBS.setTitle("Billing Statement");
         aBS.setLocationRelativeTo(null);
-        aBS.returnParams();
+        aBS.resetTexts();
+        //aBS.returnParams();
         
         // TODO add your handling code here:
     }//GEN-LAST:event_menuStatementActionPerformed

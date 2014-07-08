@@ -156,11 +156,11 @@ public class AddSupplier extends javax.swing.JFrame {
         }
                        
         if(supplierContactPerson.length() != 0)
-        if(!(validateInputs.checkForSpecial(supplierContactPerson)))
-        {
-            errorMessages += "Contact Person: Cannot contain special characters (except . and -)\n";
-            errorCount++;
-        }
+            if(!(validateInputs.checkForSpecial(supplierContactPerson)))
+            {
+                errorMessages += "Contact Person: Cannot contain special characters (except . and -)\n";
+                errorCount++;
+            }
         
         try
         {

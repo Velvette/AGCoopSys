@@ -36,7 +36,7 @@
         <Component class="javax.swing.JTable" name="listMember">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="8" rowCount="4">
+              <Table columnCount="8" rowCount="0">
                 <Column editable="false" title="ID" type="java.lang.Object"/>
                 <Column editable="false" title="LASTNAME" type="java.lang.Object"/>
                 <Column editable="false" title="FIRSTNAME" type="java.lang.Object"/>

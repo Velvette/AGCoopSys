@@ -402,12 +402,8 @@ public class ProcessBillStatement extends javax.swing.JPanel {
             tempQuery = bank.joinDistinct(compid);
             stmt.executeQuery(tempQuery);
             System.out.println("JOINING DATABASE TABLES..");
-          //  progressText = ("Joining (Success)..\n Joining Non-Members - Company..\n");
-          //  textProgress.append(progressText);
             tempQuery = bank.joinDistinctNon(compid);
-            stmt.executeQuery(tempQuery);    
-          //  progressText = ("Joining (Success)..\n");
-            //textProgress.append(progressText);
+            stmt.executeQuery(tempQuery);
         } 
         catch (SQLException ex)
         {
@@ -418,13 +414,11 @@ public class ProcessBillStatement extends javax.swing.JPanel {
             tempQuery = "select * from current_month natural join member where compid="+compid;
             rs = stmt.executeQuery(tempQuery);
             
-           // progressText = "Gathering Member Loans..\n";
-           // textProgress.append(progressText);
             int memberCount = 0;
             int prevId = 0;
             int reset = 0;
             int overTotal = 0;
-            //System.out.println("here1");
+            
             tempQuery = "insert all\n";
             while(rs.next())
             {                   
@@ -434,9 +428,6 @@ public class ProcessBillStatement extends javax.swing.JPanel {
                 
                 if(memberid != prevId)
                 { 
-                    //System.out.println("commit: " + membername);
-                   // progressText = ("Current Member #:" + memberCount + " : " + membername);
-                   // textProgress.append(progressText);
                     System.out.println("PROCESSING MEMBER #:" + memberCount + " : " + membername);
                     goodsamt = this.getBalance(prevId);
                     cashamt = this.getCashamt(prevId);
@@ -477,8 +468,6 @@ public class ProcessBillStatement extends javax.swing.JPanel {
                 midinit = rs.getString("midinit");
                 membername = lastname + ", " + firstname + " " + midinit;
                 
-                //System.out.println("outside:" + membername);
-
                 reset++;
                 prevId = memberid;
                 
@@ -486,9 +475,7 @@ public class ProcessBillStatement extends javax.swing.JPanel {
             if(memberid != 0)
             {
                 memberCount++;
-            //System.out.println("commit: " + membername);
-                //progressText = ("Current Member #:" + memberCount + " : " + membername);
-                //textProgress.append(progressText);
+                
                 goodsamt = this.getBalance(prevId);
                 cashamt = this.getCashamt(prevId);
                 cashid = this.getCashId(memberid);
@@ -500,10 +487,6 @@ public class ProcessBillStatement extends javax.swing.JPanel {
                 stmt.executeUpdate(tempQuery);
                 System.out.println("PROCESSING MEMBER #:" + memberCount + " : " + membername);
             }
-            //this.processGoods(stmt, billid, fromText, finalUntil, compid);
-            
-            
-            //textProgress.append("\n----------------Execute : Database Commit----------------");
             
             tempQuery = bank.commitDTL_Temp(billid);
             stmt.executeQuery(tempQuery);
@@ -539,8 +522,7 @@ public class ProcessBillStatement extends javax.swing.JPanel {
                     goodsamttemp = this.getBalance(memberid);
                     total = cashamttemp + tempContribution + goodsamttemp;
                     tempQuery = bank.commitCashNoLoans(billid, compid, tempHold, cashidtemp, membername, memberid, contribution, total,goodsamttemp);
-                    //PUSH TO TEMP
-                    //System.out.println(tempQuery);
+                    
                     System.out.println("MAIN:" + membername + " : " + total);
                     stmt.addBatch(tempQuery);
                     tempQuery = bank.commitCashNoLoansTemp(billid, compid, tempHold, cashidtemp, membername, memberid, contribution, total,goodsamttemp);
@@ -555,13 +537,11 @@ public class ProcessBillStatement extends javax.swing.JPanel {
                 
             }
             
-            //GET POEPLE WITH GOODS NO LOANS
             tempQuery = bank.memberGoodsNoLoans(fromText, finalUntil, compid);
             rs = null;
             rs = stmt.executeQuery(tempQuery);
             try
             {
-                //stmt.clearBatch();
                 lastname = "";
                 firstname = "";
                 midinit = "";
@@ -581,15 +561,13 @@ public class ProcessBillStatement extends javax.swing.JPanel {
                     memberid = rs.getInt("memberid");
                     total = balance + tempContribution;
                     tempQuery = bank.commitMemberNoLoans(billid, memberid, membername, balance,compid,contribution,totaltemp);
-                    //PUSH TO TEMP
-                    //System.out.println(tempQuery);
+
                     stmt.addBatch(tempQuery);
                     tempQuery = bank.commitMemberNoLoansTemp(billid, memberid, membername, balance, compid,contribution,totaltemp);
                     stmt.addBatch(tempQuery);
                     System.out.println("ADDING MEMBERS WITH PURCHASE GOODS - NO LOANS");
                 }
                 stmt.executeBatch();
-//                stmt.clearBatch();
             }
             
             catch(Exception e)
@@ -620,15 +598,12 @@ public class ProcessBillStatement extends javax.swing.JPanel {
                     balance = rs.getFloat("balance");
                     memberid = rs.getInt("memberid");
                     tempQuery = bank.commitNonMemberGoods(billid, memberid, membername, balance,compid);
-                    //PUSH TO TEMP
-                    //System.out.println(tempQuery);
                     stmt.addBatch(tempQuery);
                     tempQuery = bank.commitNonMemberGoodsTemp(billid, memberid, membername, balance, compid);
                     stmt.addBatch(tempQuery);
                             
                 }
                 stmt.executeBatch();
-//                stmt.clearBatch();
                 System.out.println("ADDING NON-MEMBER - PURCHASE GOODS");
             }
             
@@ -643,7 +618,7 @@ public class ProcessBillStatement extends javax.swing.JPanel {
             System.out.println(tempQuery);
             stmt.executeQuery(tempQuery);
             System.out.println("PREPARING REPORT");
-            this.billReport(); //this report
+            this.billReport();
         }
         catch (SQLException e)
         {

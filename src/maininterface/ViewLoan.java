@@ -318,11 +318,11 @@ public class ViewLoan extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "STATUS", "TYPE", "GRANT", "START", "END", "LOANAMT", "TERMS", "RATE", "INTERESTAMT", "PAYABLE", "BALANCE"
+                "ID", "STATUS", "TYPE", "GRANT", "PRINCIPAL", "TERMS", "RATE", "BALANCE"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -484,7 +484,7 @@ public class ViewLoan extends javax.swing.JPanel {
                 String tempLast = arrayLastName.get(select);
                 String tempMid = arrayMidName.get(select);
                // System.out.println("MemberID:  "+lastname + " : " + select);
-                String tempQuery = "select loanid,status,loantype,grantdt,startdt,enddt,loanamt,montopay,interestrt,interestamt,payableamt,balance from loan_hdr where memberid = (select memberid from member where firstname = '"+ tempFirst +"' and lastname = '"+tempLast+"' and midinit = '"+tempMid+"')";
+                String tempQuery = "select loanid,status,loantype,grantdt,loanamt,montopay,interestrt,balance from loan_hdr where memberid = (select memberid from member where firstname = '"+ tempFirst +"' and lastname = '"+tempLast+"' and midinit = '"+tempMid+"')";
         
                 Statement stmt = null;       
                 this.connect();
@@ -507,7 +507,7 @@ public class ViewLoan extends javax.swing.JPanel {
                     rs = stmt.executeQuery(tempQuery);
                     try
                     {
-                        tableUtils.updateTableModelData((DefaultTableModel) listLoan.getModel(), rs, 12);
+                        tableUtils.updateTableModelData((DefaultTableModel) listLoan.getModel(), rs, 8);
                     } 
                     catch (Exception ex)
                     {

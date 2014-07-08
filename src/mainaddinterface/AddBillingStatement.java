@@ -7,6 +7,7 @@
 package mainaddinterface;
 
 import agcoopsys.companyList;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -19,7 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import mainconnect.ConnectToDatabaseSys;
 import mainprocesses.ProcessBillStatement;
 import net.sf.jasperreports.engine.JRException;
@@ -29,6 +29,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 import utilities.QueryWarehouse;
+
 
 /**
  *
@@ -77,6 +78,7 @@ public class AddBillingStatement extends javax.swing.JFrame {
     public void clearCombo()
     {
         comboCompany.removeAllItems();
+        
         arrayList.clear();
         arrayListCompany.clear();
         this.returnParams();
@@ -265,12 +267,14 @@ public class AddBillingStatement extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonClearActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        
+
+        //this.resetTexts();
         // TODO add your handling code here:
     }//GEN-LAST:event_formWindowClosing
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.dispose();
+        
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -308,7 +312,6 @@ public class AddBillingStatement extends javax.swing.JFrame {
             while(rs.next())
             {
                 comboCompany.addItem(rs.getString("compname"));
-                //System.out.println(rs.getInt("compid") + " : " + rs.getString("compname"));
                 arrayList.add(rs.getInt("compid"));
                 arrayListCompany.add(rs.getString("compname"));
             }
@@ -377,7 +380,8 @@ public class AddBillingStatement extends javax.swing.JFrame {
         JasperReport jasperReport = null;
         JasperPrint jasperPrint = null;
         HashMap jasperParameter = new HashMap();
-        jasperReport = JasperCompileManager.compileReport("src//resources//JAR//BillingStatement.jrxml");       
+        String reportSource = "";
+        jasperReport = JasperCompileManager.compileReport("resources//JAR//BillingStatement.jrxml");       
         jasperPrint = JasperFillManager.fillReport(jasperReport,jasperParameter, conn);
                 JasperViewer.viewReport(jasperPrint, false);        
         
@@ -638,11 +642,12 @@ public class AddBillingStatement extends javax.swing.JFrame {
                     balance = rs.getFloat("balance");
                     memberid = rs.getInt("memberid");
                     total = balance + tempContribution;
-                    tempQuery = bank.commitMemberNoLoans(billid, memberid, membername, balance,compid,contribution,totaltemp);
+                    overTotal += total;
+                    tempQuery = bank.commitMemberNoLoans(billid, memberid, membername, balance,compid,contribution,total);
                     //PUSH TO TEMP
                     //System.out.println(tempQuery);
                     stmt.addBatch(tempQuery);
-                    tempQuery = bank.commitMemberNoLoansTemp(billid, memberid, membername, balance, compid,contribution,totaltemp);
+                    tempQuery = bank.commitMemberNoLoansTemp(billid, memberid, membername, balance, compid,contribution,total);
                     stmt.addBatch(tempQuery);
                     System.out.println("ADDING MEMBERS WITH PURCHASE GOODS - NO LOANS");
                 }
@@ -676,6 +681,7 @@ public class AddBillingStatement extends javax.swing.JFrame {
                     midinit = rs.getString("midinit");
                     membername = lastname + ", " + firstname + " " + midinit;
                     balance = rs.getFloat("balance");
+                    totaltemp += balance;
                     memberid = rs.getInt("memberid");
                     tempQuery = bank.commitNonMemberGoods(billid, memberid, membername, balance,compid);
                     //PUSH TO TEMP
@@ -683,8 +689,8 @@ public class AddBillingStatement extends javax.swing.JFrame {
                     stmt.addBatch(tempQuery);
                     tempQuery = bank.commitNonMemberGoodsTemp(billid, memberid, membername, balance, compid);
                     stmt.addBatch(tempQuery);
-                            
                 }
+                overTotal += totaltemp;
                 stmt.executeBatch();
 //                stmt.clearBatch();
                 System.out.println("ADDING NON-MEMBER - PURCHASE GOODS");

@@ -105,6 +105,8 @@ public class AddLoan extends javax.swing.JFrame {
         textCheckNo = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         buttonClear = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
+        prevBalText = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -214,6 +216,11 @@ public class AddLoan extends javax.swing.JFrame {
             }
         });
 
+        jLabel13.setText("Prev Bal");
+
+        prevBalText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        prevBalText.setText("0.0");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -227,13 +234,16 @@ public class AddLoan extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel13))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(labelMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(comboTypeOfLoan, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(41, 41, 41)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(comboTypeOfLoan, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(prevBalText, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel8)
                                     .addComponent(jLabel12))
@@ -302,7 +312,9 @@ public class AddLoan extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textCheckNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12))
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel13)
+                    .addComponent(prevBalText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -469,6 +481,11 @@ public class AddLoan extends javax.swing.JFrame {
                 memberID = rs.getString("memberid");
                 tempStart = rs.getString("startdt");
                 labelMember.setText(wholeName);
+                
+                labelAmortization.setText(rs.getString("amortization"));
+                labelTotalPrincipal.setText(rs.getString("loanamt"));
+                labelTotalInterest.setText(rs.getString("interestamt"));
+                labelTotalPayment.setText(rs.getString("balance"));
             }
             this.disconnect();      
 	}
@@ -502,7 +519,7 @@ public class AddLoan extends javax.swing.JFrame {
             error = false;
         }
         try{
-            loanCalculate.setPrincipalBalance(Float.parseFloat(textPrincipal.getText()));
+            loanCalculate.setPrincipalBalance(Float.parseFloat(textPrincipal.getText()),Float.parseFloat(prevBalText.getText()));
         }
         catch(Exception r)
         {
@@ -539,7 +556,7 @@ public class AddLoan extends javax.swing.JFrame {
         if(error)
         {
            loanCalculate.getAmortization();
-           principal = Float.parseFloat(textPrincipal.getText());
+           principal = Float.parseFloat(textPrincipal.getText()) - Float.parseFloat(prevBalText.getText());
            monthlyAmortization = loanCalculate.getMonthlyPayment();
            interest = loanCalculate.getInterest();
            interestrt = Float.parseFloat(textInterest.getText());
@@ -569,9 +586,6 @@ public class AddLoan extends javax.swing.JFrame {
                     enddtString = df.format(enddt);
                     currentdtString = df.format(currentDate);
                     textEndDate.setText(enddtString);
-                
-                    //System.out.println(loanType);
-                    //System.out.println("current:" + startdtString + " ||| " + "end: " + enddtString);
                 } 
                 catch (ParseException | NumberFormatException q)
                 { 
@@ -867,6 +881,7 @@ public class AddLoan extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -883,6 +898,7 @@ public class AddLoan extends javax.swing.JFrame {
     private javax.swing.JLabel labelTotalInterest;
     private javax.swing.JLabel labelTotalPayment;
     private javax.swing.JLabel labelTotalPrincipal;
+    private javax.swing.JTextField prevBalText;
     private javax.swing.JTextField textCheckNo;
     private javax.swing.JTextField textEndDate;
     private javax.swing.JTextField textInterest;

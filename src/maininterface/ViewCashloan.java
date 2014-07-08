@@ -44,6 +44,8 @@ public class ViewCashloan extends javax.swing.JPanel {
     
     String nameTemp = "";
     
+    private static String DEFAULT_QUERY = "SELECT memberid,lastname,firstname,midinit from member order by lastname";
+    
     public ViewCashloan() {
         initComponents();
         listMember.setModel(listModel);
@@ -54,7 +56,7 @@ public class ViewCashloan extends javax.swing.JPanel {
         String tempQuery = "";
         
         if(rep == 0) {
-            tempQuery = "SELECT memberid,lastname,firstname,midinit from member order by lastname";
+            tempQuery = DEFAULT_QUERY;
         }
         
         else if(rep == 1) {
@@ -173,12 +175,10 @@ public class ViewCashloan extends javax.swing.JPanel {
     
     public void editLoan()
     {
-        try
-        {
+        try {
             int index = listLoan.getSelectedRow();
             String loanid = listLoan.getValueAt(index, 0).toString();
             String wholeName = (String) listMember.getSelectedValue();
-            System.out.println(loanid);
             aL.allReset();
             aL.setVisible(true);
             aL.setLocationRelativeTo(null);
@@ -186,10 +186,7 @@ public class ViewCashloan extends javax.swing.JPanel {
             aL.setTitle("Edit Loan - Information");
             aL.editLoan(wholeName, loanid);
         }
-        catch(Exception e)
-        {
-            
-        }
+        catch(Exception e) { }
     }
     
     

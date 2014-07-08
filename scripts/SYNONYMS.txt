@@ -1,0 +1,47 @@
+
+create role ALCROLE;
+
+create public synonym COMPANY for COMPANY;
+create public synonym SUPPLIER for SUPPLIER;
+create public synonym MEMBER for MEMBER;
+create public synonym NONMEMBER for NONMEMBER;
+
+create public synonym LOAN_HDR for LOAN_HDR;
+create public synonym LOAN_DTL for LOAN_DTL;
+create public synonym CASHLOAN for CASHLOAN;
+create public synonym GOODS_SOLD_HDR for GOODS_SOLD_HDR;
+create public synonym GOODS_SOLD_DTL for GOODS_SOLD_DTL;
+create public synonym BILL_HDR for BILL_HDR;
+create public synonym BILL_DTL for BILL_DTL;
+create public synonym OR_HDR for OR_HDR;
+create public synonym OR_DTL for OR_DTL;
+create public synonym SUBLEDGER_REG for SUBLEDGER_REG;
+create public synonym SUBLEDGER_EDUC for SUBLEDGER_EDUC;
+create public synonym SUBLEDGER_CAL for SUBLEDGER_CAL;
+create public synonym SUBLEDGER_EMER for SUBLEDGER_EMER;
+create public synonym PURCHASE_HDR for PURCHASE_HDR;
+
+grant select,insert,update,delete on COMPANY to ALCROLE;
+grant select,insert,update,delete on SUPPLIER to ALCROLE;
+grant select,insert,update,delete on MEMBER to ALCROLE;
+grant select,insert,update,delete on NONMEMBER to ALCROLE;
+
+grant select,insert,update,delete on LOAN_HDR to ALCROLE;
+grant select,insert,update,delete on LOAN_DTL to ALCROLE;
+grant select,insert,update,delete on CASHLOAN to ALCROLE;
+grant select,insert,update,delete on GOODS_SOLD_HDR to ALCROLE;
+grant select,insert,update,delete on GOODS_SOLD_DTL to ALCROLE;
+grant select,insert,update,delete on BILL_HDR to ALCROLE;
+grant select,insert,update,delete on BILL_DTL to ALCROLE;
+grant select,insert,update,delete on OR_HDR to ALCROLE;
+grant select,insert,update,delete on OR_DTL to ALCROLE;
+grant select,insert,update,delete on SUBLEDGER_REG to ALCROLE;
+grant select,insert,update,delete on SUBLEDGER_EDUC to ALCROLE;
+grant select,insert,update,delete on SUBLEDGER_CAL to ALCROLE;
+grant select,insert,update,delete on SUBLEDGER_EMER to ALCROLE;
+grant select,insert,update,delete on PURCHASE_HDR to ALCROLE;
+
+create user test identified by "p@ssword";
+grant resource, connect to test;
+
+grant ALCROLE to test;
