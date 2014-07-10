@@ -17,6 +17,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -449,6 +451,37 @@ public class AddLoan extends javax.swing.JFrame {
         labelMember.setText(wholeName);
     }
     
+    public void terminateLoan(String wholeName, String id) {
+        ResultSet rs;
+        this.connect();
+        Statement stmt = null;
+        String query = "select * from loan_hdr where loanid="+id;
+        loanID = Integer.parseInt(id);
+        try
+        {
+            stmt = conn.createStatement();
+        }
+                
+	catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            rs = stmt.executeQuery(query);
+            if(rs.next())
+            {
+                labelMember.setText(wholeName);
+                prevBalText.setText(rs.getString("balance"));
+                memberID = rs.getString("memberid");
+            }
+            this.disconnect();      
+	}
+        catch (SQLException e) { }   
+        choice = 2;
+    }
+    
     public void editLoan(String wholeName,  String id)
     {
         ResultSet rs;
@@ -519,7 +552,7 @@ public class AddLoan extends javax.swing.JFrame {
             error = false;
         }
         try{
-            loanCalculate.setPrincipalBalance(Float.parseFloat(textPrincipal.getText()),Float.parseFloat(prevBalText.getText()));
+            loanCalculate.setPrincipalBalance(Float.parseFloat(textPrincipal.getText()));
         }
         catch(Exception r)
         {
@@ -556,11 +589,11 @@ public class AddLoan extends javax.swing.JFrame {
         if(error)
         {
            loanCalculate.getAmortization();
-           principal = Float.parseFloat(textPrincipal.getText()) - Float.parseFloat(prevBalText.getText());
+           principal = Float.parseFloat(textPrincipal.getText());
            monthlyAmortization = loanCalculate.getMonthlyPayment();
            interest = loanCalculate.getInterest();
            interestrt = Float.parseFloat(textInterest.getText());
-           totalPayment = loanCalculate.getTotAmortization();
+           totalPayment = loanCalculate.getTotAmortization() - Float.parseFloat(prevBalText.getText());
            terms = Integer.parseInt(textTerms.getText());
            
            labelAmortization.setText(Float.toString(monthlyAmortization));
@@ -651,16 +684,9 @@ public class AddLoan extends javax.swing.JFrame {
     {
             QueryWarehouse bank = new QueryWarehouse();
             String query = "";
-            if(choice == 0)
-            query = bank.loanFirstCommit(memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
-            
-            if(choice == 1)
-            query = bank.updateLoanFirstCommit(loanID, memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
-                
-            //System.out.println(query);
             this.connect();
+            
             Statement stmt = null;
-        
             try
             {
                 stmt = conn.createStatement();
@@ -669,15 +695,32 @@ public class AddLoan extends javax.swing.JFrame {
             {
             
             }
-        
+            
+            if(choice == 0)
+                query = bank.loanFirstCommit(memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
+            
+            if(choice == 1)
+                query = bank.updateLoanFirstCommit(loanID, memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
+                
+            if(choice == 2) {
+                query = bank.updateLoanFirstCommitTerminate(loanID);
+                try {
+                    stmt.addBatch(query);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AddLoan.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                query = bank.loanFirstCommit(memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
+            }
+            
+            System.out.println(query);
             try
             {
                 stmt.addBatch(query);
                 stmt.executeBatch();
             }
-            catch (SQLException ex)
+            catch (Exception ex)
             {
-            
+                ex.printStackTrace();
             }
         
             finally{
@@ -713,6 +756,20 @@ public class AddLoan extends javax.swing.JFrame {
             arrayInterest = loanCalculate.getInterestRecur(terms, principal);
             arrayPremium = loanCalculate.getPremiumRecur(terms, principal);
             this.deleteAmortDates();
+            this.getInsertAmortDates(repEnd, terms, arrayInterest,arrayPremium, loanID, monthlyAmortization);
+        }
+        else if(choice == 2) {
+            this.getID();
+        
+            Date repEnd;
+            repEnd = startdt;
+        
+            float arrayInterest[] = new float[terms];
+            float arrayPremium[] = new float[terms];
+        
+            arrayInterest = loanCalculate.getInterestRecur(terms, principal);
+            arrayPremium = loanCalculate.getPremiumRecur(terms, principal);
+        
             this.getInsertAmortDates(repEnd, terms, arrayInterest,arrayPremium, loanID, monthlyAmortization);
         }
     }
@@ -817,7 +874,8 @@ public class AddLoan extends javax.swing.JFrame {
         textStartDate.setText("");
         textStartDate.setEnabled(true);
         textStartDate.setEditable(true);
-        textEndDate.setEnabled(true);        
+        textEndDate.setEnabled(true);  
+        prevBalText.setText("0.0");
         
         labelAmortization.setText("");
         labelTotalPayment.setText("");

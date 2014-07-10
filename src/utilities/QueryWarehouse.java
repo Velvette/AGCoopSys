@@ -18,6 +18,11 @@ public class QueryWarehouse {
         return query;
     }
     
+    public String updateLoanFirstCommitTerminate(int loanid) {
+        String query = "update loan_hdr set status='TERMINATED' where loanid='"+loanid+"'";
+        return query;
+    }
+    
     public String updateLoanFirstCommit(int loanid, String memberID, String loanType, String currentdtString, String startdtString, String enddtString, float principal, int terms, float interestrt, float interest, float totalPayment, float monthlyAmortization, String checkNo)
     {
         String query = "update loan_hdr set memberid='"+memberID+"',loantype='"+loanType+"',grantdt='"+currentdtString+"',startdt='"+startdtString+"',enddt='"+enddtString+"',loanamt='"+principal+"',montopay='"+terms+"',interestrt='"+interestrt+"',interestamt='"+interest+"',payableamt='"+totalPayment+"',balance='"+totalPayment+"',amortization='"+monthlyAmortization+"',checkno='"+checkNo+"'where loanid="+loanid;

@@ -140,7 +140,7 @@ public class ConnectToDatabaseSys {
         if(choice == 0)
             query = "select suppvname from supplier where suppvname='"+checkThis+"'";
         else if(choice==1)//mabelle
-            query = "select compvname from company where compvname='"+checkThis+"'";
+            query = "select compvname from company where compvname-='"+checkThis+"'";
         else if(choice==2)//mabelle
             query = "select billid from or_hdr where billid='"+checkThis+"'";
         else if(choice==3)//mabelle

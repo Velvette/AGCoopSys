@@ -325,7 +325,7 @@ public class AddCashloan extends javax.swing.JFrame {
             error = false;
         }
         try{
-            loanCalculate.setPrincipalBalance(Float.parseFloat(textPrincipal.getText()),Float.parseFloat(prevBalText.getText()));
+            loanCalculate.setPrincipalBalance(Float.parseFloat(textPrincipal.getText()));
         }
         catch(Exception r)
         {
