@@ -406,7 +406,7 @@ public class ViewLoan extends javax.swing.JPanel {
 
         jButton3.setText("Print");
 
-        jButton4.setText("Terminate and Add");
+        jButton4.setText("Terminate");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);

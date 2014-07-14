@@ -703,13 +703,13 @@ public class AddLoan extends javax.swing.JFrame {
                 query = bank.updateLoanFirstCommit(loanID, memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
                 
             if(choice == 2) {
-                query = bank.updateLoanFirstCommitTerminate(loanID);
+                query = bank.loanFirstCommit(memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
                 try {
                     stmt.addBatch(query);
                 } catch (SQLException ex) {
                     Logger.getLogger(AddLoan.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                query = bank.loanFirstCommit(memberID, loanType, currentdtString, startdtString, enddtString, principal, terms, interestrt, interest, totalPayment, monthlyAmortization, checkNo);
+                query = bank.updateLoanFirstCommitTerminate(loanID);
             }
             
             System.out.println(query);
