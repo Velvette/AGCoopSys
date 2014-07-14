@@ -13,11 +13,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -44,7 +51,7 @@ public class ViewLoan extends javax.swing.JPanel {
     ArrayList<String> arrayMidName = new ArrayList<>();
     ArrayList<String> arrayMemberid = new ArrayList<>();
     
-    DbUtils tableUtils = new DbUtils();
+    DbUtils commonUtils = new DbUtils();
     
     public ViewLoan() {
         initComponents();
@@ -269,7 +276,7 @@ public class ViewLoan extends javax.swing.JPanel {
         searchBox = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        buttonPrint = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -404,7 +411,12 @@ public class ViewLoan extends javax.swing.JPanel {
             }
         });
 
-        jButton3.setText("Print");
+        buttonPrint.setText("Print");
+        buttonPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPrintActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Terminate");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -434,7 +446,7 @@ public class ViewLoan extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buttonPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(121, 121, 121)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -468,7 +480,7 @@ public class ViewLoan extends javax.swing.JPanel {
                             .addComponent(textPayment1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1)
                             .addComponent(textPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3))
+                            .addComponent(buttonPrint))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -519,7 +531,7 @@ public class ViewLoan extends javax.swing.JPanel {
                     rs = stmt.executeQuery(tempQuery);
                     try
                     {
-                        tableUtils.updateTableModelData((DefaultTableModel) listLoan.getModel(), rs, 8);
+                        commonUtils.updateTableModelData((DefaultTableModel) listLoan.getModel(), rs, 8);
                     } 
                     catch (Exception ex)
                     {
@@ -600,6 +612,47 @@ public class ViewLoan extends javax.swing.JPanel {
         
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
+        
+        try
+        {
+            int index = listLoan.getSelectedRow();
+            String loanID = listLoan.getValueAt(index, 0).toString();
+            this.connect();
+            conn = this.getConnection();
+        
+            String dateTime = commonUtils.getSysparam(conn, "SYSDATETIME");
+            System.out.println(dateTime);
+            System.out.println(loanID);
+            try{ 
+                this.billReport(loanID, dateTime);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        catch(Exception o)
+        {
+            DefaultTableModel model = (DefaultTableModel) listDetails.getModel();
+            model.removeRow(model.getRowCount()-1);
+        }
+
+    }//GEN-LAST:event_buttonPrintActionPerformed
+
+    public void billReport(String loanID, String dateTime) throws JRException
+    {
+        JasperReport jasperReport = null;
+        JasperPrint jasperPrint = null;
+        HashMap jasperParameter = new HashMap();
+        jasperParameter.put("P_MAINCOMP", "AG COOPERATIVE"); 
+        jasperParameter.put("P_LOANID", loanID);
+        jasperParameter.put("P_DATETIME", dateTime);
+        jasperReport = JasperCompileManager.compileReport("src//resources//JAR//alcSked.jrxml");       
+        jasperPrint = JasperFillManager.fillReport(jasperReport,jasperParameter, conn);
+        JasperViewer.viewReport(jasperPrint, false);        
+        
+    }
+    
     public void getListDetails(String id)
     {
         float total = 0;
@@ -632,7 +685,7 @@ public class ViewLoan extends javax.swing.JPanel {
                 
                 try
                 {                    
-                    tableUtils.updateTableModelData((DefaultTableModel) listDetails.getModel(), rs, 4);
+                    commonUtils.updateTableModelData((DefaultTableModel) listDetails.getModel(), rs, 4);
                 }
                 catch (Exception ex)
                 {
@@ -681,9 +734,9 @@ public class ViewLoan extends javax.swing.JPanel {
     }
      
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonPrint;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

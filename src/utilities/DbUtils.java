@@ -4,8 +4,10 @@
  */
 package utilities;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -126,5 +128,68 @@ public class DbUtils {
         }
     }
     
+   public String getSysparam (Connection p_Conn, String p_Param) {
+		Statement v_Stmt;
+		ResultSet v_Rec;
+
+    	String v_Retv = "";
+
+		try {
+	        v_Stmt = p_Conn.createStatement();
+	        if (p_Param.equals("SYSDATETIME")) {
+		        v_Rec = v_Stmt.executeQuery(
+			            "SELECT TO_CHAR(SYSDATE,'MM/DD/YYYY HH24:MI:SS') DTIME" +
+			            " FROM DUAL");
+			        while(v_Rec.next()) { v_Retv = v_Rec.getString(1);}
+	        } else if (p_Param.equals("SYSDATE")) {
+		        v_Rec = v_Stmt.executeQuery(
+			            "SELECT TO_CHAR(SYSDATE,'MM/DD/YYYY') DTIME" +
+			            " FROM DUAL");
+			        while(v_Rec.next()) { v_Retv = v_Rec.getString(1);}
+	        } else if (p_Param.equals("FMSYSDATE")) {
+		        v_Rec = v_Stmt.executeQuery(
+			            "SELECT TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') DTIME" +
+			            " FROM DUAL");
+			        while(v_Rec.next()) { v_Retv = v_Rec.getString(1);}
+	        } else if (p_Param.equals("FIRSTDAYYR")) {
+		        v_Rec = v_Stmt.executeQuery(
+			            "SELECT '01/01/'||TO_CHAR(SYSDATE,'YYYY') DTIME" +
+			            " FROM DUAL");
+			        while(v_Rec.next()) { v_Retv = v_Rec.getString(1);}
+	        } else if (p_Param.equals("LASTDAYYR")) {
+		        v_Rec = v_Stmt.executeQuery(
+			            "SELECT '12/31/'||TO_CHAR(SYSDATE,'YYYY') DTIME" +
+			            " FROM DUAL");
+			        while(v_Rec.next()) { v_Retv = v_Rec.getString(1);}
+	        } else if (p_Param.equals("FIRSTDAYMO")) {
+		        v_Rec = v_Stmt.executeQuery(
+			            "SELECT TO_CHAR(SYSDATE,'MM')||'/01/'||TO_CHAR(SYSDATE,'YYYY') DTIME" +
+			            " FROM DUAL");
+			        while(v_Rec.next()) { v_Retv = v_Rec.getString(1);}
+	        } else if (p_Param.equals("LASTDAYMO")) {
+		        v_Rec = v_Stmt.executeQuery(
+			            "SELECT TO_CHAR(LAST_DAY(SYSDATE),'MM/DD/YYYY') DTIME" +
+			            " FROM DUAL");
+			        while(v_Rec.next()) { v_Retv = v_Rec.getString(1);}
+	        } else if (p_Param.equals("MAINCOMP")) {
+		        v_Rec = v_Stmt.executeQuery(
+			            "SELECT MAINCOMPANY" +
+			            " FROM PARAM" +
+			            " WHERE ROWNUM = 1");
+			        while(v_Rec.next()) { v_Retv = v_Rec.getString(1);}
+	        } else if (p_Param.equals("MAINADDR")) {
+		        v_Rec = v_Stmt.executeQuery(
+			            "SELECT MAINADDRESS" +
+			            " FROM PARAM" +
+			            " WHERE ROWNUM = 1");
+			        while(v_Rec.next()) { v_Retv = v_Rec.getString(1);}
+	        }
+	        v_Stmt.close();
+	    } catch (Exception e) {
+	        //aipTools.showMessageErr(e.toString(),"DB Connection Error (Level 2)");
+        }
+
+    	return v_Retv;
+    }
 
 }

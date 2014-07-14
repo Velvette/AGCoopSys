@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="alcSked" language="groovy" pageWidth="612" pageHeight="792" whenNoDataType="BlankPage" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Invno_Style" forecolor="#000000" fontName="Arial" fontSize="6" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{CANCELED}.equals( "Y" )]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\MyMainDir\\MyProjects\\Java\\pstsi\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_MAINCOMP" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="P_DATETIME" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="P_LOANID" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+  'A' GRP,
+  M.LASTNAME ||', '|| M.FIRSTNAME ||' '|| M.MIDINIT MEMBERNAME,
+  C.COMPNAME,
+  H.LOANTYPE,
+  TO_CHAR(H.STARTDT,'MM/DD/YYYY') ||' to '|| TO_CHAR(H.ENDDT,'MM/DD/YYYY') DURATION,
+  H.MONTOPAY,
+  H.INTERESTRT,
+  H.AMORTIZATION,
+  H.PAYABLEAMT,
+  H.INTERESTAMT,
+  H.LOANAMT,
+  D.AMORDATE,
+  D.MON_AMORT,
+  D.MON_PREMIUM,
+  D.MON_INTEREST
+FROM LOAN_HDR H,
+     LOAN_DTL D,
+     MEMBER M,
+     COMPANY C
+WHERE H.LOANID = $P{P_LOANID}
+AND D.LOANID = H.LOANID
+AND H.MEMBERID = M.MEMBERID(+)
+AND M.COMPID = C.COMPID(+)
+ORDER BY AMORDATE]]>
+	</queryString>
+	<field name="GRP" class="java.lang.String"/>
+	<field name="MEMBERNAME" class="java.lang.String"/>
+	<field name="COMPNAME" class="java.lang.String"/>
+	<field name="LOANTYPE" class="java.lang.String"/>
+	<field name="DURATION" class="java.lang.String"/>
+	<field name="MONTOPAY" class="java.math.BigDecimal"/>
+	<field name="INTERESTRT" class="java.math.BigDecimal"/>
+	<field name="AMORTIZATION" class="java.math.BigDecimal"/>
+	<field name="PAYABLEAMT" class="java.math.BigDecimal"/>
+	<field name="INTERESTAMT" class="java.math.BigDecimal"/>
+	<field name="LOANAMT" class="java.math.BigDecimal"/>
+	<field name="AMORDATE" class="java.sql.Timestamp"/>
+	<field name="MON_AMORT" class="java.math.BigDecimal"/>
+	<field name="MON_PREMIUM" class="java.math.BigDecimal"/>
+	<field name="MON_INTEREST" class="java.math.BigDecimal"/>
+	<variable name="G_AMORT" class="java.math.BigDecimal" resetType="Group" resetGroup="GRP" calculation="Sum">
+		<variableExpression><![CDATA[$F{MON_AMORT}]]></variableExpression>
+	</variable>
+	<variable name="G_PREMIUM" class="java.math.BigDecimal" resetType="Group" resetGroup="GRP" calculation="Sum">
+		<variableExpression><![CDATA[$F{MON_PREMIUM}]]></variableExpression>
+	</variable>
+	<variable name="G_INTEREST" class="java.math.BigDecimal" resetType="Group" resetGroup="GRP" calculation="Sum">
+		<variableExpression><![CDATA[$F{MON_INTEREST}]]></variableExpression>
+	</variable>
+	<group name="GRP" isResetPageNumber="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{GRP}]]></groupExpression>
+		<groupHeader>
+			<band height="112">
+				<staticText>
+					<reportElement x="63" y="87" width="62" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Due Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="363" y="87" width="80" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Interest]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="98" width="571" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="257" y="87" width="80" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Principal]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="471" y="87" width="80" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Principal Balance]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="87" width="43" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Inst. No.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="151" y="87" width="80" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Monthly Amortization]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="14" width="78" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Borrower]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="25" width="78" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[AG Unit]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="36" width="78" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Principal]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="47" width="78" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Terms]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="58" width="78" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Interest Rate]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="69" width="78" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Monthly Amortization]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement x="86" y="14" width="206" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{MEMBERNAME}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement x="86" y="25" width="206" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COMPNAME}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement x="86" y="36" width="70" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{LOANAMT}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0;(-###0)" isBlankWhenNull="true">
+					<reportElement x="86" y="47" width="70" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{MONTOPAY}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement x="86" y="58" width="70" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{INTERESTRT}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement x="86" y="69" width="70" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{AMORTIZATION}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="366" y="25" width="60" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Total Payments]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="348" y="14" width="78" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Duration of Loan]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="366" y="47" width="60" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Total Principal]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="366" y="36" width="60" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Total Interest]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement x="434" y="14" width="126" height="10"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DURATION}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement x="434" y="25" width="70" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{PAYABLEAMT}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement x="434" y="36" width="70" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{INTERESTAMT}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement x="434" y="47" width="70" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{LOANAMT}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement isPrintRepeatedValues="false" x="471" y="100" width="80" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{LOANAMT}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="30">
+				<line>
+					<reportElement x="151" y="3" width="80" height="1"/>
+				</line>
+				<line>
+					<reportElement x="257" y="3" width="80" height="1"/>
+				</line>
+				<line>
+					<reportElement x="363" y="3" width="80" height="1"/>
+				</line>
+				<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement x="151" y="6" width="80" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{G_AMORT}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement x="257" y="6" width="80" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{G_PREMIUM}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+					<reportElement x="363" y="6" width="80" height="10"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{MON_INTEREST}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="363" y="18" width="80" height="1"/>
+				</line>
+				<line>
+					<reportElement x="151" y="18" width="80" height="1"/>
+				</line>
+				<line>
+					<reportElement x="257" y="18" width="80" height="1"/>
+				</line>
+				<line>
+					<reportElement x="363" y="21" width="80" height="1"/>
+				</line>
+				<line>
+					<reportElement x="151" y="21" width="80" height="1"/>
+				</line>
+				<line>
+					<reportElement x="257" y="21" width="80" height="1"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<pageHeader>
+		<band height="36">
+			<textField>
+				<reportElement x="0" y="0" width="284" height="15"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_MAINCOMP}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="435" y="0" width="136" height="10"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Runtime: " + $P{P_DATETIME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="513" y="15" width="58" height="10"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page: " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="16" width="284" height="15"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Amortization Schedule]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="12">
+			<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+				<reportElement x="151" y="1" width="80" height="10"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MON_AMORT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement x="63" y="1" width="62" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AMORDATE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+				<reportElement x="257" y="1" width="80" height="10"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MON_PREMIUM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+				<reportElement x="363" y="1" width="80" height="10"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MON_INTEREST}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+				<reportElement x="471" y="1" width="80" height="10"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MON_PREMIUM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement x="0" y="1" width="43" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
